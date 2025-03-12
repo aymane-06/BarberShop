@@ -1,0 +1,133 @@
+Cahier des Charges : Barbershop Reservation Website
+Titre du Projet
+Barbershop Reservation Website
+
+Présentation Générale
+Description Succincte
+Une plateforme web permettant aux barbiers de créer et promouvoir leur espace virtuel tout en permettant aux utilisateurs de trouver et réserver les meilleurs barbiers dans leur zone. Le site propose des fonctionnalités adaptées à trois acteurs principaux : Barbiers, Utilisateurs, et Administrateurs.
+Objectifs Principaux
+Offrir une solution simple et efficace pour gérer les réservations dans les barbershops.
+Permettre aux utilisateurs de découvrir et choisir des barbiers en fonction de leur localisation et des avis clients.
+Fournir un espace pour les barbiers afin de promouvoir leurs services et gérer leurs rendez-vous.
+Offrir aux administrateurs un panel de contrôle pour gérer la plateforme et analyser les données.
+
+Contexte et Problématique
+Contexte
+Avec l'évolution des modes de consommation, les clients préfèrent de plus en plus réserver leurs services en ligne pour gagner du temps. Cependant, il existe peu de plateformes dédiées aux barbershops qui permettent à la fois une gestion efficace des rendez-vous pour les barbiers et une expérience utilisateur fluide.
+Problèmes à Résoudre
+Difficulté à trouver des barbiers locaux de qualité.
+Manque d’outils pour que les barbiers gèrent efficacement leurs réservations et promotions.
+Absence d'un système centralisé pour analyser les activités et performances de la plateforme.
+
+Objectifs Détaillés
+Objectifs Fonctionnels
+Permettre aux utilisateurs de :
+
+
+Rechercher des barbiers par localisation, avis, ou disponibilité.
+Réserver un rendez-vous en ligne.
+Consulter les profils et les services des barbiers.
+Offrir aux barbiers :
+
+
+La possibilité de créer un profil et d’ajouter leurs services.
+Gérer leurs disponibilités et rendez-vous.
+Promouvoir leurs services via des offres ou promotions.
+Fournir aux administrateurs :
+
+
+Un panneau de contrôle pour gérer les utilisateurs et barbiers.
+Des statistiques complètes sur l’activité de la plateforme.
+Des outils pour modérer les avis et le contenu.
+Objectifs Techniques
+Conception d'une interface réactive et intuitive.
+Base de données centralisée pour stocker les informations des utilisateurs, barbiers, et réservations.
+Intégration de paiements en ligne sécurisés.
+Notifications par email ou SMS pour confirmer et rappeler les rendez-vous.
+
+Fonctionnalités Clés
+Utilisateur
+Recherche avancée (localisation, avis, prix).
+Consultation des profils des barbiers.
+Système de réservation simple et rapide.
+Notifications sur les réservations (confirmation et rappel).
+Barbier
+Création et gestion du profil.
+Gestion des disponibilités et des réservations.
+Promotion de services avec des offres.
+Visualisation des avis clients.
+Administrateur
+Gestion des utilisateurs et des barbiers (création, modification, suppression).
+Tableau de bord avec statistiques sur les réservations, activités et revenus.
+Modération des avis et contenus.
+Paramètres généraux de la plateforme.
+
+Techniques
+Langages : HTML, CSS (TailwindCSS), JavaScript.
+Backend : PHP.
+Base de données : MySQL.
+Hébergement : Serveur local (XAMPP/WAMP) ou cloud.
+
+Livrables Attendus
+Code source complet avec structure organisée.
+Documentation technique (installation, API, utilisation).
+Base de données fonctionnelle avec jeu de données de démo.
+Interface utilisateur et panneau d’administration fonctionnels.
+
+Critères de Validation
+Toutes les fonctionnalités listées sont fonctionnelles.
+Interface utilisateur intuitive et responsive.
+Panneau d’administration offrant un contrôle total.
+Tests concluants sur les réservations, paiements et notifications.
+Performance optimale avec un temps de chargement rapide.
+
+///////////////////////////
+views/
+│
+├── layouts/                   # Layout templates
+│   ├── main.php              # Main site layout with header/footer
+│   ├── auth.php              # Layout for authentication pages
+│   ├── admin.php             # Admin panel layout
+│   └── barber.php            # Barber dashboard layout
+├── pages/                    # Main pages
+│   ├── home.php             # Landing page
+│   ├── about.php            # About us page
+│   ├── contact.php          # Contact page
+│   ├── search-results.php   # Search results
+│   ├── barber-detail.php    # Individual barber page
+│   └── booking-confirm.php  # Booking confirmation
+│
+├── auth/                     # Authentication views
+│   ├── login.php            # Login page
+│   ├── register.php         # Registration page
+│   ├── forgot-password.php  # Password recovery
+│   └── reset-password.php   # Reset password
+│
+├── user/                     # User account area
+│   ├── dashboard.php        # User dashboard
+│   ├── profile.php          # User profile edit
+│   ├── bookings.php         # User's bookings
+│   ├── favorites.php        # Favorite barbers
+│   └── reviews.php          # User's reviews
+│
+├── barber/                   # Barber dashboard area
+│   ├── dashboard.php        # Barber main dashboard
+│   ├── profile.php          # Barber profile edit
+│   ├── services.php         # Service management
+│   ├── schedule.php         # Availability settings
+│   ├── bookings.php         # Appointment management
+│   ├── promotions.php       # Promotions/offers
+│   └── reviews.php          # Customer reviews
+│
+└── admin/                    # Admin panel
+    ├── dashboard.php        # Admin dashboard
+    ├── users/               # User management
+    │   ├── list.php         # All users list
+    │   └── edit.php         # Edit user details
+    ├── barbers/             # Barber management
+    │   ├── list.php         # All barbers list
+    │   └── edit.php         # Edit barber details
+    ├── bookings.php         # All bookings view
+    ├── reviews.php          # Review moderation
+    ├── statistics.php       # Analytics and reports
+    └── settings.php         # Platform settings
