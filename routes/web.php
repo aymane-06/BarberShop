@@ -29,3 +29,7 @@ Route::get('/barbershop-detail', function () {
 Route::get('/Booking-confirm', function () {
     return view('pages.Booking-confirm');
 })->name('Booking-confirm');
+
+Route::get('/profile', function () {
+    return view('user.profile');
+})->name('user.profile');
