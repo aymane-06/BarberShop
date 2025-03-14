@@ -83,15 +83,25 @@ class AuthController extends Controller
      */
     public function forgotPassword(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['email' => 'required|email|exists:users']);
 
-        $status = \Illuminate\Support\Facades\Password::sendResetLink(
-            $request->only('email')
+        // Generate a new token
+        $token = \Illuminate\Support\Str::random(64);
+        
+        // Store the token in the password resets table
+        \DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'email' => $request->email,
+                'token' => bcrypt($token),
+                'created_at' => now()
+            ]
         );
-
-        return $status === \Illuminate\Support\Facades\Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        
+        // Send the custom reset password email
+        \Mail::to($request->email)->send(new \App\Mail\CustomResetPassword($token, $request->email));
+        
+        return back()->with(['status' => 'We have emailed your password reset link!']);
     }
 
     /**
@@ -99,7 +109,7 @@ class AuthController extends Controller
      */
     public function showResetPassword()
     {
-        return view('auth.reset-password');
+        return view('auth.passwords.reset');
     }
 
     /**

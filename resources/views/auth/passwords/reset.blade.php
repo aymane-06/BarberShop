@@ -110,7 +110,7 @@
             <form id="resetPasswordForm" class="space-y-6" action="{{ route('reset-password.submit') }}" method="POST">
                 @csrf
                 <!-- Hidden token field -->
-                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="token" value="{{ request()->token }}">
                 
                 <div class="space-y-4">
                     <!-- Email Field -->
@@ -122,7 +122,7 @@
                             </div>
                             <input id="email" name="email" type="email" 
                                 class="bg-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                                placeholder="your@email.com" required autocomplete="email" value="{{ $email ?? old('email') }}" readonly>
+                                placeholder="your@email.com" required autocomplete="email" value="{{ request()->email ?? old('email') }}" readonly>
                         </div>
                         @error('email')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

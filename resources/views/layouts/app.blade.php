@@ -90,6 +90,10 @@
                             <a href="" class="block hover:text-primary-600 transition-colors">Dashboard</a>
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
                         </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
+                        </form>
                     </div>
                 @elseif(auth()->user()->role === 'admin')
                     <div x-data="{ open: false }" class="relative">
@@ -103,6 +107,10 @@
                             <a href="{{ route('admin.dashboard') }}" class="block hover:text-primary-600 transition-colors">Dashboard</a>
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
                         </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
+                        </form>
                     </div>
                 @else
                     <div x-data="{ open: false }" class="relative">
@@ -118,6 +126,10 @@
                             <a href="" class="block hover:text-primary-600 transition-colors">My Reviews</a>
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Edit Profile</a>
                         </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
+                        </form>
                     </div>
                 @endif
                 

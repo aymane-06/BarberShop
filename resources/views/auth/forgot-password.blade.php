@@ -113,7 +113,7 @@
                 </div>
             @endif
 
-            <form id="resetForm" class="space-y-6" action="" method="POST">
+            <form id="resetForm" class="space-y-6" action="{{ route('forgot-password.submit') }}" method="POST">
                 @csrf
 
                 <div class="space-y-4">
