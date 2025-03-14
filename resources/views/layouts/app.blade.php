@@ -87,7 +87,7 @@
                             </svg>
                         </button>
                         <div x-show="open" class="pl-4 mt-2 space-y-2">
-                            <a href="" class="block hover:text-primary-600 transition-colors">Dashboard</a>
+                            <a href="{{ route('barber.dashboard') }}" class="block hover:text-primary-600 transition-colors">Dashboard</a>
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
@@ -190,7 +190,11 @@
                     </button>
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden group-hover:block z-50">
                         @if(auth()->user()->role === 'barber')
-                            <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Barber Dashboard</a>
+                            @if (auth()->user()->barbershop===null)
+                            <a href="{{ route('barber.barbershop.create') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Create BarberShop</a>
+                            @else
+                            <a href="{{ route('barber.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Barber Dashboard</a>
+                            @endif
                         @elseif(auth()->user()->role === 'admin')
                             <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Admin Panel</a>
                         @else

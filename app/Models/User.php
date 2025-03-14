@@ -49,4 +49,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected function barbershop(){
+        return $this->belongsTo(BarberShop::class);
+    }
 }

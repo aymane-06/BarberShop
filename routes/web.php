@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BarberShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -37,3 +38,9 @@ Route::get('/profile', function () {
 Route::get('/barber/dashboard', function () {
     return view('barber.dashboard');
 })->name('barber.dashboard');
+
+Route::get('/barber/barbershop/create', function () {
+    return view('barber.BarbershopCreate');
+})->name('barber.barbershop.create');
+
+Route::post('/barber/barbershop/create', [BarberShopController::class, 'store'])->name('barber.barbershop.store');
