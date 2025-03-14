@@ -41,66 +41,189 @@
 </head>
 <body class="bg-gray-50">
   <!-- Mobile Menu Overlay -->
-  <div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">
-    <div class="mobile-menu bg-white h-full w-64 shadow-xl p-5">
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center space-x-1">
-          <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M7 21h10V7l-10 14zm2.74-7.76L12 7.5l2.26 5.74-4.52 0z"></path>
-            <path d="M18.07 2.93L16 5l2.07 2.07-1.41 1.42L13 4.83 17.59 0l1.41 1.41L16.93 3.5l2.55 2.55-1.41 1.42z">
-            </path>
-          </svg>
-          <span class="font-bold text-xl text-primary-600">CutBook</span>
-        </div>
-        <button id="close-menu" class="text-gray-500 hover:text-gray-700">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      <nav class="space-y-4 text-gray-700">
-        <a href="#features" class="block hover:text-primary-600 transition-colors">Features</a>
-        <a href="#how-it-works" class="block hover:text-primary-600 transition-colors">How it Works</a>
-        <a href="#testimonials" class="block hover:text-primary-600 transition-colors">Testimonials</a>
-        <a href="/login" class="block hover:text-primary-600 transition-colors mt-6">Log in</a>
-        <a href="/register"
-          class="block bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors shadow-sm text-center mt-2">Sign
-          Up Free</a>
-      </nav>
+<div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">
+    <div class="mobile-menu bg-white h-full w-72 shadow-xl p-5 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center space-x-1">
+                        <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 21h10V7l-10 14zm2.74-7.76L12 7.5l2.26 5.74-4.52 0z"></path>
+                            <path d="M18.07 2.93L16 5l2.07 2.07-1.41 1.42L13 4.83 17.59 0l1.41 1.41L16.93 3.5l2.55 2.55-1.41 1.42z"></path>
+                        </svg>
+                        <span class="font-bold text-xl text-primary-600">CutBook</span>
+                    </div>
+                    <button id="close-menu" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+        <nav class="space-y-4 text-gray-700">
+            <a href="{{ route('home') }}" class="block hover:text-primary-600 transition-colors font-medium">Home</a>
+            <div class="border-b border-gray-200 my-2"></div>
+            
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" class="flex justify-between w-full hover:text-primary-600 transition-colors">
+                    Discover
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="open" class="pl-4 mt-2 space-y-2">
+                    <a href="{{ route('search-results') }}" class="block hover:text-primary-600 transition-colors">Find Barbers</a>
+                    <a href="{{ route('home') }}#features" class="block hover:text-primary-600 transition-colors">Features</a>
+                    <a href="{{ route('home') }}#how-it-works" class="block hover:text-primary-600 transition-colors">How it Works</a>
+                    <a href="{{ route('home') }}#testimonials" class="block hover:text-primary-600 transition-colors">Testimonials</a>
+                </div>
+            </div>
+            
+            @auth
+                <div class="border-b border-gray-200 my-2"></div>
+                @if(auth()->user()->role === 'barber')
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="flex justify-between w-full hover:text-primary-600 transition-colors">
+                            Barber Dashboard
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open" class="pl-4 mt-2 space-y-2">
+                            <a href="" class="block hover:text-primary-600 transition-colors">Dashboard</a>
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
+                        </div>
+                    </div>
+                @elseif(auth()->user()->role === 'admin')
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="flex justify-between w-full hover:text-primary-600 transition-colors">
+                            Admin Panel
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open" class="pl-4 mt-2 space-y-2">
+                            <a href="{{ route('admin.dashboard') }}" class="block hover:text-primary-600 transition-colors">Dashboard</a>
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
+                        </div>
+                    </div>
+                @else
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="flex justify-between w-full hover:text-primary-600 transition-colors">
+                            My Account
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open" class="pl-4 mt-2 space-y-2">
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">My Bookings</a>
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Favorites</a>
+                            <a href="" class="block hover:text-primary-600 transition-colors">My Reviews</a>
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Edit Profile</a>
+                        </div>
+                    </div>
+                @endif
+                
+                
+            @else
+                <div class="border-b border-gray-200 my-2"></div>
+                <a href="{{ route('login') }}" class="block hover:text-primary-600 transition-colors mt-4">Log in</a>
+                <a href="{{ route('register') }}" class="block bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors shadow-sm text-center mt-2">Sign Up Free</a>
+            @endauth
+        </nav>
     </div>
-  </div>
+</div>
 
-  <!-- Navigation -->
-  <nav class="bg-white shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40">
+<!-- Navigation -->
+<nav class="bg-white shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-1">
-        <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M7 21h10V7l-10 14zm2.74-7.76L12 7.5l2.26 5.74-4.52 0z"></path>
-          <path d="M18.07 2.93L16 5l2.07 2.07-1.41 1.42L13 4.83 17.59 0l1.41 1.41L16.93 3.5l2.55 2.55-1.41 1.42z">
-          </path>
-        </svg>
-        <span class="font-bold text-xl text-primary-600">CutBook</span>
-      </div>
-      <div class="hidden md:flex space-x-6 text-gray-700">
+        <div class="flex items-center space-x-1">
+            <a href="{{ route('home') }}" class="flex items-center space-x-1">
+                <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 21h10V7l-10 14zm2.74-7.76L12 7.5l2.26 5.74-4.52 0z"></path>
+                    <path d="M18.07 2.93L16 5l2.07 2.07-1.41 1.42L13 4.83 17.59 0l1.41 1.41L16.93 3.5l2.55 2.55-1.41 1.42z"></path>
+                </svg>
+                <span class="font-bold text-xl text-primary-600">CutBook</span>
+            </a>
+        </div>
         
-        <a href="{{ route('home') }}#features" class="hover:text-primary-600 transition-colors">Features</a>
-        <a href="{{ route('home') }}#how-it-works" class="hover:text-primary-600 transition-colors">How it Works</a>
-        <a href="{{ route('home') }}#testimonials" class="hover:text-primary-600 transition-colors">Testimonials</a>
-        <a href="{{ route('search-results') }}" class="hover:text-primary-600 transition-colors">Find Barber</a>
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex space-x-6 text-gray-700">
+            <div class="relative group">
+                <a href="{{ route('search-results') }}" class="flex items-center hover:text-primary-600 transition-colors">
+                    Find Barber
+                    <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </a>
+                <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden group-hover:block z-50">
+                    <a href="{{ route('search-results') }}?filter=nearest" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Nearest Barbers</a>
+                    <a href="{{ route('search-results') }}?filter=top-rated" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Top Rated</a>
+                    <a href="{{ route('search-results') }}?filter=availability" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Available Today</a>
+                    <a href="{{ route('search-results') }}?filter=promotions" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Special Offers</a>
+                </div>
+            </div>
+            
+            <a href="{{ route('home') }}#features" class="hover:text-primary-600 transition-colors">Features</a>
+            <a href="{{ route('home') }}#how-it-works" class="hover:text-primary-600 transition-colors">How it Works</a>
+            <a href="{{ route('home') }}#testimonials" class="hover:text-primary-600 transition-colors">Testimonials</a>
+        </div>
+        
+        <div class="hidden md:flex items-center space-x-4">
+            @auth
+                <div class="relative group">
+                    <button class="flex items-center text-gray-700 hover:text-primary-600 focus:outline-none">
+                        <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}" class="w-8 h-8 rounded-full mr-2 object-cover border border-gray-200">
+                        <span>{{ auth()->user()->name }}</span>
+                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden group-hover:block z-50">
+                        @if(auth()->user()->role === 'barber')
+                            <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Barber Dashboard</a>
+                        @elseif(auth()->user()->role === 'admin')
+                            <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Admin Panel</a>
+                        @else
+                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">My Bookings</a>
+                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Favorites</a>
+                        @endif
+                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Edit Profile</a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-800 transition-colors">Log in</a>
+                <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors shadow-sm">Sign Up Free</a>
+            @endauth
+        </div>
+        
+        <button id="open-menu" class="md:hidden text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
     </div>
-      <div class="hidden md:flex items-center space-x-4">
-        <a href="/login" class="text-primary-600 hover:text-primary-800 transition-colors">Log in</a>
-        <a href="/register"
-          class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors shadow-sm">Sign
-          Up Free</a>
-      </div>
-      <button id="open-menu" class="md:hidden text-gray-700">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
-    </div>
-  </nav>
+</nav>
+
+<!-- Alpine.js for dropdowns -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const openMenu = document.getElementById('open-menu');
+        const closeMenu = document.getElementById('close-menu');
+        
+        openMenu.addEventListener('click', function() {
+            mobileMenu.classList.remove('hidden');
+        });
+        
+        closeMenu.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+        });
+    });
+</script>
   @yield('content')
 
   <!-- Footer -->
