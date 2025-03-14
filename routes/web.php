@@ -34,3 +34,6 @@ Route::get('/profile', function () {
 })->name('user.profile');
 
 
+Route::get('/barber/dashboard', function () {
+    return view('barber.dashboard');
+})->name('barber.dashboard');
