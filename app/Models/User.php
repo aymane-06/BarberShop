@@ -50,6 +50,6 @@ class User extends Authenticatable
         ];
     }
     protected function barbershop(){
-        return $this->belongsTo(BarberShop::class);
+        return $this->hasOne(BarberShop::class);
     }
 }

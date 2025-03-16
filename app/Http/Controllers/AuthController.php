@@ -66,6 +66,8 @@ class AuthController extends Controller
         ]);
 
         auth()->login($user);
+        
+        $this->emailVerification();
 
         return redirect()->route('home');
     }
@@ -148,5 +150,37 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function emailVerification(){
+        $token = \Illuminate\Support\Str::random(64);
+        $user = auth()->user();
+        $token=hash('sha256', $token);
+        $user->email_verification_token = $token;
+        $user->email_verified_at = null;
+        $user->save();
+        // dd($user->email_verification_token);
+        $verificationUrl=\Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'email.verify', now()->addMinutes(60), ['token' => $token, 'email' => $user->email]
+        );
+
+        \Mail::to($user->email)->send(new \App\Mail\EmailVerification($verificationUrl, $user));
+        return (['status' => 'We have emailed your email verification link!']);
+    }
+
+    public function verifyEmail(Request $request){
+        
+        
+        $user = User::where('email', $request->email)->first();
+        $verified=true;
+        if (! hash_equals((string) $request->token, (string) $user->email_verification_token)) {
+           $verified=false;
+        }
+
+        $user->email_verified_at=now();
+        $user->email_verification_token=null;
+        $user->save();
+
+        return view('auth.emailVerification',compact('verified'));
     }
 }

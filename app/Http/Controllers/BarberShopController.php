@@ -29,7 +29,26 @@ class BarberShopController extends Controller
      */
     public function store(StorebarberShopRequest $request)
     {
-        //
+        // dd($request->all());
+        barberShop::create([
+            "user_id" => auth()->user()->id,
+            "name" => $request->name,
+            "description" => $request->description,
+            "address" => $request->address,
+            "city" => $request->city,
+            "zip" => $request->zip,
+            "phone" => $request->phone,
+            "email" => $request->email,
+            "barbers" => $request->barbers,
+            "avatar" => $request->file('avatar')->store('barber-shops'),
+            "cover" => $request->file('cover')->store('barber-shops'),
+            "slug" => $request->slug,
+            "website" => $request->website,
+            "social_links" => $request->social_links,
+            "working_hours" => $request->working_hours,
+            ]
+        );
+        return redirect()->route('barber.dashboard');
     }
 
     /**

@@ -117,7 +117,7 @@
                 </div>
             </div>
 
-            <form id="createBarbershopForm" action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form id="createBarbershopForm" action="{{ route('barber.barbershop.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 <!-- Step 1: Basic Information -->
@@ -264,7 +264,7 @@
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="font-medium text-sm">{{ $day }}</span>
                                         <div class="flex items-center">
-                                            <input type="checkbox" id="{{ strtolower($day) }}_closed" data-day="{{ strtolower($day) }}" class="day-closed mr-2">
+                                            <input type="checkbox" id="{{ strtolower($day) }}_closed" data-day="{{ strtolower($day) }}" name="working_hours[{{ strtolower($day) }}][closed]" class="day-closed mr-2">
                                             <label for="{{ strtolower($day) }}_closed" class="text-sm text-gray-600">Closed</label>
                                         </div>
                                     </div>

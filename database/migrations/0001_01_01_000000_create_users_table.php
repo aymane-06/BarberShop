@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('role')->default('user');
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('email_verification_token')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
