@@ -205,7 +205,6 @@ class AuthController extends Controller
                     'provider' => $provider,
                     'provider_id' => $socialUser->id,
                     'name' => $socialUser->getName(),
-                    'phone' => $socialUser->phone ?? 'social-' . Str::random(10), 
                     'password' => bcrypt(Str::random(24)),
                     'provider_token' => $socialUser->token ?? null,
                     'avatar' => $socialUser->avatar ?? null,
