@@ -296,11 +296,11 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
-                    <a href="#" class="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('socialite.redirect','google') }}" class="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         <i class="fab fa-google text-red-500 mr-2"></i>
                         <span>Google</span>
                     </a>
-                    <a href="#" class="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('socialite.redirect','facebook') }}" class="flex items-center justify-center py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         <i class="fab fa-facebook-f text-blue-600 mr-2"></i>
                         <span>Facebook</span>
                     </a>

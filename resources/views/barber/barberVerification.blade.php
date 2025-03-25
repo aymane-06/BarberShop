@@ -93,7 +93,7 @@
                             </div>
                             @if(!Auth::user()->email_verified_at)
                                 <div class="ml-auto">
-                                    <form method="POST" action="">
+                                    <form method="POST" action="{{ route('verification.send') }}">
                                         @csrf
                                         <button type="submit" class="text-primary-600 hover:text-primary-800 text-sm font-medium">
                                             Resend verification email

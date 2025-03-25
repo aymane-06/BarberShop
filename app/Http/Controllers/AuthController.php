@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
+use Str;
 
 class AuthController extends Controller
 {
@@ -69,7 +72,8 @@ class AuthController extends Controller
         
         $this->emailVerification();
 
-        return redirect()->route('home');
+        // return redirect()->route('home');
+        return redirect()->route('email.verifyUser');
     }
 
     /**
@@ -182,5 +186,50 @@ class AuthController extends Controller
         $user->save();
 
         return view('auth.emailVerification',compact('verified'));
+    }
+
+    public function showEmailVerification(){
+        return view('auth.verifyUserEmail');
+    }
+
+    public function callback($provider)
+    {
+        try {
+            $socialUser = Socialite::driver($provider)->user();
+        //   dd($socialUser);
+            $user = User::firstOrCreate(
+                [
+                    'email' => $socialUser->getEmail(),
+                ],
+                [
+                    'provider' => $provider,
+                    'provider_id' => $socialUser->id,
+                    'name' => $socialUser->getName(),
+                    'phone' => $socialUser->phone ?? 'social-' . Str::random(10), 
+                    'password' => bcrypt(Str::random(24)),
+                    'provider_token' => $socialUser->token ?? null,
+                    'avatar' => $socialUser->avatar ?? null,
+                    'role' => 'client', 
+                    'email_verified_at' => now() 
+                ]
+            );
+            
+            // dd($user);
+            
+            Auth::login($user, true);
+
+            return redirect()->route('home');
+
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors([
+                'socialite' => 'Unable to authenticate using '.ucfirst($provider)
+            ]);
+        }
+    }
+
+    public function redirect($provider)
+    {
+    //   dd($provider);
+        return Socialite::driver($provider)->redirect();
     }
 }

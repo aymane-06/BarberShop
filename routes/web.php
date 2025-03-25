@@ -48,9 +48,18 @@ Route::get('/barber/barbershop/Verification', function () {
     return view('barber.BarberVerification');
 })->name('barber.barberVerification');
 // Email verification routes
+Route::get('/email/verify', [AuthController::class, 'showEmailVerification'])->name('email.verifyUser');
 Route::get('/email/verify/{token}/{email}', [AuthController::class, 'verifyEmail'])->name('email.verify');
 Route::get('/email/verification', [AuthController::class, 'showEmailVerification'])->name('email.verification');
 Route::post('/email/verification/send', [AuthController::class, 'emailVerification'])->name('verification.send');
+// Social Auth Routes
+Route::prefix('auth')->group(function () {
+    Route::get('/{provider}/redirect', [AuthController::class, 'redirect'])
+        ->name('socialite.redirect');
+    
+    Route::get('/{provider}/callback', [AuthController::class, 'callback'])
+        ->name('socialite.callback');
+});        
 
 
 
