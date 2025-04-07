@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailJob;
+use App\Jobs\SendFrogetPasswordJob;
+use App\Jobs\SendVerficationEmailJob;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -105,7 +108,9 @@ class AuthController extends Controller
         );
         
         // Send the custom reset password email
-        \Mail::to($request->email)->send(new \App\Mail\CustomResetPassword($token, $request->email));
+        // \Mail::to($request->email)->send(new \App\Mail\CustomResetPassword($token, $request->email));
+        // Send the email verification job to the queue
+        SendFrogetPasswordJob::dispatch($token, $request->email);
         
         return back()->with(['status' => 'We have emailed your password reset link!']);
     }
@@ -168,7 +173,9 @@ class AuthController extends Controller
             'email.verify', now()->addMinutes(60), ['token' => $token, 'email' => $user->email]
         );
 
-        \Mail::to($user->email)->send(new \App\Mail\EmailVerification($verificationUrl, $user));
+        // \Mail::to($user->email)->send(new \App\Mail\EmailVerification($verificationUrl, $user));
+        // Send the email verification job to the queue
+        SendVerficationEmailJob::dispatch($user, $verificationUrl);
         return (['status' => 'We have emailed your email verification link!']);
     }
 
