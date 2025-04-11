@@ -278,7 +278,7 @@
         <div>
           <h3 class="text-lg font-semibold text-white mb-4">For Barbers</h3>
           <ul class="space-y-2">
-            <li><a href="/barbers/register" class="hover:text-white transition-colors">Join as a Barber</a></li>
+            <li><a href="{{ route('barber.barberJoin') }}" class="hover:text-white transition-colors">Join as a Barber</a></li>
             <li><a href="/barber-resources" class="hover:text-white transition-colors">Resources</a></li>
             <li><a href="/pricing" class="hover:text-white transition-colors">Pricing</a></li>
           </ul>

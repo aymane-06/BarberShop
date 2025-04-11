@@ -39,6 +39,12 @@ Route::get('/barber/dashboard', function () {
     return view('barber.dashboard');
 })->name('barber.dashboard');
 
+Route::get('/barber/barberjoin', function () {
+    return view('barber.barberJoin');
+})->name('barber.barberJoin');
+Route::get('/barber/barberjoin', [BarberShopController::class, 'barberJoin'])->name('barber.barberJoin');
+Route::post('/barber/barberjoin', [BarberShopController::class, 'barberadd'])->name('barber.barberJoin.submit');
+
 Route::get('/barber/barbershop/create', function () {
     return view('barber.BarbershopCreate');
 })->name('barber.barbershop.create');
@@ -59,7 +65,35 @@ Route::prefix('auth')->group(function () {
     
     Route::get('/{provider}/callback', [AuthController::class, 'callback'])
         ->name('socialite.callback');
-});        
+});  
+
+
+// Admin routes group with middleware
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+    
+    Route::get('/users', function () {
+        return view('admin.users');
+    })->name('users');
+    
+    Route::get('/barbershops', function () {
+        return view('admin.barbershops');
+    })->name('barbershops');
+    
+    Route::get('/appointments', function () {
+        return view('admin.appointments');
+    })->name('appointments');
+    
+    Route::get('/reports', function () {
+        return view('admin.reports');
+    })->name('reports');
+    
+    Route::get('/settings', function () {
+        return view('admin.settings');
+    })->name('settings');
+});
 
 
 

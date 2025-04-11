@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\barberShop;
 use App\Http\Requests\StorebarberShopRequest;
 use App\Http\Requests\UpdatebarberShopRequest;
+use Illuminate\Http\Request;
 
 class BarberShopController extends Controller
 {
@@ -40,15 +41,15 @@ class BarberShopController extends Controller
             "phone" => $request->phone,
             "email" => $request->email,
             "barbers" => $request->barbers,
-            "avatar" => $request->file('avatar')->store('barber-shops'),
-            "cover" => $request->file('cover')->store('barber-shops'),
+            "avatar" => $request->file('avatar')?->store('barber-shops'),
+            "cover" => $request->file('cover')?->store('barber-shops'),
             "slug" => $request->slug,
             "website" => $request->website,
             "social_links" => $request->social_links,
             "working_hours" => $request->working_hours,
             ]
         );
-        return redirect()->route('barber.dashboard');
+        return redirect()->route('barber.barberVerification')->with('success', 'Barber shop created successfully');
     }
 
     /**
@@ -81,5 +82,21 @@ class BarberShopController extends Controller
     public function destroy(barberShop $barberShop)
     {
         //
+    }
+
+    public function barberJoin(){
+        return view('barber.barberJoin');
+    }
+    public function barberadd(Request $request){
+        $validated = $request->validate([
+            "agree-terms"=>"required",
+        ]);
+
+        $user = auth()->user();
+        $user->update([
+            "role"=>"barber",
+        ]);
+        return redirect()->route('barber.barbershop.create');
+
     }
 }

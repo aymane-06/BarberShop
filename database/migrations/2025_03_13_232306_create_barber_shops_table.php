@@ -34,7 +34,9 @@ return new class extends Migration
             $table->integer('ratings_count')->default(0);
             $table->float('ratings')->default(0);
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_verified')->default(false);
+            $table->enum('is_verified', ['Pending Verification', 'Verified', 'Rejected'])->default('pending Verification');
+            $table->string(('Rejection_Reason'))->nullable();
+            $table->string('Rejection_Details')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

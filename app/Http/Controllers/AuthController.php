@@ -176,7 +176,7 @@ class AuthController extends Controller
         // \Mail::to($user->email)->send(new \App\Mail\EmailVerification($verificationUrl, $user));
         // Send the email verification job to the queue
         SendVerficationEmailJob::dispatch($user, $verificationUrl);
-        return (['status' => 'We have emailed your email verification link!']);
+        return redirect()->route('email.verifyUser');
     }
 
     public function verifyEmail(Request $request){
@@ -191,7 +191,7 @@ class AuthController extends Controller
         $user->email_verified_at=now();
         $user->email_verification_token=null;
         $user->save();
-
+        auth()->login($user);
         return view('auth.emailVerification',compact('verified'));
     }
 

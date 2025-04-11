@@ -93,14 +93,18 @@
           <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight text-shadow">Find & Book Your Perfect Barber</h1>
           <p class="text-lg mb-8 text-gray-100 max-w-lg">Discover top-rated barbers in your area and book appointments
             with ease. No more waiting in line for your next haircut.</p>
-          <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 relative z-20">
             <a href="/register"
-              class="bg-white text-primary-700 px-6 py-3 rounded-md font-medium text-center shadow-lg hover:bg-gray-100 transition-all transform hover:scale-105">Book
-              Now</a>
-            <a href="/barbers/register"
-              class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-md font-medium text-center hover:bg-white hover:text-primary-700 transition-all transform hover:scale-105">Register
-              as a Barber</a>
-          </div>
+              class="bg-white text-primary-700 px-6 py-3 rounded-md font-medium text-center shadow-lg hover:bg-gray-100 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 relative z-20">
+              <span>Book Now</span>
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ route("barber.barberJoin") }}"
+              class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-md font-medium text-center hover:bg-white hover:text-primary-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 mt-4 sm:mt-0 relative z-20">
+              <i class="fas fa-cut"></i>
+              <span>Register as a Barber</span>
+            </a>
+            </div>
         </div>
         <div class="md:w-1/2 relative" data-aos="fade-left" data-aos-duration="1000">
           <img
@@ -111,13 +115,7 @@
         </div>
       </div>
     </div>
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#f8fafc" fill-opacity="1"
-          d="M0,192L48,170.7C96,149,192,107,288,112C384,117,480,171,576,186.7C672,203,768,181,864,165.3C960,149,1056,139,1152,144C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-        </path>
-      </svg>
-    </div>
+    
   </section>
 
   <!-- Features Section -->
