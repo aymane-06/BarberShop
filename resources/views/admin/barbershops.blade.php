@@ -504,6 +504,209 @@
     </form>
 </div>
 
+<!-- Reconsideration Modal -->
+
+<div id="reconsiderationModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="bg-blue-50 px-4 py-3 border-b border-blue-100">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-medium text-blue-800">Reconsider Barbershop</h3>
+                <button type="button" class="close-reconsider-modal text-blue-400 hover:text-blue-600">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4">
+            <p class="text-sm text-gray-700 mb-4">You are about to reconsider this barbershop's application. This will move the shop back to pending status for review.</p>
+            
+            <div class="mb-4">
+                <label for="reconsideration-notes" class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                <textarea id="reconsideration-notes" rows="3" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Add any notes about why this shop is being reconsidered..."></textarea>
+            </div>
+            
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="sendReconsiderationEmail" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-gray-700">Send email notification to owner</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
+            <button type="button" class="close-reconsider-modal inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2">
+                Cancel
+            </button>
+            <button type="button" class="confirm-reconsideration inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Confirm Reconsideration
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Approval Modal -->
+<div id="approvalModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="bg-green-50 px-4 py-3 border-b border-green-100">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-medium text-green-800">Approve Barbershop</h3>
+                <button type="button" class="close-approval-modal text-green-400 hover:text-green-600">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4">
+            <p class="text-sm text-gray-700 mb-4">You are about to approve this barbershop. This will make the shop visible to all users and allow bookings.</p>
+            
+            <div class="mb-4">
+                <label for="approval-notes" class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                <textarea id="approval-notes" rows="3" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" placeholder="Add any notes about this approval..."></textarea>
+            </div>
+            
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="sendApprovalEmail" checked class="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-gray-700">Send email notification to owner</span>
+                </label>
+            </div>
+            
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="featuredBarbershop" class="rounded border-gray-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-gray-700">Mark as featured barbershop</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
+            <button type="button" class="close-approval-modal inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2">
+                Cancel
+            </button>
+            <button type="button" class="confirm-approval inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Confirm Approval
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Function to handle approval button clicks
+function openApprovalModal(shopId) {
+    const modal = document.getElementById('approvalModal');
+    modal.classList.remove('hidden');
+    const confirmButton = modal.querySelector('.confirm-approval');
+    confirmButton.setAttribute('id', shopId); // Set the id attribute to the shop ID
+    document.body.style.overflow = 'hidden';
+}
+
+// Initialize approval modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal
+    const modal = document.getElementById('approvalModal');
+    
+    // Get all elements that should close the modal
+    const closeElements = modal.querySelectorAll('.close-approval-modal');
+    
+    // Get the confirm button
+    const confirmButton = modal.querySelector('.confirm-approval');
+    
+    // Function to close modal
+    function closeApprovalModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('approval-notes').value = '';
+        document.getElementById('featuredBarbershop').checked = false;
+        // Keep the email notification checked by default
+        document.getElementById('sendApprovalEmail').checked = true;
+    }
+    
+    // Add click event to all close elements
+    closeElements.forEach(element => {
+        element.addEventListener('click', closeApprovalModal);
+    });
+    
+    // Close modal when clicking outside of it
+    modal.addEventListener('click', function(event) {            
+        if (event.target === modal) {
+            closeApprovalModal();
+        }
+    });
+    
+    // Handle confirmation
+    confirmButton.addEventListener('click', async function() {
+        const notes = document.getElementById('approval-notes').value;
+        const sendEmail = document.getElementById('sendApprovalEmail').checked;
+        const isFeatured = document.getElementById('featuredBarbershop').checked;
+        const shopId = this.getAttribute('id');
+        
+        let data = JSON.stringify({
+            approved_by: {{ auth()->user()->id }},
+            shopId: shopId,
+            notes: notes,
+            sendEmail: sendEmail,
+            isFeatured: isFeatured
+        });
+        
+        try {
+            let approve = await fetch('http://127.0.0.1:8000/api/admin/barbershops/approve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: data,
+            });
+            
+            const response = await approve.json();
+            console.log(response);
+            alert(response.message || 'Barbershop has been approved successfully!');
+            
+            // Refresh the barbershops display
+            getBarberShops(curentPage);
+            
+            // Close the modal after successful submission
+            closeApprovalModal();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing your request.');
+        }
+    });
+    
+    // Update the barbershop cards to use the new modal
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.approve')) {
+            let button = event.target.closest('.approve');
+            let shopId = button.closest('.barbershop-card').getAttribute('data-shop-id');
+            // If we can't get the ID this way, we'll need to add it to the cards
+            // This is a fallback
+            if (!shopId) {
+                // Try to find the ID from the reject button if it exists
+                const rejectButton = button.closest('.barbershop-card').querySelector('.reject');
+                if (rejectButton) {
+                    const onclickAttr = rejectButton.getAttribute('onclick');
+                    if (onclickAttr) {
+                        shopId = onclickAttr.match(/openModal\((\d+)\)/)?.[1];
+                    }
+                }
+            }
+            if (shopId) {
+                openApprovalModal(shopId);
+            } else {
+                console.error('Could not find shop ID');
+            }
+            event.preventDefault();
+        }
+    });
+});
+</script>
+
+
+
 
 
 @endsection
@@ -651,7 +854,7 @@
                         </div>
                     </div>
                     <div class="mt-4 flex justify-between space-x-2">
-                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <button class="approve flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
@@ -747,7 +950,7 @@
                             </svg>
                             Email Owner
                         </button>
-                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <button onclick="openReconsiderationModal(${shop.id})" class="reconsider flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
@@ -794,7 +997,9 @@
                     pageLink.addEventListener('click',(e)=>{
                         e.preventDefault();
                         page.label=page.url.split('page=')[1];
-                        getBarberShops(page.label);
+                            
+                            getBarberShops(page.label);
+                        
                     });
                 }else{
                     pageLink.classList.add('bg-gray-200','text-gray-500','cursor-not-allowed');
@@ -923,5 +1128,96 @@
             
         });
     });
+
+
+
+
+
+
+
+// Function to handle reconsideration button clicks
+function openReconsiderationModal(shopId) {
+    const modal = document.getElementById('reconsiderationModal');
+    modal.classList.remove('hidden');
+    const confirmButton = modal.querySelector('.confirm-reconsideration');
+    confirmButton.setAttribute('id', shopId); // Set the id attribute to the shop ID
+    document.body.style.overflow = 'hidden';
+}
+
+// Initialize reconsideration modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal
+    const modal = document.getElementById('reconsiderationModal');
+    
+    // Get all elements that should close the modal
+    const closeElements = modal.querySelectorAll('.close-reconsider-modal');
+    
+    // Get the confirm button
+    const confirmButton = modal.querySelector('.confirm-reconsideration');
+    
+    // Function to close modal
+    function closeReconsiderationModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('reconsideration-notes').value = '';
+        document.getElementById('sendReconsiderationEmail').checked = false;
+    }
+    
+    // Add click event to all close elements
+    closeElements.forEach(element => {
+        element.addEventListener('click', closeReconsiderationModal);
+    });
+    
+    // Close modal when clicking outside of it
+    modal.addEventListener('click', function(event) {            
+        if (event.target === modal) {
+            closeReconsiderationModal();
+        }
+    });
+    
+    // Handle confirmation
+    confirmButton.addEventListener('click', async function() {
+        const notes = document.getElementById('reconsideration-notes').value;
+        const sendEmail = document.getElementById('sendReconsiderationEmail').checked;
+        const shopId = this.getAttribute('id');
+        
+        let data = JSON.stringify({
+            reconsidered_by: {{ auth()->user()->id }},
+            shopId: shopId,
+            notes: notes,
+            sendEmail: sendEmail
+        });
+        
+        
+        
+        try {
+            let reconsider = await fetch('http://127.0.0.1:8000/api/admin/barbershops/reconsider', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: data,
+            });
+            
+            const response = await reconsider.json();
+            console.log(response);
+            alert(response.message || 'Barbershop has been moved to pending status for reconsideration.');
+            
+            // Refresh the barbershops display
+            getBarberShops(curentPage);
+            
+            // Close the modal after successful submission
+            closeReconsiderationModal();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing your request.');
+        }
+    });
+});
+
+
+
+
 </script>
 @endsection

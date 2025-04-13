@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/admin/Barbershops',[BarberShopController::class,'getBarberShops']);
 Route::post('/admin/barbershops/reject',[BarberShopController::class,'reject']);
+Route::post('/admin/barbershops/reconsider',[BarberShopController::class,'reconsider']);
