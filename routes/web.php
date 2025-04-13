@@ -53,6 +53,7 @@ Route::post('/barber/barbershop/create', [BarberShopController::class, 'store'])
 Route::get('/barber/barbershop/Verification', function () {
     return view('barber.BarberVerification');
 })->name('barber.barberVerification');
+Route::post('/barber/barbershop/reject', [BarberShopController::class, 'reject'])->name('barber.barberVerification.reject');
 // Email verification routes
 Route::get('/email/verify', [AuthController::class, 'showEmailVerification'])->name('email.verifyUser');
 Route::get('/email/verify/{token}/{email}', [AuthController::class, 'verifyEmail'])->name('email.verify');

@@ -264,7 +264,7 @@
                         </svg>
                         Approve
                     </button>
-                    <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <button  class="reject flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -438,39 +438,11 @@
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-                <p class="text-sm text-gray-700">
-                    Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">187</span> results
-                </p>
+                
             </div>
             <div>
-                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <span class="sr-only">Previous</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        1
-                    </a>
-                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary-50 text-sm font-medium text-primary-600 hover:bg-primary-100">
-                        2
-                    </a>
-                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        3
-                    </a>
-                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                        ...
-                    </span>
-                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        19
-                    </a>
-                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        <span class="sr-only">Next</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
+                <nav id="pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                   
                 </nav>
             </div>
         </div>
@@ -479,6 +451,7 @@
 
 <!-- Rejection Modal -->
 <div id="rejectionModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <form id="rejectionForm" action="{{ route('barber.barberVerification.reject') }}" method="POST">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
         <div class="bg-red-50 px-4 py-3 border-b border-red-100">
             <div class="flex items-center justify-between">
@@ -496,7 +469,7 @@
             
             <div class="mb-4">
                 <label for="rejection-reason" class="block text-sm font-medium text-gray-700 mb-1">Rejection Reason</label>
-                <select id="rejection-reason" class="w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-500">
+                <select id="rejection-reason" name="Rejection_Reason" class="w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-500">
                     <option value="">Select a reason</option>
                     <option value="invalid_license">Invalid Business License</option>
                     <option value="incomplete_info">Incomplete Information</option>
@@ -513,7 +486,7 @@
             
             <div class="mb-4">
                 <label class="flex items-center">
-                    <input type="checkbox" class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+                    <input type="checkbox" id="sendRejectionEmail" class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
                     <span class="ml-2 text-sm text-gray-700">Send email notification to owner</span>
                 </label>
             </div>
@@ -528,13 +501,340 @@
             </button>
         </div>
     </div>
+    </form>
 </div>
 
+
+
+@endsection
+
+@section('additional_scripts')
 <script>
-    // Initialize modal functionality
+
+    let barberShops=[];
+    let pagination=[];
+    let curentPage=1;
+
+    async function getBarberShops(page=1) {
+        url=`http://127.0.0.1:8000/api/admin/Barbershops?page=${page}`;
+        await fetch(url)
+            .then(res=>res.json())
+            .then(data=>{
+                console.log(data);
+                barberShops=data.data;
+                curentPage=data.current_page;
+                pagination=data.links;
+            })
+            .catch(err=>console.log(err));
+
+        // console.log(barberShops);
+        // Display the barbershops in the grid
+        const gridContainer = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-6.mb-6');
+        gridContainer.innerHTML = ''; // Clear existing content
+        barberShops.forEach(shop => {
+            // console.log(shop);
+            
+            // Determine status badge class and text
+            let statusClass, statusText;
+            if (shop.is_verified === "Pending Verification") {
+                statusClass = "bg-yellow-100 text-yellow-800";
+                statusText = "Pending Verification";
+            } else if (shop.is_verified === "Verified") {
+                statusClass = "bg-green-100 text-green-800";
+                statusText = "Verified";
+            } else if (shop.is_verified === "Rejected") {
+                statusClass = "bg-red-100 text-red-800";
+                statusText = "Rejected";
+            }
+            
+            // Format created_at date
+            const createdDate = new Date(shop.created_at);
+            const timeDiff = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+            const submittedText = timeDiff <= 1 ? "Submitted today" : `Submitted ${timeDiff} days ago`;
+            
+            // Generate rating stars
+            const rating = shop.ratings || 0;
+            let ratingStars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    ratingStars += '<span class="filled">★</span>';
+                } else {
+                    ratingStars += '<span class="empty">★</span>';
+                }
+            }
+            
+            // Generate barber badges if available
+            let barberBadges = '';
+            if (shop.barbers && shop.barbers.length > 0) {
+                // Parse the barbers JSON string if necessary
+                if (typeof shop.barbers === 'string') {
+                    shop.barbers = JSON.parse(shop.barbers);
+                }
+                shop.barbers.forEach(barber => {
+                    barberBadges += `
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
+                            ${barber}
+                        </span>`;
+                });
+            }
+
+            // Get first part of working hours if available
+            let workingHoursText = "Hours not specified";
+            if (shop.working_hours && shop.working_hours.monday) {
+                const monday = shop.working_hours.monday;
+                if (monday.open && monday.close) {
+                    workingHoursText = `Mon: ${monday.open} - ${monday.close}`;
+                }
+            }
+            
+            let container=document.createElement('div'); 
+
+            // Create the HTML string for the barbershop card
+            const shopHTML = `
+            <div class="bg-white rounded-lg shadow overflow-hidden barbershop-card">
+                <div class="relative">
+                    <img src="${shop.cover ? '/storage/' + shop.cover : 'https://placehold.co/600x400'}" alt="${shop.name}" class="h-48 w-full object-cover">
+                    <div class="absolute top-2 right-2">
+                        <span class="status-badge px-3 py-1 rounded-full text-xs font-medium ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </div>
+                    <div class="absolute top-2 left-2">
+                        <span class="px-2 py-1 rounded-md text-xs font-medium bg-gray-900 bg-opacity-70 text-white">
+                            ${submittedText}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-lg font-bold text-gray-900">${shop.name}</h3>
+                        <div class="rating-stars flex">
+                            ${ratingStars}
+                            <span class="ml-1 text-xs text-gray-600">(${shop.ratings_count || 0})</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">${shop.address || ''}, ${shop.city || ''}, ${shop.zip || ''}</p>
+                    
+                    ${shop.is_verified === "Pending Verification" ? `
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            ${workingHoursText}
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            ${shop.phone || 'No phone provided'}
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <div>
+                            ${barberBadges || '<span class="text-sm text-gray-600">No barbers listed</span>'}
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-600">Views: ${shop.views || 0}</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 border-t pt-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Email: </span>
+                                <span class="text-sm text-gray-600">${shop.email || ''}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Website: </span>
+                                <a href="${shop.website || '#'}" class="text-sm text-blue-600 hover:underline" target="_blank">Visit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between space-x-2">
+                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Approve
+                        </button>
+                        <button onclick="openModal(${shop.id})" class="reject flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Reject
+                        </button>
+                    </div>
+                    ` : shop.is_verified === "Verified" ? `
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            ${workingHoursText}
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                            ${shop.bookings_count || 0} bookings this month
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <div>
+                            ${barberBadges || '<span class="text-sm text-gray-600">No services listed</span>'}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 border-t pt-4 flex justify-between">
+                        <div class="text-sm">
+                            <span class="font-medium">Revenue:</span>
+                            <span class="text-green-600 font-medium">$${shop.revenue || 0} last month</span>
+                        </div>
+                        <div>
+                            <span class="inline-flex items-center text-xs font-medium text-green-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                ${shop.revenue_change || 0}% from last month
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex space-x-2 quick-actions">
+                        <button class="flex-1 inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            View Details
+                        </button>
+                        <button class="inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    ` : shop.is_verified === "Rejected" ? `
+                    <div class="mt-4 bg-red-50 border border-red-200 rounded-md p-3">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Rejection reason:</h3>
+                                <p class="text-sm text-red-700 mt-1">
+                                    ${shop.rejection_reason || 'Invalid business license documentation'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 border-t pt-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Rejected by: </span>
+                                <span class="text-sm text-gray-600">${shop.rejected_by?.name || 'Admin'}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600">Date: </span>
+                                <span class="text-sm text-gray-600">${new Date(shop.rejected_at || shop.updated_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex justify-between space-x-2">
+                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Email Owner
+                        </button>
+                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Reconsider
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+            `;
+
+            container.innerHTML = shopHTML;
+
+            gridContainer.appendChild(container);
+                        
+        });
+        
+        
+        // // Animation for activity items with delay
+        const cards = document.querySelectorAll('.barbershop-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('scale-in');
+            }, 100 * index);
+        });
+            console.log(pagination);
+            let paginationContainer=document.getElementById('pagination');
+            paginationContainer.innerHTML='';
+            pagination.forEach((page, index) => {
+                let pageLink=document.createElement('a');
+                pageLink.classList.add('relative', 'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'text-sm', 'font-medium', 'rounded-md');
+                
+                if(page.active) {
+                    // Style for current page
+                    pageLink.classList.add('z-10', 'bg-primary-50', 'border-primary-500', 'text-primary-600');
+                } else {
+                    // Style for non-current pages
+                    pageLink.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
+                }
+                
+                pageLink.innerHTML=page.label;
+                if(page.url){
+                    pageLink.setAttribute('href', page.url);
+                    pageLink.addEventListener('click',(e)=>{
+                        e.preventDefault();
+                        page.label=page.url.split('page=')[1];
+                        getBarberShops(page.label);
+                    });
+                }else{
+                    pageLink.classList.add('bg-gray-200','text-gray-500','cursor-not-allowed');
+                }
+                paginationContainer.appendChild(pageLink);
+            });
+            
+        
+
+        
+ 
+        
+    }
+    getBarberShops(curentPage);
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Animation for activity items with delay
+        const cards = document.querySelectorAll('.barbershop-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('scale-in');
+            }, 100 * index);
+        });
+
+    });
+
+    function openModal(shopId) {
+        
+        const modal = document.getElementById('rejectionModal');
+        modal.classList.remove('hidden');
+        const confirmButton = modal.querySelector('.confirm-rejection');
+        confirmButton.setAttribute('id', shopId); // Set the id attribute to the shop ID
+        document.body.style.overflow = 'hidden';
+    }
+
+
+     // Initialize modal functionality
+     document.addEventListener('DOMContentLoaded', function() {
         // Get all buttons that should open the rejection modal
-        const rejectButtons = document.querySelectorAll('button:has(svg path[d="M6 18L18 6M6 6l12 12"])');
+        const rejectButtons = document.querySelectorAll('.reject');
         
         // Get the modal
         const modal = document.getElementById('rejectionModal');
@@ -545,22 +845,15 @@
         // Get the confirm button
         const confirmButton = modal.querySelector('.confirm-rejection');
         
-        // Function to open modal
-        function openModal() {
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
         
         // Function to close modal
         function closeModal() {
             modal.classList.add('hidden');
             document.body.style.overflow = '';
+            document.getElementById('rejectionForm').reset(); // Reset the form
         }
         
-        // Add click event to all reject buttons
-        rejectButtons.forEach(button => {
-            button.addEventListener('click', openModal);
-        });
+        
         
         // Add click event to all close elements
         closeElements.forEach(element => {
@@ -568,46 +861,66 @@
         });
         
         // Close modal when clicking outside of it
-        modal.addEventListener('click', function(event) {
+        modal.addEventListener('click', function(event) {            
             if (event.target === modal) {
                 closeModal();
             }
         });
         
         // Handle confirmation
-        confirmButton.addEventListener('click', function() {
+        confirmButton.addEventListener('click', async function() {
             const reason = document.getElementById('rejection-reason').value;
             const details = document.getElementById('rejection-details').value;
+            const SendRejectionEmail = document.getElementById('sendRejectionEmail').checked;
+            
+            
+
+            const shopId = this.getAttribute('id'); // Get the shop ID from the button's id attribute
             
             if (!reason) {
                 alert('Please select a rejection reason');
                 return;
             }
+
             
-            // Here you would typically send an AJAX request to your server
-            console.log('Rejection confirmed with reason:', reason);
-            console.log('Additional details:', details);
+            
+            // console.log('Rejection confirmed with reason:', reason);
+            // console.log('Additional details:', details);
+            let data = JSON.stringify({
+                rejected_by: {{ auth()->user()->id }},
+                shopId: shopId,
+                Rejection_Reason: reason,
+                Rejection_Details: details,
+                SendRejectionEmail: SendRejectionEmail
+            });
+            
+            
+          
+        let reject = await fetch('http://127.0.0.1:8000/api/admin/barbershops/reject', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: data,
+                });
+                reject.json()
+                .then(data=>{
+                    console.log(data);
+                    alert(data.message);
+                })
+                .catch(err=>console.log(err));
+            
+
+            
+
             
             // Close the modal after successful submission
+            getBarberShops(curentPage);
             closeModal();
             
             // Show a success message
-            alert('Barbershop has been rejected');
-        });
-    });
-</script>
-
-@endsection
-
-@section('additional_scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animation for activity items with delay
-        const cards = document.querySelectorAll('.barbershop-card');
-        cards.forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('scale-in');
-            }, 100 * index);
+            
         });
     });
 </script>

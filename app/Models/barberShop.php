@@ -34,6 +34,9 @@ class barberShop extends Model
         'is_active',
         'is_verified',
         'verified_at',
+        'Rejection_Reason',
+        'Rejection_Details',
+        'rejected_by'
     ];
 
     protected $casts = [
@@ -44,6 +47,9 @@ class barberShop extends Model
     ];
     protected function user(){
         return $this->belongsTo(User::class);
+    }
+    protected function rejectedBy(){
+        return $this->belongsTo(User::class, 'rejected_by');
     }
     
 

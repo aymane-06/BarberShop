@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendBarberShopRejectionEmail;
+use App\Mail\BarberShopRejected;
 use App\Models\barberShop;
 use App\Http\Requests\StorebarberShopRequest;
 use App\Http\Requests\UpdatebarberShopRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class BarberShopController extends Controller
 {
@@ -41,8 +46,8 @@ class BarberShopController extends Controller
             "phone" => $request->phone,
             "email" => $request->email,
             "barbers" => $request->barbers,
-            "avatar" => $request->file('avatar')?->store('barber-shops'),
-            "cover" => $request->file('cover')?->store('barber-shops'),
+            "avatar" => $request->file('avatar')?->store('barber-shops', 'public'),
+            "cover" => $request->file('cover')?->store('barber-shops', 'public'),
             "slug" => $request->slug,
             "website" => $request->website,
             "social_links" => $request->social_links,
@@ -51,6 +56,15 @@ class BarberShopController extends Controller
         );
         return redirect()->route('barber.barberVerification')->with('success', 'Barber shop created successfully');
     }
+
+    public function getBarberShops(){
+        $barbershops= barberShop::paginate(3);
+        foreach($barbershops as $barbershop){
+            $barbershop->rejected_by=$barbershop->rejectedBy;
+        }
+        // dd($barbershops[0]->rejected_by);
+         return response()->json($barbershops,200);
+       }
 
     /**
      * Display the specified resource.
@@ -98,5 +112,42 @@ class BarberShopController extends Controller
         ]);
         return redirect()->route('barber.barbershop.create');
 
+    }
+
+    public function reject(Request $request){
+        
+        try {
+            $validated = $request->validate([
+            "Rejection_Reason" => "required",
+            ]);
+
+            
+            $barbershop = barberShop::find($request->shopId);
+            if (!$barbershop) {
+            throw new \Exception("Barber shop not found");
+            }
+            
+            $barbershop->update([
+            "is_verified" => "Rejected",
+            "Rejection_Reason" => $request->Rejection_Reason,
+            "Rejection_Details" => $request->Rejection_Details,
+            "rejected_by"=> $request->rejected_by,
+            ]);
+
+            
+            if($request->SendRejectionEmail){
+            // Dispatch the job to send the rejection email
+            SendBarberShopRejectionEmail::dispatch($barbershop, $request->Rejection_Reason, $request->Rejection_Details);
+        }
+            return response()->json([
+            "message" => "Barber shop rejected successfully",
+            "barbershop" => $barbershop,
+            "rejected_by" => User::findOrFail($barbershop->rejected_by)->name,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+            "message" => $e->getMessage(),
+            ], 400); 
+        }
     }
 }

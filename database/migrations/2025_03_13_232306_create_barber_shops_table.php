@@ -37,6 +37,7 @@ return new class extends Migration
             $table->enum('is_verified', ['Pending Verification', 'Verified', 'Rejected'])->default('pending Verification');
             $table->string(('Rejection_Reason'))->nullable();
             $table->string('Rejection_Details')->nullable();
+            $table->foreignId('rejected_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
