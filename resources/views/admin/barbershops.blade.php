@@ -369,7 +369,9 @@
     let barberShops=[];
     let pagination=[];
     let curentPage=1;
-    let filterData={};
+    let filterData={
+        sort:'DESC',
+    };
     
 
     async function getBarberShops(page=1, filterData={}) {
@@ -705,7 +707,7 @@
  
         
     }
-    getBarberShops(curentPage);
+    getBarberShops(curentPage,filterData);
 
     document.addEventListener('DOMContentLoaded', function() {
         // Animation for activity items with delay
@@ -813,7 +815,7 @@
 
             
             // Close the modal after successful submission
-            getBarberShops(curentPage);
+            getBarberShops(curentPage,filterData);
 
             getBarberShopsStatistics();
 
@@ -900,7 +902,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(response.message || 'Barbershop has been moved to pending status for reconsideration.');
             
             // Refresh the barbershops display
-            getBarberShops(curentPage);
+            getBarberShops(curentPage,filterData);
             getBarberShopsStatistics();
 
             
@@ -985,7 +987,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Refresh the barbershops display
             getBarberShopsStatistics();
-            getBarberShops(curentPage);
+            getBarberShops(curentPage,filterData);
             
             // Close the modal after successful submission
             closeApprovalModal();
