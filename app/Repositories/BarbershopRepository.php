@@ -48,4 +48,28 @@ class BarbershopRepository extends BaseRepository
             'totalBarberShopsRejected' => static::getTotalBarberShopsRejected(),
         ];
     }
+
+    public static function getBarberShops($search=null,$status=null,$rating=null,$sort=null)
+    {
+        $query= BarberShop::query();
+        if ($search){
+                $query->where('name', 'LIKE', "%$search%");
+        }
+        if ($status){
+            $query->where('is_verified', $status);
+        }
+        if ($rating){
+            $query->where('ratings', '>=', $rating);
+        }
+        if ($sort){
+            if ($sort == 'name'){
+                $query->orderBy($sort, 'asc');
+            }else{
+            $query->orderBy('created_at', $sort);
+        }
+    }
+    
+    
+        return $query->paginate(3);
+    }
 }

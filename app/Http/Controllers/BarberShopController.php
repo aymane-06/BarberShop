@@ -62,8 +62,10 @@ class BarberShopController extends Controller
         return redirect()->route('barber.barberVerification')->with('success', 'Barber shop created successfully');
     }
 
-    public function getBarberShops(){
-        $barbershops= barberShop::paginate(3);
+    public function getBarberShops(Request $request){
+        // $barbershops = barberShop::orderBy('created_at', 'desc')->paginate(3);
+        // return response()->json($request->all(), 200);
+        $barbershops = BarbershopRepository::getBarberShops($request->search,$request->status,$request->rating,$request->sort);
         foreach($barbershops as $barbershop){
             $barbershop->rejected_by=$barbershop->rejectedBy;
         }

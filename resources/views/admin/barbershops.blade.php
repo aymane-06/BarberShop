@@ -139,8 +139,9 @@
     <div class="bg-white rounded-lg shadow mb-6 p-4">
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
+                <form action="">
                 <div class="relative">
-                    <input type="text" class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500" placeholder="Search barbershops...">
+                    <input id="search-input" type="text" class="filter w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500" placeholder="Search barbershops by name, location, or services...">
                     <div class="absolute left-3 top-2.5">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -148,56 +149,43 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <select class="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto">
+                <select id="status-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
+                    <option value="Pending Verification">Pending</option>
+                    <option value="Verified">Approved</option>
+                    <option value="Rejected">Rejected</option>
                 </select>
                 
-                <select class="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                <select id="rating-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">All Ratings</option>
                     <option value="5">5 stars</option>
                     <option value="4">4+ stars</option>
                     <option value="3">3+ stars</option>
+                    <option value="2">2+ stars</option>
+                    <option value="1">1+ stars</option>
                 </select>
                 
-                <select class="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
-                    <option value="">Sort By</option>
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="rating">Highest Rating</option>
-                    <option value="bookings">Most Bookings</option>
+                <select id="sort-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                    <option value="DESC">Newest First</option>
+                    <option value="ASC">Oldest First</option>
+                    <!-- <option value="rating">Highest Rating</option> -->
+                    <option value="name">Name A-Z</option>
+                    <!-- <option value="bookings">Most Bookings</option> -->
                 </select>
             </div>
         </div>
-        
-        <div class="mt-3 flex flex-wrap gap-2">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                Active filters:
-            </span>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                Pending
-                <button type="button" class="ml-1 inline-flex text-gray-400 hover:text-gray-600">
-                    <span class="sr-only">Remove filter</span>
-                    <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </span>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                4+ stars
-                <button type="button" class="ml-1 inline-flex text-gray-400 hover:text-gray-600">
-                    <span class="sr-only">Remove filter</span>
-                    <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </span>
-            <button type="button" class="text-xs text-primary-600 hover:text-primary-800">
-                Clear all filters
+        <div class="flex justify-end mt-3">
+            <button type="reset" onclick="getBarberShops(1,{sort:'DESC'})" id="clear-filters" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Clear Filters
             </button>
+        </div>
+        </form>
+        <div id="active-filters" class="mt-3 flex flex-wrap gap-2">
+            <!-- Active filters will be dynamically added here -->
         </div>
     </div>
     
@@ -381,8 +369,11 @@
     let barberShops=[];
     let pagination=[];
     let curentPage=1;
+    let filterData={};
+    
 
-    async function getBarberShops(page=1) {
+    async function getBarberShops(page=1, filterData={}) {
+        // Show loader animation
         const gridContainer = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-6.mb-6');
         // Display a more refined loader animation
         gridContainer.innerHTML = `
@@ -411,7 +402,15 @@
         // Fetch barbershops from the API
 
         url=`http://127.0.0.1:8000/api/admin/Barbershops?page=${page}`;
-        await fetch(url)
+        // Add filter parameters to the URL if they exist
+        if (filterData.search) url += `&search=${encodeURIComponent(filterData.search)}`;
+        if (filterData.status) url += `&status=${encodeURIComponent(filterData.status)}`;
+        if (filterData.rating) url += `&rating=${encodeURIComponent(filterData.rating)}`;
+        if (filterData.sort) url += `&sort=${encodeURIComponent(filterData.sort)}`;
+        
+        await fetch(url, {
+            method: 'GET'
+        })
             .then(res=>res.json())
             .then(data=>{
                 console.log(data);
@@ -691,7 +690,7 @@
                         e.preventDefault();
                         page.label=page.url.split('page=')[1];
                             
-                            getBarberShops(page.label);
+                            getBarberShops(page.label,filterData);
                         
                     });
                 }else{
@@ -815,7 +814,7 @@
             
             // Close the modal after successful submission
             getBarberShops(curentPage);
-            
+
             getBarberShopsStatistics();
 
             closeModal();
@@ -1074,6 +1073,27 @@ async function getBarberShopsStatistics() {
 }
 
 getBarberShopsStatistics();
+
+
+//filter barbershops
+
+
+    const filter=document.querySelectorAll('.filter');
+    
+    filter.forEach((item)=>{
+       item.addEventListener('change',()=>{
+        filterData={
+                search:document.getElementById('search-input').value,
+                status:document.getElementById('status-filter').value,
+                rating:document.getElementById('rating-filter').value,
+                sort:document.getElementById('sort-filter').value,
+            }
+            console.log(filterData);
+            getBarberShops(curentPage,filterData);
+        });
+    });
+
+
 
 
 </script>
