@@ -12,6 +12,7 @@ use App\Models\barberShop;
 use App\Http\Requests\StorebarberShopRequest;
 use App\Http\Requests\UpdatebarberShopRequest;
 use App\Models\User;
+use App\Repositories\BarbershopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Mail;
@@ -207,6 +208,12 @@ class BarberShopController extends Controller
                 "message" => $e->getMessage()
             ], 400);
         }
+    }
+
+
+    public function getBarbershopsStatistics(){
+        $statistics=BarbershopRepository::getBarberShopsStatistics();
+        return response()->json($statistics, 200);
     }
 
 }

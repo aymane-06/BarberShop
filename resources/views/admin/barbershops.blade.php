@@ -2,6 +2,82 @@
 
 @section('additional_styles')
 <style>
+    .barber-pole-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 800px;
+            }
+            
+            .barber-pole {
+            position: relative;
+            width: 50px;
+            height: 120px;
+            background-color: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border: 3px solid #e5e7eb;
+            transform: rotateX(10deg);
+            }
+            
+            .pole-stripe {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 200%;
+            height: 300%;
+            background: repeating-linear-gradient(
+                45deg,
+                #d20a0a 0px,
+                #d20a0a 12px,
+                #ffffff 12px,
+                #ffffff 24px,
+                #1a56db 24px,
+                #1a56db 36px,
+                #ffffff 36px,
+                #ffffff 48px
+            );
+            animation: spin-pole 1.2s linear infinite;
+            }
+            
+            @keyframes spin-pole {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(48px); }
+            }
+            
+            .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 3px;
+            background-color: #6b7280;
+            border-radius: 50%;
+            animation: dot-pulse 1.5s infinite ease-in-out;
+            }
+            
+            .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+            }
+            
+            .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+            }
+            
+            @keyframes dot-pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            }
+            
+            #barbershop-loader {
+            animation: fade-in 0.5s ease-out;
+            }
+            
+            @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+            }
+
     .status-badge {
         transition: all 0.3s ease;
     }
@@ -126,304 +202,14 @@
     </div>
     
     <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4 scale-in">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-sm font-medium text-gray-600">Total Barbershops</h2>
-                    <p class="text-xl font-semibold">187</p>
-                    <p class="text-xs text-green-600 mt-1">↑ 12% from last month</p>
-                </div>
-            </div>
-        </div>
+    <div id="statistics" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.1s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-sm font-medium text-gray-600">Pending Verification</h2>
-                    <p class="text-xl font-semibold">14</p>
-                    <p class="text-xs text-red-600 mt-1">↑ 8 new in last 24h</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.2s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-sm font-medium text-gray-600">Verified Shops</h2>
-                    <p class="text-xl font-semibold">156</p>
-                    <p class="text-xs text-green-600 mt-1">83% of total</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.3s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-red-100 rounded-md p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <h2 class="text-sm font-medium text-gray-600">Rejected</h2>
-                    <p class="text-xl font-semibold">17</p>
-                    <p class="text-xs text-gray-500 mt-1">9% of total</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Barbershops Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Pending Verification Shop -->
-        <div class="bg-white rounded-lg shadow overflow-hidden barbershop-card">
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1521490711676-14a7cdad7564" alt="Barbershop" class="h-48 w-full object-cover">
-                <div class="absolute top-2 right-2">
-                    <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        Pending Verification
-                    </span>
-                </div>
-                <div class="absolute top-2 left-2">
-                    <span class="px-2 py-1 rounded-md text-xs font-medium bg-gray-900 bg-opacity-70 text-white">
-                        Submitted 2 days ago
-                    </span>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="flex justify-between items-start">
-                    <h3 class="text-lg font-bold text-gray-900">CutMaster Barbershop</h3>
-                    <div class="rating-stars flex">
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="empty">★</span>
-                        <span class="ml-1 text-xs text-gray-600">(0)</span>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mt-1">123 Main St, New York, NY 10001</p>
-                <div class="mt-4">
-                    <div class="flex items-center text-sm text-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Mon-Sat: 9:00 AM - 8:00 PM
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mt-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        (555) 123-4567
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-between">
-                    <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
-                            Haircuts
-                        </span>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                            Shaves
-                        </span>
-                    </div>
-                    <div>
-                        <span class="text-sm font-medium text-gray-600">Owner: John Doe</span>
-                    </div>
-                </div>
-                <div class="mt-4 border-t pt-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-sm font-medium text-gray-600">ID Verification: </span>
-                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
-                        </div>
-                        <div>
-                            <span class="text-sm font-medium text-gray-600">Business License: </span>
-                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Submitted</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-between space-x-2">
-                    <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Approve
-                    </button>
-                    <button  class="reject flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Reject
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Verified Shop -->
-        <div class="bg-white rounded-lg shadow overflow-hidden barbershop-card">
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70" alt="Barbershop" class="h-48 w-full object-cover">
-                <div class="absolute top-2 right-2">
-                    <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Verified
-                    </span>
-                </div>
-                <div class="absolute top-2 left-2 featured-badge">
-                    <span class="px-2 py-1 rounded-md text-xs font-medium bg-amber-500 text-white">
-                        FEATURED
-                    </span>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="flex justify-between items-start">
-                    <h3 class="text-lg font-bold text-gray-900">Classic Men's Salon</h3>
-                    <div class="rating-stars flex">
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="filled">★</span>
-                        <span class="ml-1 text-xs text-gray-600">(78)</span>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mt-1">456 Broadway, New York, NY 10012</p>
-                <div class="mt-4">
-                    <div class="flex items-center text-sm text-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Open today: 10:00 AM - 9:00 PM
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 mt-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                        </svg>
-                        143 bookings this month
-                    </div>
-                </div>
-                <div class="mt-4 flex justify-between">
-                    <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
-                            Premium
-                        </span>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800 mr-1">
-                            Hot Towels
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="mt-4 border-t pt-4 flex justify-between">
-                    <div class="text-sm">
-                        <span class="font-medium">Revenue:</span>
-                        <span class="text-green-600 font-medium">$12,450 last month</span>
-                    </div>
-                    <div>
-                        <span class="inline-flex items-center text-xs font-medium text-green-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
-                            32% from last month
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="mt-4 flex space-x-2 quick-actions">
-                    <button class="flex-1 inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        View Details
-                    </button>
-                    <button class="inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Rejected Shop -->
-        <div class="bg-white rounded-lg shadow overflow-hidden barbershop-card">
-            <div class="relative">
-                <img src="https://images.unsplash.com/photo-1622288432450-277d0fef5ed6" alt="Barbershop" class="h-48 w-full object-cover">
-                <div class="absolute top-2 right-2">
-                    <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        Rejected
-                    </span>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="flex justify-between items-start">
-                    <h3 class="text-lg font-bold text-gray-900">City Barbers</h3>
-                    <div class="rating-stars flex">
-                        <span class="empty">★</span>
-                        <span class="empty">★</span>
-                        <span class="empty">★</span>
-                        <span class="empty">★</span>
-                        <span class="empty">★</span>
-                        <span class="ml-1 text-xs text-gray-600">(0)</span>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mt-1">789 Park Ave, New York, NY 10021</p>
-                
-                <div class="mt-4 bg-red-50 border border-red-200 rounded-md p-3">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-red-800">Rejection reason:</h3>
-                            <p class="text-sm text-red-700 mt-1">
-                                Invalid business license documentation. Need to provide proper business registration certificate.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-4 border-t pt-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-sm font-medium text-gray-600">Rejected by: </span>
-                            <span class="text-sm text-gray-600">Admin (Jane Smith)</span>
-                        </div>
-                        <div>
-                            <span class="text-sm font-medium text-gray-600">Date: </span>
-                            <span class="text-sm text-gray-600">Oct 12, 2023</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-4 flex justify-between space-x-2">
-                    <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        Email Owner
-                    </button>
-                    <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        Reconsider
-                    </button>
-                </div>
-            </div>
-        </div>
+
+       
     </div>
     
     <!-- Pagination -->
@@ -597,6 +383,33 @@
     let curentPage=1;
 
     async function getBarberShops(page=1) {
+        const gridContainer = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-6.mb-6');
+        // Display a more refined loader animation
+        gridContainer.innerHTML = `
+        <div id="barbershop-loader" class="col-span-full flex flex-col justify-center items-center py-20">
+            <div class="flex flex-col items-center">
+            <div class="barber-pole-loader mb-4">
+                <div class="barber-pole">
+                <div class="pole-stripe"></div>
+                </div>
+                <div class="scissors">
+                <span class="scissors-top"></span>
+                <span class="scissors-bottom"></span>
+                </div>
+            </div>
+            <div class="text-center">
+                <p class="text-xl font-bold text-gray-800">Loading Barbershops</p>
+                <p class="text-sm text-gray-500 mt-2">Just a moment while we fetch the latest data...</p>
+                <div class="loading-dots mt-2">
+                <span></span><span></span><span></span>
+                </div>
+            </div>
+            </div>
+        </div>`;
+
+
+        // Fetch barbershops from the API
+
         url=`http://127.0.0.1:8000/api/admin/Barbershops?page=${page}`;
         await fetch(url)
             .then(res=>res.json())
@@ -610,7 +423,6 @@
 
         // console.log(barberShops);
         // Display the barbershops in the grid
-        const gridContainer = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-6.mb-6');
         gridContainer.innerHTML = ''; // Clear existing content
         barberShops.forEach(shop => {
             // console.log(shop);
@@ -843,9 +655,11 @@
 
             container.innerHTML = shopHTML;
 
+            
             gridContainer.appendChild(container);
-                        
+            
         });
+        
         
         
         // // Animation for activity items with delay
@@ -1001,6 +815,9 @@
             
             // Close the modal after successful submission
             getBarberShops(curentPage);
+            
+            getBarberShopsStatistics();
+
             closeModal();
             
             // Show a success message
@@ -1085,6 +902,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Refresh the barbershops display
             getBarberShops(curentPage);
+            getBarberShopsStatistics();
+
             
             // Close the modal after successful submission
             closeReconsiderationModal();
@@ -1166,6 +985,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(response.message || 'Barbershop has been approved successfully!');
             
             // Refresh the barbershops display
+            getBarberShopsStatistics();
             getBarberShops(curentPage);
             
             // Close the modal after successful submission
@@ -1177,6 +997,83 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
 });
+
+///statistics
+
+async function getBarberShopsStatistics() {
+    
+  let statistics=  await fetch('http://127.0.0.1:8000/api/admin/Barbershops/statistics')
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data);
+            return data;
+        })
+        .catch(err=>console.log(err));
+    console.log(statistics);
+    let statisticsContainer=document.getElementById('statistics');
+    statisticsContainer.innerHTML=`<div class="bg-white rounded-lg shadow p-4 scale-in">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Total Barbershops</h2>
+                    <p id="totalBarberShops" class="text-xl font-semibold">${statistics.totalBarberShops}</p>
+                    <p class="text-xs text-green-600 mt-1">↑ 12% from last month</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.1s">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Pending Verification</h2>
+                    <p class="text-xl font-semibold">${statistics.totalBarberShopsPending}</p>
+                    <p class="text-xs text-red-600 mt-1">↑ 8 new in last 24h</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.2s">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Verified Shops</h2>
+                    <p class="text-xl font-semibold">${statistics.totalBarberShopsApproved}</p>
+                    <p class="text-xs text-green-600 mt-1">83% of total</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.3s">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-red-100 rounded-md p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Rejected</h2>
+                    <p class="text-xl font-semibold">${statistics.totalBarberShopsRejected}</p>
+                    <p class="text-xs text-gray-500 mt-1">9% of total</p>
+                </div>
+            </div>
+        </div>`;
+
+}
+
+getBarberShopsStatistics();
 
 
 </script>
