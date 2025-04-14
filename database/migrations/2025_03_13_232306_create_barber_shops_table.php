@@ -35,9 +35,10 @@ return new class extends Migration
             $table->float('ratings')->default(0);
             $table->boolean('is_active')->default(true);
             $table->enum('is_verified', ['Pending Verification', 'Verified', 'Rejected'])->default('pending Verification');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->string(('Rejection_Reason'))->nullable();
             $table->string('Rejection_Details')->nullable();
-            $table->string(('reconsidered_by'))->nullable();
+            $table->string(('reconsidered_by'))->nullable()->constrained('users')->onDelete('set null');
             $table->string('reconsideration_notes')->nullable();
             $table->foreignId('rejected_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('verified_at')->nullable();

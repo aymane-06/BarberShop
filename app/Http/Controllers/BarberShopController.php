@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendBarberShopApprouvalMail;
 use App\Jobs\SendBarberShopReconsiderationEmail;
 use App\Jobs\SendBarberShopRejectionEmail;
+use App\Mail\BarberShopApprovalMail;
 use App\Mail\BarberShopRejected;
 use App\Mail\SendReconsiderationEmail;
 use App\Models\barberShop;
@@ -180,4 +182,31 @@ class BarberShopController extends Controller
             ], 400);
         }
     }
+
+    public function approve(Request $request){
+        try{   
+        $barbershop = barberShop::findOrFail($request->shopId);
+            $barbershop->update([
+                "is_verified" => "Verified",
+                "approved_by" => $request->approved_by,
+                "reconsideration_notes" => $request->notes,
+                "verified_at" => now(),
+            ]);
+            if($request->sendEmail) {
+                // Dispatch the job to send the reconsideration email
+                    SendBarberShopApprouvalMail::dispatch($barbershop, $request->notes);
+            }
+
+            return response()->json([
+
+                "message" => "Barber shop approved successfully",
+                "barbershop" => $barbershop
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => $e->getMessage()
+            ], 400);
+        }
+    }
+
 }

@@ -574,13 +574,6 @@
                     <span class="ml-2 text-sm text-gray-700">Send email notification to owner</span>
                 </label>
             </div>
-            
-            <div class="mb-4">
-                <label class="flex items-center">
-                    <input type="checkbox" id="featuredBarbershop" class="rounded border-gray-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-700">Mark as featured barbershop</span>
-                </label>
-            </div>
         </div>
         
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t">
@@ -593,121 +586,6 @@
         </div>
     </div>
 </div>
-
-<script>
-// Function to handle approval button clicks
-function openApprovalModal(shopId) {
-    const modal = document.getElementById('approvalModal');
-    modal.classList.remove('hidden');
-    const confirmButton = modal.querySelector('.confirm-approval');
-    confirmButton.setAttribute('id', shopId); // Set the id attribute to the shop ID
-    document.body.style.overflow = 'hidden';
-}
-
-// Initialize approval modal functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the modal
-    const modal = document.getElementById('approvalModal');
-    
-    // Get all elements that should close the modal
-    const closeElements = modal.querySelectorAll('.close-approval-modal');
-    
-    // Get the confirm button
-    const confirmButton = modal.querySelector('.confirm-approval');
-    
-    // Function to close modal
-    function closeApprovalModal() {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-        document.getElementById('approval-notes').value = '';
-        document.getElementById('featuredBarbershop').checked = false;
-        // Keep the email notification checked by default
-        document.getElementById('sendApprovalEmail').checked = true;
-    }
-    
-    // Add click event to all close elements
-    closeElements.forEach(element => {
-        element.addEventListener('click', closeApprovalModal);
-    });
-    
-    // Close modal when clicking outside of it
-    modal.addEventListener('click', function(event) {            
-        if (event.target === modal) {
-            closeApprovalModal();
-        }
-    });
-    
-    // Handle confirmation
-    confirmButton.addEventListener('click', async function() {
-        const notes = document.getElementById('approval-notes').value;
-        const sendEmail = document.getElementById('sendApprovalEmail').checked;
-        const isFeatured = document.getElementById('featuredBarbershop').checked;
-        const shopId = this.getAttribute('id');
-        
-        let data = JSON.stringify({
-            approved_by: {{ auth()->user()->id }},
-            shopId: shopId,
-            notes: notes,
-            sendEmail: sendEmail,
-            isFeatured: isFeatured
-        });
-        
-        try {
-            let approve = await fetch('http://127.0.0.1:8000/api/admin/barbershops/approve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: data,
-            });
-            
-            const response = await approve.json();
-            console.log(response);
-            alert(response.message || 'Barbershop has been approved successfully!');
-            
-            // Refresh the barbershops display
-            getBarberShops(curentPage);
-            
-            // Close the modal after successful submission
-            closeApprovalModal();
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while processing your request.');
-        }
-    });
-    
-    // Update the barbershop cards to use the new modal
-    document.addEventListener('click', function(event) {
-        if (event.target.closest('.approve')) {
-            let button = event.target.closest('.approve');
-            let shopId = button.closest('.barbershop-card').getAttribute('data-shop-id');
-            // If we can't get the ID this way, we'll need to add it to the cards
-            // This is a fallback
-            if (!shopId) {
-                // Try to find the ID from the reject button if it exists
-                const rejectButton = button.closest('.barbershop-card').querySelector('.reject');
-                if (rejectButton) {
-                    const onclickAttr = rejectButton.getAttribute('onclick');
-                    if (onclickAttr) {
-                        shopId = onclickAttr.match(/openModal\((\d+)\)/)?.[1];
-                    }
-                }
-            }
-            if (shopId) {
-                openApprovalModal(shopId);
-            } else {
-                console.error('Could not find shop ID');
-            }
-            event.preventDefault();
-        }
-    });
-});
-</script>
-
-
-
-
 
 @endsection
 
@@ -854,7 +732,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="mt-4 flex justify-between space-x-2">
-                        <button class="approve flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <button onclick="openApprovalModal(${shop.id})" class="approve flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
@@ -907,10 +785,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="flex-1 inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                             View Details
                         </button>
-                        <button class="inline-flex justify-center items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <button onclick="openModal(${shop.id})" class="inline-flex justify-center items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
+                            Reject
                         </button>
                     </div>
                     ` : shop.is_verified === "Rejected" ? `
@@ -1217,6 +1096,87 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+// Function to handle approval button clicks
+function openApprovalModal(shopId) {
+    const modal = document.getElementById('approvalModal');
+    modal.classList.remove('hidden');
+    const confirmButton = modal.querySelector('.confirm-approval');
+    confirmButton.setAttribute('id', shopId); // Set the id attribute to the shop ID
+    document.body.style.overflow = 'hidden';
+}
+
+// Initialize approval modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal
+    const modal = document.getElementById('approvalModal');
+    
+    // Get all elements that should close the modal
+    const closeElements = modal.querySelectorAll('.close-approval-modal');
+    
+    // Get the confirm button
+    const confirmButton = modal.querySelector('.confirm-approval');
+    
+    // Function to close modal
+    function closeApprovalModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('approval-notes').value = '';
+        // Keep the email notification checked by default
+        document.getElementById('sendApprovalEmail').checked = true;
+    }
+    
+    // Add click event to all close elements
+    closeElements.forEach(element => {
+        element.addEventListener('click', closeApprovalModal);
+    });
+    
+    // Close modal when clicking outside of it
+    modal.addEventListener('click', function(event) {            
+        if (event.target === modal) {
+            closeApprovalModal();
+        }
+    });
+    
+    // Handle confirmation
+    confirmButton.addEventListener('click', async function() {
+        const notes = document.getElementById('approval-notes').value;
+        const sendEmail = document.getElementById('sendApprovalEmail').checked;
+        const shopId = this.getAttribute('id');
+        
+        let data = JSON.stringify({
+            approved_by: {{ auth()->user()->id }},
+            shopId: shopId,
+            notes: notes,
+            sendEmail: sendEmail
+        });
+        
+        try {
+            let approve = await fetch('http://127.0.0.1:8000/api/admin/barbershops/approve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: data,
+            });
+            
+            const response = await approve.json();
+            console.log(response);
+            alert(response.message || 'Barbershop has been approved successfully!');
+            
+            // Refresh the barbershops display
+            getBarberShops(curentPage);
+            
+            // Close the modal after successful submission
+            closeApprovalModal();
+        } catch (error) {
+            console.log('Error:', error);
+            alert('An error occurred while processing your request.');
+        }
+    });
+    
+});
 
 
 </script>

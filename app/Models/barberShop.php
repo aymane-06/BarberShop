@@ -38,7 +38,8 @@ class barberShop extends Model
         'Rejection_Details',
         'rejected_by',
         'reconsidered_by',
-        'reconsideration_notes'
+        'reconsideration_notes',
+        'approved_by',
     ];
 
     protected $casts = [
@@ -55,6 +56,9 @@ class barberShop extends Model
     }
     protected function reconsideredBy(){
         return $this->belongsTo(User::class, 'reconsidered_by');
+    }
+    protected function approvedBy(){
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
 
