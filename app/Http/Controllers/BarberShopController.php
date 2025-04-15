@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendBarberShopApprouvalMail;
+use App\Jobs\SendBarberShopCustomEmail;
 use App\Jobs\SendBarberShopReconsiderationEmail;
 use App\Jobs\SendBarberShopRejectionEmail;
 use App\Mail\BarberShopApprovalMail;
@@ -233,10 +234,13 @@ class BarberShopController extends Controller
             $message = $request->message;
             $send_copy = $request->send_copy;
 
-            Mail::to($barbershop->email)->send(new customEmail($barbershop, $subject, $message));
+            // Mail::to($barbershop->email)->send(new customEmail($barbershop, $subject, $message));
+            SendBarberShopCustomEmail::dispatch($barbershop,$barbershop, $subject, $message);
             
             if($send_copy) {
-                Mail::to($admin->email)->send(new customEmail($barbershop, $subject, $message));
+                // Mail::to($admin->email)->send(new customEmail($barbershop, $subject, $message));
+            SendBarberShopCustomEmail::dispatch($admin,$barbershop, $subject, $message);
+
             }
             
             return response()->json([

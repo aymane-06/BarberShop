@@ -1228,16 +1228,13 @@ getBarberShopsStatistics();
                 
                 const data = await response.json();
                 
-                if (data.success) {
-                    console.log(data);
+                
+                    // console.log(data);
                     
                     alert('Email sent successfully!');
                     closeEmailModal();
-                } else {
-                    console.log(data);
-                    
-                    alert('Failed to send email: ' + data.message);
-                }
+                
+                
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while sending the email.');
