@@ -7,6 +7,7 @@ use App\Jobs\SendBarberShopReconsiderationEmail;
 use App\Jobs\SendBarberShopRejectionEmail;
 use App\Mail\BarberShopApprovalMail;
 use App\Mail\BarberShopRejected;
+use App\Mail\customEmail;
 use App\Mail\SendReconsiderationEmail;
 use App\Models\barberShop;
 use App\Http\Requests\StorebarberShopRequest;
@@ -216,6 +217,36 @@ class BarberShopController extends Controller
     public function getBarbershopsStatistics(){
         $statistics=BarbershopRepository::getBarberShopsStatistics();
         return response()->json($statistics, 200);
+    }
+
+    public function emailOwner(Request $request){
+        
+        try {
+            $validated = $request->validate([
+                "subject" => "required",
+                "message" => "required",
+            ]);
+            
+            $barbershop = barberShop::findOrFail($request->shop_id);
+            $admin = User::findOrFail($request->sent_by);
+            $subject = $request->subject;
+            $message = $request->message;
+            $send_copy = $request->send_copy;
+
+            Mail::to($barbershop->email)->send(new customEmail($barbershop, $subject, $message));
+            
+            if($send_copy) {
+                Mail::to($admin->email)->send(new customEmail($barbershop, $subject, $message));
+            }
+            
+            return response()->json([
+                "message" => "Email sent successfully"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Failed to send email: " . $e->getMessage()
+            ], 400);
+        }
     }
 
 }

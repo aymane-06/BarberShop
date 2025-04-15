@@ -13,3 +13,4 @@ Route::get('/admin/Barbershops/statistics',[BarberShopController::class,'getBarb
 Route::post('/admin/barbershops/reject',[BarberShopController::class,'reject']);
 Route::post('/admin/barbershops/reconsider',[BarberShopController::class,'reconsider']);
 Route::post('/admin/barbershops/approve',[BarberShopController::class,'approve']);
+Route::post('/admin/barbershops/email-owner',[BarberShopController::class,'emailOwner']);

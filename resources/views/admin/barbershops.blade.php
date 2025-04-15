@@ -361,6 +361,63 @@
     </div>
 </div>
 
+<!-- Email Owner Modal -->
+<div id="emailOwnerModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="bg-primary-50 px-4 py-3 border-b border-primary-100">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-medium text-primary-800">Email Shop Owner</h3>
+                <button type="button" class="close-email-modal text-primary-400 hover:text-primary-600">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-4">
+            <p class="text-sm text-gray-700 mb-4">Send a direct email to the barbershop owner.</p>
+            
+            <div class="mb-4">
+                <label for="email-subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                <input type="text" id="email-subject" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50" placeholder="Enter email subject...">
+            </div>
+            
+            <div class="mb-4">
+                <label for="email-message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea id="email-message" rows="5" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50" placeholder="Type your message here..."></textarea>
+            </div>
+            
+            
+            
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="send-copy" class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-gray-700">Send me a copy</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t flex items-center justify-end">
+            <button type="button" class="close-email-modal inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-2">
+                Cancel
+            </button>
+            <button type="button" class="send-email inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Send Email
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+</script>
+
+
+
 @endsection
 
 @section('additional_scripts')
@@ -636,7 +693,7 @@
                     </div>
                     
                     <div class="mt-4 flex justify-between space-x-2">
-                        <button class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <button onclick="openEmailModal(${shop.id})"  class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 email-owner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
@@ -1095,6 +1152,98 @@ getBarberShopsStatistics();
         });
     });
 
+
+    // email-owner
+
+    
+        // Get email owner buttons
+        
+        
+        // Get the modal
+        const modal = document.getElementById('emailOwnerModal');
+        
+        // Get close buttons
+        const closeButtons = modal.querySelectorAll('.close-email-modal');
+        
+        // Get send button
+        const sendButton = modal.querySelector('.send-email');
+        
+        // Function to open modal
+        function openEmailModal(shopId) {
+            modal.classList.remove('hidden');
+            sendButton.setAttribute('id', shopId);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Function to close modal
+        function closeEmailModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            document.getElementById('email-subject').value = '';
+            document.getElementById('email-message').value = '';
+        }
+        
+        
+        
+        // Add click listeners to close buttons
+        closeButtons.forEach(button => {
+            button.addEventListener('click', closeEmailModal);
+        });
+        
+        // Close when clicking outside
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeEmailModal();
+            }
+        });
+        
+        // Handle send button
+        sendButton.addEventListener('click', async function() {
+            const subject = document.getElementById('email-subject').value;
+            const message = document.getElementById('email-message').value;
+            const sendCopy = document.getElementById('send-copy').checked;
+            const shopId = this.getAttribute('id');
+            const send_by = {{ auth()->user()->id }};
+            
+            if (!subject || !message) {
+                alert('Please fill in both subject and message fields.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/admin/barbershops/email-owner', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        shop_id: shopId,
+                        subject: subject,
+                        message: message,
+                        send_copy: sendCopy,
+                        sent_by: send_by
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log(data);
+                    
+                    alert('Email sent successfully!');
+                    closeEmailModal();
+                } else {
+                    console.log(data);
+                    
+                    alert('Failed to send email: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while sending the email.');
+            }
+        });
+  
 
 
 
