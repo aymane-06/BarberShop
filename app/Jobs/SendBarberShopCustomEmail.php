@@ -18,12 +18,14 @@ class SendBarberShopCustomEmail implements ShouldQueue
     protected $barbershop;
     protected $subject;
     protected $message;
+
     public function __construct($to,$barbershop, $subject, $message)
     {   
         $this->to = $to;
         $this->barbershop = $barbershop;
         $this->subject = $subject;
         $this->message = $message;
+      
     }
     
 

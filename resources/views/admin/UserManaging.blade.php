@@ -194,8 +194,168 @@
     </div>
 
     <!-- Users Grid -->
-    <div id="users-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    <div id="users-table" class="">
         <!-- Users will be populated here -->
+        <!-- Sample Users (Static Examples) -->
+        <div class="overflow-x-auto relative">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">User</th>
+                        <th scope="col" class="py-3 px-6">Role</th>
+                        <th scope="col" class="py-3 px-6">Status</th>
+                        <th scope="col" class="py-3 px-6">Joined</th>
+                        <th scope="col" class="py-3 px-6">Last Login</th>
+                        <th scope="col" class="py-3 px-6">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example User 1 -->
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=3f83f8" 
+                                         alt="John Doe" 
+                                         class="h-10 w-10 rounded-full">
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900">John Doe</p>
+                                    <p class="text-xs text-gray-600">johndoe@example.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 role-badge">
+                                Customer
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">Jan 15, 2023</td>
+                        <td class="py-4 px-6">Today</td>
+                        <td class="py-4 px-6">
+                            <div class="flex space-x-2">
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-transparent rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Example User 2 -->
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=6b46c1" 
+                                         alt="Jane Smith" 
+                                         class="h-10 w-10 rounded-full">
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900">Jane Smith</p>
+                                    <p class="text-xs text-gray-600">janesmith@example.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 role-badge">
+                                Barber
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Suspended
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">Feb 8, 2023</td>
+                        <td class="py-4 px-6">5 days ago</td>
+                        <td class="py-4 px-6">
+                            <div class="flex space-x-2">
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-transparent rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Example User 3 -->
+                    <tr class="bg-white hover:bg-gray-50">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <img src="https://ui-avatars.com/api/?name=Mike+Johnson&background=10b981" 
+                                         alt="Mike Johnson" 
+                                         class="h-10 w-10 rounded-full">
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900">Mike Johnson</p>
+                                    <p class="text-xs text-gray-600">mike@example.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 role-badge">
+                                Shop Owner
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="status-badge px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                Inactive
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">March 22, 2023</td>
+                        <td class="py-4 px-6">30 days ago</td>
+                        <td class="py-4 px-6">
+                            <div class="flex space-x-2">
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                                <button class="inline-flex items-center p-1.5 border border-transparent rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     
     <!-- Pagination -->
@@ -403,12 +563,12 @@
     let filterData = {
         sort: 'DESC',
     };
-    
+
     async function getUsers(page = 1, filterData = {}) {
         // Show loader animation
-        const gridContainer = document.getElementById('users-grid');
-        gridContainer.innerHTML = `
-        <div id="user-loader" class="col-span-full flex flex-col justify-center items-center py-20">
+        const tableContainer = document.getElementById('users-table');
+        tableContainer.innerHTML = `
+        <div id="user-loader" class="flex flex-col justify-center items-center py-20">
             <div class="flex flex-col items-center">
                 <div class="barber-pole-loader mb-4">
                     <div class="barber-pole">
@@ -449,23 +609,38 @@
             
         } catch (error) {
             console.error('Error fetching users:', error);
-            gridContainer.innerHTML = `
-            <div class="col-span-full text-center py-10">
+            tableContainer.innerHTML = `
+            <div class="text-center py-10">
                 <p class="text-red-500">Failed to load users. Please try again later.</p>
             </div>`;
         }
     }
+
     function renderUsers() {
-        const gridContainer = document.getElementById('users-grid');
-        gridContainer.innerHTML = '';
+        const tableContainer = document.getElementById('users-table');
         
         if (users.length === 0) {
-            gridContainer.innerHTML = `
-            <div class="col-span-full text-center py-10">
+            tableContainer.innerHTML = `
+            <div class="text-center py-10">
                 <p class="text-gray-500">No users found matching your criteria.</p>
             </div>`;
             return;
         }
+        
+        let tableHtml = `
+        <div class="overflow-x-auto relative">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">User</th>
+                        <th scope="col" class="py-3 px-6">Role</th>
+                        <th scope="col" class="py-3 px-6">Status</th>
+                        <th scope="col" class="py-3 px-6">Joined</th>
+                        <th scope="col" class="py-3 px-6">Last Login</th>
+                        <th scope="col" class="py-3 px-6">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>`;
         
         users.forEach(user => {
             // Determine status badge class and text
@@ -513,95 +688,70 @@
                 }
             }
             
-            // Create card for each user
-            const userCard = document.createElement('div');
-            
-              userCard.innerHTML=`<div class="p-5">
-                    <div class="flex justify-between items-start">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0">
-                                <img src="${user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random'}" 
-                                     alt="${user.name}" 
-                                     class="h-10 w-10 rounded-full">
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900">${user.name}</h3>
-                                <p class="text-sm text-gray-600">${user.email}</p>
-                            </div>
+            tableHtml += `
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="py-4 px-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            <img src="${user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random'}" 
+                                 alt="${user.name}" 
+                                 class="h-10 w-10 rounded-full">
                         </div>
-                        <span class="status-badge px-3 py-1 rounded-full text-xs font-medium ${statusClass}">
-                            ${statusText}
-                        </span>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <div class="flex items-center text-sm text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            Joined: ${joinedDate}
-                        </div>
-                        <div class="flex items-center text-sm text-gray-500 mt-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Last login: ${lastLoginText}
+                        <div>
+                            <p class="font-bold text-gray-900">${user.name}</p>
+                            <p class="text-xs text-gray-600">${user.email}</p>
                         </div>
                     </div>
-                    
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 role-badge">
-                            ${user.role || 'Customer'}
-                        </span>
-                        ${user.email_verified_at ? 
-                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                Verified Email
-                            </span>` : 
-                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                Unverified Email
-                            </span>`
+                </td>
+                <td class="py-4 px-6">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 role-badge">
+                        ${user.role || 'Customer'}
+                    </span>
+                </td>
+                <td class="py-4 px-6">
+                    <span class="status-badge px-3 py-1 rounded-full text-xs font-medium ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+                <td class="py-4 px-6">${joinedDate}</td>
+                <td class="py-4 px-6">${lastLoginText}</td>
+                <td class="py-4 px-6">
+                    <div class="flex space-x-2">
+                        <button onclick="openEditModal(${user.id})" class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </button>
+                        <button onclick="openEmailModal(${user.id})" class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                        ${user.status !== 'Suspended' ? 
+                            `<button onclick="openSuspendModal(${user.id})" class="inline-flex items-center p-1.5 border border-transparent rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                            </button>` : 
+                            `<button onclick="activateUser(${user.id})" class="inline-flex items-center p-1.5 border border-transparent rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>`
                         }
                     </div>
-                    
-                    <div class="mt-5 border-t pt-4">
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="openEditModal(${user.id})" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                Edit
-                            </button>
-                            
-                            <button onclick="openEmailModal(${user.id})" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                Email
-                            </button>
-                            
-                            ${user.status !== 'Suspended' ? 
-                                `<button onclick="openSuspendModal(${user.id})" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                    </svg>
-                                    Suspend
-                                </button>` : 
-                                `<button onclick="activateUser(${user.id})" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Activate
-                                </button>`
-                            }
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            gridContainer.appendChild(userCard);
+                </td>
+            </tr>`;
         });
+        
+        tableHtml += `
+                </tbody>
+            </table>
+        </div>`;
+        
+        tableContainer.innerHTML = tableHtml;
     }
-    
+
     function renderPagination() {
         const paginationContainer = document.getElementById('pagination');
         paginationContainer.innerHTML = '';
@@ -634,7 +784,7 @@
             paginationContainer.appendChild(pageLink);
         });
     }
-    
+
     async function getUsersStatistics() {
         try {
             const response = await fetch('/api/admin/users/statistics');
@@ -706,7 +856,7 @@
             console.error('Error fetching statistics:', error);
         }
     }
-    
+
     // Filter handling
     document.addEventListener('DOMContentLoaded', function() {
         const filterInputs = document.querySelectorAll('.filter');
@@ -750,7 +900,7 @@
             getUsers(1, filterData);
         });
     });
-    
+
     // Modal functions
     function openEditModal(userId) {
         const modal = document.getElementById('editUserModal');
@@ -774,7 +924,7 @@
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function openSuspendModal(userId) {
         const modal = document.getElementById('suspendUserModal');
         const confirmButton = modal.querySelector('.confirm-suspension');
@@ -783,18 +933,18 @@
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function openEmailModal(userId) {
         const modal = document.getElementById('emailUserModal');
         const sendButton = modal.querySelector('.send-email');
         const user = users.find(u => u.id === userId);
         
-        sendButton.setAttribute('data-user-id', userId);
+        sendButton.setAttribute('id', userId);
         
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
-    
+
     async function updateUser(userId) {
         const name = document.getElementById('edit-name').value;
         const email = document.getElementById('edit-email').value;
@@ -842,7 +992,7 @@
             alert('An error occurred while updating the user.');
         }
     }
-    
+
     // Initialize data and event listeners
     document.addEventListener('DOMContentLoaded', function() {
         getUsers(currentPage, filterData);
@@ -932,11 +1082,12 @@
         
         // Email user handler
         const sendEmailButton = document.querySelector('.send-email');
-        sendEmailButton.addEventListener('click', async () => {
-            const userId = sendEmailButton.getAttribute('data-user-id');
+        sendEmailButton.addEventListener('click', async function() {
             const subject = document.getElementById('email-subject').value;
             const message = document.getElementById('email-message').value;
             const sendCopy = document.getElementById('send-copy').checked;
+            const userId = this.getAttribute('id');
+            const send_by = {{ auth()->user()->id }};
             
             if (!subject || !message) {
                 alert('Please fill in both subject and message fields.');
@@ -944,45 +1095,48 @@
             }
             
             try {
-                const response = await fetch(`/api/admin/users/${userId}/email`, {
+                const response = await fetch('http://127.0.0.1:8000/api/admin/users/email-user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
-                        subject,
-                        message,
+                        user_id: userId,
+                        subject: subject,
+                        message: message,
                         send_copy: sendCopy,
-                        sent_by: {{ auth()->user()->id }}
-                    })
+                        sent_by: send_by
+                    }),
                 });
                 
                 const data = await response.json();
                 
-                if (data.success) {
-                    // Close modal
-                    const modal = document.getElementById('emailUserModal');
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                    
-                    // Reset form
-                    document.getElementById('email-subject').value = '';
-                    document.getElementById('email-message').value = '';
-                    document.getElementById('send-copy').checked = false;
+                
+                    // console.log(data);
                     
                     alert('Email sent successfully!');
-                } else {
-                    alert(data.message || 'Failed to send email.');
-                }
+                    closeEmailModal();
+                
+                
             } catch (error) {
-                console.error('Error sending email:', error);
+                console.error('Error:', error);
                 alert('An error occurred while sending the email.');
             }
         });
     });
-    
+
+    function closeEmailModal() {
+        const modal = document.getElementById('emailUserModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        
+        // Reset form fields
+        document.getElementById('email-subject').value = '';
+        document.getElementById('email-message').value = '';
+        document.getElementById('send-copy').checked = false;
+    }
+
     // Function to activate a suspended user
     async function activateUser(userId) {
         if (!confirm('Are you sure you want to activate this user?')) {

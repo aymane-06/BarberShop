@@ -9,25 +9,23 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class customEmail extends Mailable
+class customUserEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    // $barbershop, $subject, $message
-    public $barbershop;
+    public $user;
     public $subject;
     public $message;
     
-    public function __construct($barberShop, $subject, $message)
+    public function __construct($user, $subject, $message)
     {
-        $this->barbershop = $barberShop;
+        $this->user = $user;
         $this->subject = $subject;
         $this->message = $message;
     }
-  
 
     /**
      * Get the message envelope.
@@ -45,9 +43,9 @@ class customEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.CustomEmail',
+            view: 'email.userCustomEmail',
             with: [
-                'barbershop' => $this->barbershop,
+                'user' => $this->user,
                 'CustomMessage' => $this->message,
             ],
         );
