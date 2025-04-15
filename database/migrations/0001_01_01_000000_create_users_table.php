@@ -17,11 +17,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique()->nullable();
             $table->string('avatar')->nullable();
+            $table->enum('status',["Active", "Inactive", "Suspended"])->default('active');
             $table->string('role')->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('email_verification_token')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('suspended_at')->nullable();
+            $table->foreignId('suspended_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('suspension_reason')->nullable();
+            $table->string('suspension_details')->nullable();
             $table->timestamps();
         });
 

@@ -72,6 +72,10 @@ class AuthController extends Controller
         ]);
 
         auth()->login($user);
+        $user->last_login_at = now();
+        $user->save();
+
+        // Send the custom registration email
         
         $this->emailVerification();
 
@@ -192,6 +196,8 @@ class AuthController extends Controller
         $user->email_verification_token=null;
         $user->save();
         auth()->login($user);
+        $user->last_login_at = now();
+        $user->save();
         return view('auth.emailVerification',compact('verified'));
     }
 
@@ -223,6 +229,8 @@ class AuthController extends Controller
             // dd($user);
             
             Auth::login($user, true);
+            $user->last_login_at = now();
+            $user->save();
 
             return redirect()->route('home');
 

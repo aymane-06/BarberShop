@@ -76,7 +76,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     })->name('dashboard');
     
     Route::get('/users', function () {
-        return view('admin.users');
+        return view('admin.UserManaging');
     })->name('users');
     
     Route::get('/barbershops', function () {
