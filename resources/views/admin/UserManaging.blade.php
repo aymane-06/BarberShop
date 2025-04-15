@@ -596,6 +596,7 @@
             
             const response = await fetch(url);
             const data = await response.json();
+            console.log('Fetched users:', data);
             
             users = data.data;
             currentPage = data.current_page;
@@ -928,7 +929,7 @@
     function openSuspendModal(userId) {
         const modal = document.getElementById('suspendUserModal');
         const confirmButton = modal.querySelector('.confirm-suspension');
-        confirmButton.setAttribute('data-user-id', userId);
+        confirmButton.setAttribute('id', userId);
         
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
@@ -1027,7 +1028,7 @@
         // Suspend user handler
         const suspendConfirmButton = document.querySelector('.confirm-suspension');
         suspendConfirmButton.addEventListener('click', async () => {
-            const userId = suspendConfirmButton.getAttribute('data-user-id');
+            const userId = suspendConfirmButton.getAttribute('id');
             const reason = document.getElementById('suspend-reason').value;
             const details = document.getElementById('suspend-details').value;
             const sendEmail = document.getElementById('sendSuspensionEmail').checked;
@@ -1038,14 +1039,14 @@
             }
             
             try {
-                const response = await fetch(`/api/admin/users/${userId}/suspend`, {
+                const response = await fetch(`/api/admin/users/suspend`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
+                        user_id: userId,
                         suspended_by: {{ auth()->user()->id }},
                         reason,
                         details,
@@ -1055,7 +1056,7 @@
                 
                 const data = await response.json();
                 
-                if (data.success) {
+                
                     // Close modal
                     const modal = document.getElementById('suspendUserModal');
                     modal.classList.add('hidden');
@@ -1071,9 +1072,9 @@
                     getUsersStatistics();
                     
                     alert('User suspended successfully!');
-                } else {
-                    alert(data.message || 'Failed to suspend user.');
-                }
+                
+                    
+                
             } catch (error) {
                 console.error('Error suspending user:', error);
                 alert('An error occurred while suspending the user.');

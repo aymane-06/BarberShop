@@ -28,7 +28,14 @@ class User extends Authenticatable
         'email_verification_token',
         'provider',
         'provider_id',
-        'provider_token'
+        'provider_token',
+        'status',
+        'last_login_at',
+        'suspended_at',
+        'suspended_by',
+        'suspension_reason',
+        'suspension_details',
+        
     ];
 
     /**

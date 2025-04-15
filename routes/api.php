@@ -20,4 +20,6 @@ Route::post('/admin/barbershops/email-owner',[BarberShopController::class,'email
 
 Route::get('/admin/users',[UserController::class,'getUsers']);
 Route::post('/admin/users/email-user',[UserController::class,'emailUser']);
+Route::post('/admin/users/activate',[UserController::class,'activateUser']);
+Route::post('/admin/users/suspend',[UserController::class,'suspendUser']);
 
