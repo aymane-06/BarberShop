@@ -65,9 +65,9 @@ class UserRepository extends BaseRepository
         
         if ($role) {
             if ($role == 'shop_owner') {
-                $query->whereHas('barbershop', function($q) {
-                    $q->where('is_verified', 'Verified');
-                });
+                $query->join('barber_shops', 'users.id', '=', 'barber_shops.user_id')
+                      ->where('barber_shops.is_verified', 'Verified')
+                      ->select('users.*');
             } else {
                 $query->where('role', '=', $role);
             }

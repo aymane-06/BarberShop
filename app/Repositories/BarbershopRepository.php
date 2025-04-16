@@ -41,11 +41,35 @@ class BarbershopRepository extends BaseRepository
     }
 
     public static function getBarberShopsStatistics(){
+        $total = static::getTotalBarberShops();
+        $approved = static::getTotalBarberShopsApproved();
+        $pending = static::getTotalBarberShopsPending();
+        $rejected = static::getTotalBarberShopsRejected();
+        
+        // Calculate percentages
+        $approvedPercentage = $total > 0 ? round(($approved / $total) * 100) : 0;
+        $rejectedPercentage = $total > 0 ? round(($rejected / $total) * 100) : 0;
+        
+        // Get shops created in the last day
+        $pendingLastDay = BarberShop::where('is_verified', 'Pending Verification')
+            ->where('created_at', '>=', now()->subDay())
+            ->count();
+            
+        // Get new shops percentage (comparing with last month)
+        $lastMonthCount = BarberShop::where('created_at', '<', now()->startOfMonth())->count();
+        $newBarberShopsPercentage = $lastMonthCount > 0 
+            ? round((($total - $lastMonthCount) / $lastMonthCount) * 100) 
+            : 0;
+            
         return [
-            'totalBarberShops' => static::getTotalBarberShops(),
-            'totalBarberShopsApproved' => static::getTotalBarberShopsApproved(),
-            'totalBarberShopsPending' => static::getTotalBarberShopsPending(),
-            'totalBarberShopsRejected' => static::getTotalBarberShopsRejected(),
+            'totalBarberShops' => $total,
+            'totalBarberShopsPending' => $pending,
+            'totalBarberShopsApproved' => $approved,
+            'totalBarberShopsRejected' => $rejected,
+            'newBarberShopsPercentage' => $newBarberShopsPercentage,
+            'pendingLastDay' => $pendingLastDay,
+            'approvedPercentage' => $approvedPercentage,
+            'rejectedPercentage' => $rejectedPercentage,
         ];
     }
 

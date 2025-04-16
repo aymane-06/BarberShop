@@ -1079,7 +1079,7 @@ async function getBarberShopsStatistics() {
                 <div class="ml-4">
                     <h2 class="text-sm font-medium text-gray-600">Total Barbershops</h2>
                     <p id="totalBarberShops" class="text-xl font-semibold">${statistics.totalBarberShops}</p>
-                    <p class="text-xs text-green-600 mt-1">↑ 12% from last month</p>
+                    <p class="text-xs text-green-600 mt-1">↑ ${statistics.newBarberShopsPercentage}% from last month</p>
                 </div>
             </div>
         </div>
@@ -1094,7 +1094,7 @@ async function getBarberShopsStatistics() {
                 <div class="ml-4">
                     <h2 class="text-sm font-medium text-gray-600">Pending Verification</h2>
                     <p class="text-xl font-semibold">${statistics.totalBarberShopsPending}</p>
-                    <p class="text-xs text-red-600 mt-1">↑ 8 new in last 24h</p>
+                    <p class="text-xs text-red-600 mt-1">↑ ${statistics.pendingLastDay} new in last 24h</p>
                 </div>
             </div>
         </div>
@@ -1109,7 +1109,7 @@ async function getBarberShopsStatistics() {
                 <div class="ml-4">
                     <h2 class="text-sm font-medium text-gray-600">Verified Shops</h2>
                     <p class="text-xl font-semibold">${statistics.totalBarberShopsApproved}</p>
-                    <p class="text-xs text-green-600 mt-1">83% of total</p>
+                    <p class="text-xs text-green-600 mt-1">${statistics.approvedPercentage}% of total</p>
                 </div>
             </div>
         </div>
@@ -1124,7 +1124,7 @@ async function getBarberShopsStatistics() {
                 <div class="ml-4">
                     <h2 class="text-sm font-medium text-gray-600">Rejected</h2>
                     <p class="text-xl font-semibold">${statistics.totalBarberShopsRejected}</p>
-                    <p class="text-xs text-gray-500 mt-1">9% of total</p>
+                    <p class="text-xs text-gray-500 mt-1">${statistics.rejectedPercentage}% of total</p>
                 </div>
             </div>
         </div>`;
