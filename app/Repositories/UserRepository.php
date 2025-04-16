@@ -50,7 +50,7 @@ class UserRepository extends BaseRepository
 
     public static function getUsers($search=null, $status=null, $role=null, $sort=null)
     {
-        $query = User::query();
+        $query = User::query()->where('role','!=',"super admin");
         
         if ($search) {
             $query->where(function($q) use ($search) {
