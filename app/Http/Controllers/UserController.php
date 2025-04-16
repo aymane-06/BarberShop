@@ -11,7 +11,7 @@ use Mail;
 
 class UserController extends Controller
 {
-    public function getUsers(){
+    public function getUsers(Request $request){
         // Update inactive users first
         User::whereNotNull('last_login_at')
             ->where('last_login_at', '<', now()->subDays(10))
@@ -21,7 +21,12 @@ class UserController extends Controller
             
         // Then get paginated results
         // $usersStatistics=UserRepository::getUserStatistics();
-        $users = User::paginate(10);
+        $users = UserRepository::getUsers(
+            request()->input('search'),
+            request()->input('status'),
+            request()->input('role'),
+            request()->input('sort')
+        );
         return response()->json($users, 200);
     }
 
@@ -127,10 +132,12 @@ class UserController extends Controller
             ]);
             
             // Send email notification to user
-            if($send_email) {
+            
                 // Mail::to($admin->email)->send(new customUserEmail($user, 'Account Activation', 'Your account has been activated.'));
-                SendUserCustomEmail::dispatch($user,'Account Activation', 'Your account has been activated.');
-            }
+                $subject = 'Account Activation';
+                $message = 'Your account has been activated.';
+                SendUserCustomEmail::dispatch($user,$subject, $message);
+            
             
             return response()->json([
                 "message" => "User activated successfully"

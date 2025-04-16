@@ -46,4 +46,44 @@ class UserRepository extends BaseRepository
                 : 0,
         ];
     }
+
+
+    public static function getUsers($search=null, $status=null, $role=null, $sort=null)
+    {
+        $query = User::query();
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%")
+                  ->orWhere('email', 'LIKE', "%$search%");
+            });
+        }
+        
+        if ($status) {
+            $query->where('status', $status);
+        }
+        
+        if ($role) {
+            if ($role == 'shop_owner') {
+                $query->whereHas('barbershop', function($q) {
+                    $q->where('is_verified', 'Verified');
+                });
+            } else {
+                $query->where('role', '=', $role);
+            }
+        }
+        
+        if ($sort) {
+            if ($sort == 'name') {
+                $query->orderBy($sort, 'asc');
+            } elseif ($sort == 'last_login_at') {
+                $query->orderBy($sort, 'desc');
+            } else {
+                $query->orderBy('created_at', $sort);
+            }
+        }
+        
+        return $query->paginate(10);
+    }
+    
 }

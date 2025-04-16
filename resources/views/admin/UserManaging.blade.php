@@ -140,7 +140,7 @@
     <div class="bg-white rounded-lg shadow mb-6 p-4">
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <form action="">
+              
                 <div class="relative">
                     <input id="search-input" type="text" class="filter w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500" placeholder="Search users by name, email, or role...">
                     <div class="absolute left-3 top-2.5">
@@ -162,7 +162,7 @@
                     <option value="">All Roles</option>
                     <option value="admin">Admin</option>
                     <option value="barber">Barber</option>
-                    <option value="customer">Customer</option>
+                    <option value="client">Customer</option>
                     <option value="shop_owner">Shop Owner</option>
                 </select>
                 
@@ -170,19 +170,19 @@
                     <option value="DESC">Newest First</option>
                     <option value="ASC">Oldest First</option>
                     <option value="name">Name A-Z</option>
-                    <option value="login">Last Login</option>
+                    <option value="last_login_at">Last Login</option>
                 </select>
             </div>
         </div>
         <div class="flex justify-end mt-3">
-            <button type="reset" onclick="getUsers(1,{sort:'DESC'})" id="clear-filters" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+            <button type="button" onclick="getUsers(1,{sort:'DESC'})" id="clear-filters" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
                 Clear Filters
             </button>
         </div>
-        </form>
+        
         <div id="active-filters" class="mt-3 flex flex-wrap gap-2">
             <!-- Active filters will be dynamically added here -->
         </div>
@@ -584,10 +584,11 @@
             if (filterData.status) url += `&status=${encodeURIComponent(filterData.status)}`;
             if (filterData.role) url += `&role=${encodeURIComponent(filterData.role)}`;
             if (filterData.sort) url += `&sort=${encodeURIComponent(filterData.sort)}`;
+            console.log(filterData);
             
             const response = await fetch(url);
             const data = await response.json();
-            console.log('Fetched users:', data);
+            // console.log('Fetched users:', data);
             
             users = data.data;
             currentPage = data.current_page;
@@ -817,9 +818,9 @@
                 <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.2s">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
                         </div>
                         <div class="ml-4">
                             <h2 class="text-sm font-medium text-gray-600">Shop Owners</h2>
@@ -861,22 +862,12 @@
                     role: document.getElementById('role-filter').value,
                     sort: document.getElementById('sort-filter').value,
                 };
+                console.log('Filter data:', filterData);
                 
                 getUsers(1, filterData);
             });
         });
         
-        // Search input with debounce
-        const searchInput = document.getElementById('search-input');
-        let debounceTimer;
-        
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                filterData.search = searchInput.value;
-                getUsers(1, filterData);
-            }, 500);
-        });
         
         // Clear filters button
         document.getElementById('clear-filters').addEventListener('click', () => {
