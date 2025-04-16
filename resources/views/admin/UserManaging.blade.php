@@ -1143,29 +1143,27 @@
         if (!confirm('Are you sure you want to activate this user?')) {
             return;
         }
+        const user = userId;
         
         try {
-            const response = await fetch(`/api/admin/users/${userId}/activate`, {
+            const response = await fetch(`/api/admin/users/activate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    activated_by: {{ auth()->user()->id }}
+                    user_id: userId,
                 })
             });
             
             const data = await response.json();
             
-            if (data.success) {
+           
                 getUsers(currentPage, filterData);
                 getUsersStatistics();
                 alert('User activated successfully!');
-            } else {
-                alert(data.message || 'Failed to activate user.');
-            }
+                
         } catch (error) {
             console.error('Error activating user:', error);
             alert('An error occurred while activating the user.');

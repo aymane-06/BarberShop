@@ -105,4 +105,38 @@ class UserController extends Controller
 
   }
 
+    public function activateUser(Request $request){
+        try {
+            $validated = $request->validate([
+                "user_id" => "required|exists:users,id",
+            ]);
+            
+            $user = User::findOrFail($request->user_id);
+            $send_email = $request->send_email;
+
+            // Update user status to active
+            $user->update([
+                'status' => 'Active',
+                'suspended_by' => null,
+                'suspension_reason' => null,
+                'suspension_details' => null,
+                'suspended_at' => null,
+            ]);
+            
+            // Send email notification to user
+            if($send_email) {
+                // Mail::to($admin->email)->send(new customUserEmail($user, 'Account Activation', 'Your account has been activated.'));
+                SendUserCustomEmail::dispatch($user,'Account Activation', 'Your account has been activated.');
+            }
+            
+            return response()->json([
+                "message" => "User activated successfully"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Failed to activate user: " . $e->getMessage()
+            ], 400);
+        }
+    }
+
 }

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreignId('suspended_by')->nullable()->constrained('users')->onDelete('set null');
             $table->string('suspension_reason')->nullable();
             $table->string('suspension_details')->nullable();
+            $table->stering('admin_notes')->nullable();
             $table->timestamps();
         });
 
