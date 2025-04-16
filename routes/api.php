@@ -22,4 +22,6 @@ Route::get('/admin/users',[UserController::class,'getUsers']);
 Route::post('/admin/users/email-user',[UserController::class,'emailUser']);
 Route::post('/admin/users/activate',[UserController::class,'activateUser']);
 Route::post('/admin/users/suspend',[UserController::class,'suspendUser']);
+Route::put('/admin/users/edit',[UserController::class,'editUser']);
+Route::get('/admin/users/statistics',[UserController::class,'getUsersStatistics']);
 

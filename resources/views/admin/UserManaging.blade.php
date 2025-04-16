@@ -397,22 +397,13 @@
         
         <form id="editUserForm">
             <div class="p-4">
-                <div class="mb-4">
-                    <label for="edit-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                    <input type="text" id="edit-name" name="name" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                </div>
                 
-                <div class="mb-4">
-                    <label for="edit-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="edit-email" name="email" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                </div>
                 
                 <div class="mb-4">
                     <label for="edit-role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
                     <select id="edit-role" name="role" class="w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
-                        <option value="customer">Customer</option>
+                        <option value="client">Customer</option>
                         <option value="barber">Barber</option>
-                        <option value="shop_owner">Shop Owner</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
@@ -609,7 +600,7 @@
             renderPagination();
             
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.log('Error fetching users:', error);
             tableContainer.innerHTML = `
             <div class="text-center py-10">
                 <p class="text-red-500">Failed to load users. Please try again later.</p>
@@ -854,7 +845,7 @@
                 </div>
             `;
         } catch (error) {
-            console.error('Error fetching statistics:', error);
+            console.log('Error fetching statistics:', error);
         }
     }
 
@@ -908,9 +899,7 @@
         const user = users.find(u => u.id === userId);
         
         if (user) {
-            document.getElementById('edit-name').value = user.name;
-            document.getElementById('edit-email').value = user.email;
-            document.getElementById('edit-role').value = user.role || 'customer';
+            document.getElementById('edit-role').value = user.role || 'client';
             document.getElementById('edit-status').value = user.status || 'Active';
             document.getElementById('edit-email-verified').checked = !!user.email_verified_at;
             document.getElementById('edit-notes').value = user.admin_notes || '';
@@ -947,24 +936,21 @@
     }
 
     async function updateUser(userId) {
-        const name = document.getElementById('edit-name').value;
-        const email = document.getElementById('edit-email').value;
         const role = document.getElementById('edit-role').value;
         const status = document.getElementById('edit-status').value;
         const emailVerified = document.getElementById('edit-email-verified').checked;
         const notes = document.getElementById('edit-notes').value;
         
+        
         try {
-            const response = await fetch(`/api/admin/users/${userId}`, {
+            const response = await fetch(`/api/admin/users/edit`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    name,
-                    email,
+                    user_id: userId,
                     role,
                     status,
                     email_verified: emailVerified,
@@ -974,7 +960,6 @@
             
             const data = await response.json();
             
-            if (data.success) {
                 // Close modal
                 const modal = document.getElementById('editUserModal');
                 modal.classList.add('hidden');
@@ -985,11 +970,9 @@
                 getUsersStatistics();
                 
                 alert('User updated successfully!');
-            } else {
-                alert(data.message || 'Failed to update user.');
-            }
+            
         } catch (error) {
-            console.error('Error updating user:', error);
+            console.log('Error updating user:', error);
             alert('An error occurred while updating the user.');
         }
     }
@@ -1076,7 +1059,7 @@
                     
                 
             } catch (error) {
-                console.error('Error suspending user:', error);
+                console.log('Error suspending user:', error);
                 alert('An error occurred while suspending the user.');
             }
         });
@@ -1121,7 +1104,7 @@
                 
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.log('Error:', error);
                 alert('An error occurred while sending the email.');
             }
         });
@@ -1165,7 +1148,7 @@
                 alert('User activated successfully!');
                 
         } catch (error) {
-            console.error('Error activating user:', error);
+            console.log('Error activating user:', error);
             alert('An error occurred while activating the user.');
         }
     }

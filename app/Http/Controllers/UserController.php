@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendUserCustomEmail;
 use App\Mail\customUserEmail;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -15,9 +16,11 @@ class UserController extends Controller
         User::whereNotNull('last_login_at')
             ->where('last_login_at', '<', now()->subDays(10))
             ->where('status', '!=', 'Inactive')
+            ->where('status', '!=', 'Suspended')
             ->update(['status' => 'Inactive']);
             
         // Then get paginated results
+        // $usersStatistics=UserRepository::getUserStatistics();
         $users = User::paginate(10);
         return response()->json($users, 200);
     }
@@ -137,6 +140,46 @@ class UserController extends Controller
                 "message" => "Failed to activate user: " . $e->getMessage()
             ], 400);
         }
+    }
+
+    public function editUser(Request $request){
+        /**
+         *  user_id: userId,
+            *        role,
+           *         status,
+             *       email_verified: emailVerified,
+              *      admin_notes: notes
+         */
+        try {
+            $validated = $request->validate([
+                "user_id" => "required|exists:users,id",
+                "role" => "nullable|string",
+                "status" => "nullable|string",
+                "email_verified" => "nullable|boolean",
+                "admin_notes" => "nullable|string",
+            ]);
+            
+            $user = User::findOrFail($request->user_id);
+            $user->update([
+                'role' => $request->role,
+                'status' => $request->status,
+                'email_verified_at' => $request->email_verified ? now() : null,
+                'admin_notes' => $request->admin_notes,
+            ]);
+            
+            return response()->json([
+                "message" => "User updated successfully"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Failed to update user: " . $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getUsersStatistics(){
+        $statistics=UserRepository::getUserStatistics();
+        return response()->json($statistics, 200);
     }
 
 }
