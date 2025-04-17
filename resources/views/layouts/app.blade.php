@@ -124,7 +124,7 @@
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">My Bookings</a>
                             <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Favorites</a>
                             <a href="" class="block hover:text-primary-600 transition-colors">My Reviews</a>
-                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Edit Profile</a>
+                            <a href="{{ route('user.profile') }}" class="block hover:text-primary-600 transition-colors">Profile</a>
                         </div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -182,7 +182,7 @@
             @auth
                 <div class="relative group">
                     <button class="flex items-center text-gray-700 hover:text-primary-600 focus:outline-none">
-                        <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}" class="w-8 h-8 rounded-full mr-2 object-cover border border-gray-200">
+                        <img src="{{ auth()->user()->provider ? auth()->user()->avatar : (auth()->user()->avatar ? '/storage/'.auth()->user()->avatar : asset('images/default-avatar.png')) }}" class="w-8 h-8 rounded-full mr-2 object-cover border border-gray-200">
                         <span>{{ auth()->user()->name }}</span>
                         <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -201,7 +201,7 @@
                             <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">My Bookings</a>
                             <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Favorites</a>
                         @endif
-                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Edit Profile</a>
+                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md"> Profile</a>
                         <div class="border-t border-gray-100 my-1"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

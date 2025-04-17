@@ -246,4 +246,36 @@ class AuthController extends Controller
     //   dd($provider);
         return Socialite::driver($provider)->redirect();
     }
+
+
+    // updateProfile
+    public function updateProfile(Request $request)
+    {
+        
+        $user = auth()->user();
+        $validated = $request->validate([
+
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|max:20',
+            'current_password' => 'nullable|required_with:password|current_password',
+            'password' => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|string|min:8',
+            'avatar'=> 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $updateData = array_filter($validated, function($value) {
+            return $value !== null;
+        });
+        
+        if (!empty($updateData)) {
+            $user->update($updateData);
+        }
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+            $user->save();
+        }
+        return redirect()->route('user.profile')->with('status', 'Profile updated successfully!');
+    }
 }

@@ -33,6 +33,8 @@ Route::get('/Booking-confirm', function () {
 Route::get('/profile', function () {
     return view('user.profile');
 })->name('user.profile');
+// user.profile.update
+Route::put('/profile', [AuthController::class, 'updateProfile'])->name('user.profile.update');
 
 
 Route::get('/barber/dashboard', function () {

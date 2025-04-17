@@ -680,13 +680,23 @@
                     lastLoginText = `${diffDays} days ago`;
                 }
             }
-            
-            tableHtml += `
+            //user avatar
+
+            if(!user.avatar) {
+                user.avatar = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random';
+            }else if(user.avatar.startsWith('https://')) {
+                user.avatar = user.avatar;
+            }else {
+                user.avatar = '/storage/' + user.avatar;
+            }
+
+
+            tableHtml += `  
             <tr class="bg-white border-b hover:bg-gray-50">
                 <td class="py-4 px-6">
                     <div class="flex items-center space-x-3">
                         <div class="flex-shrink-0">
-                            <img src="${user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random'}" 
+                            <img src="${user.avatar}" 
                                  alt="${user.name}" 
                                  class="h-10 w-10 rounded-full">
                         </div>
