@@ -28,8 +28,9 @@ Route::get('/admin/users/statistics',[UserController::class,'getUsersStatistics'
 
 
 //services
-Route::post('/barberShop/services',[BarberShopController::class,'getServices']);
-Route::post('/barberShop/services/add',[BarberShopController::class,'addService']);
+Route::post('/barberShop/services',[ServicesController::class,'index']);
+Route::post('/barberShop/services/add',[ServicesController::class,'store']);
 Route::post('/barberShop/services/update/{services:id}',[ServicesController::class,'update']);
-Route::delete('/barberShop/services/delete/{services:id}',[ServicesController::class,'destroy']);
+Route::delete('/barberShop/services/delete/{services:id}',action: [ServicesController::class,'destroy']);
 Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::class,'toggle']);
+Route::post('/barberShop/services/statistics',[ServicesController::class,'getServicesStatistics']);

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\barberShop;
 use App\Models\Services;
 use App\Http\Requests\StoreServicesRequest;
 use App\Http\Requests\UpdateServicesRequest;
+use App\Repositories\ServicesRepository;
 use Illuminate\Http\Request;
 
 class ServicesController extends Controller
@@ -12,9 +14,16 @@ class ServicesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $barbershop = barberShop::findOrFail($request->shopId);
+        $services = Services::where('barber_shop_id', $barbershop->id)->orderBy('created_at','DESC')->paginate(6);
+        if ($services->isEmpty()) {
+            return response()->json([
+                "message" => "No services found for this barber shop"
+            ], 404);
+        }
+        return response()->json($services, 200);
     }
 
     /**
@@ -28,9 +37,38 @@ class ServicesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreServicesRequest $request)
+    public function store()
     {
-        //
+        try {
+            $validated = request()->validate([
+                "name" => "required",
+                "description" => "required",
+                "price" => "required|numeric",
+                "duration" => "required|integer",
+                "image" => "nullable|image",
+                "type" => "required|in:Haircuts,Beard & Shave,Packages",
+                "is_active" => "nullable|boolean",
+            ]);
+
+
+            $barbershop = barberShop::findOrFail(request()->shopId);
+            $service = Services::create([
+                "barber_shop_id" => $barbershop->id,
+                "name" => $validated["name"],
+                "description" => $validated["description"],
+                "price" => $validated["price"],
+                "duration" => $validated["duration"],
+                "image" => request()->file('image')?->store('services', 'public'),
+                "type" => $validated["type"],
+                "is_active" => $validated["is_active"],
+                ]);
+
+            return response()->json($service, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Failed to add service: " . $e->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -122,7 +160,7 @@ class ServicesController extends Controller
                     'message' => 'You are not authorized to toggle this service'
                 ], 403);
             }
-            $services->is_active = !$request->is_active;
+            $services->is_active = $request->is_active;
             $services->save();
             return response()->json([
                 'message' => 'Service status updated successfully',
@@ -135,5 +173,11 @@ class ServicesController extends Controller
             ], 500);
         }
         
+    }
+
+    public function getServicesStatistics(Request $request){
+        $barbershop = barberShop::findOrFail($request->shopId);
+        $statistics=ServicesRepository::getStatistics($barbershop->id);
+        return response()->json($statistics, 200);
     }
 }

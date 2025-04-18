@@ -121,6 +121,20 @@
             box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
         }
     }
+    @keyframes fadeInUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                    .animate-fade-in-up {
+                        animation: fadeInUp 0.5s ease-out forwards;
+                        opacity: 0;
+                    }
 </style>
 @endsection
 
@@ -153,7 +167,7 @@
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
                 <div class="relative">
-                    <input id="search-input" type="text" placeholder="Search services..." class="w-full rounded-md border border-gray-300 shadow-sm py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                    <input id="search-input" type="text" placeholder="Search services..." class="filter w-full rounded-md border border-gray-300 shadow-sm py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -166,7 +180,6 @@
                     <option value="">Status: All</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
-                    <option value="featured">Featured</option>
                 </select>
                 
                 <select id="category-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
@@ -202,61 +215,7 @@
     
     <!-- Stats Overview -->
     <div id="statistics" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4 scale-in">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 rounded-md bg-blue-100 p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                </div>
-                <div class="ml-5">
-                    <h4 class="text-lg font-medium text-gray-900" id="total-services">0</h4>
-                    <p class="text-sm font-medium text-gray-500">Total Services</p>
-                </div>
-            </div>
-        </div>
         
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.1s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 rounded-md bg-green-100 p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-5">
-                    <h4 class="text-lg font-medium text-gray-900" id="active-services">0</h4>
-                    <p class="text-sm font-medium text-gray-500">Active Services</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.2s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 rounded-md bg-yellow-100 p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                    </svg>
-                </div>
-                <div class="ml-5">
-                    <h4 class="text-lg font-medium text-gray-900" id="featured-services">0</h4>
-                    <p class="text-sm font-medium text-gray-500">Featured Services</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow p-4 scale-in" style="animation-delay: 0.3s">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 rounded-md bg-purple-100 p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="ml-5">
-                    <h4 class="text-lg font-medium text-gray-900" id="avg-price">$0</h4>
-                    <p class="text-sm font-medium text-gray-500">Average Price</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Services Grid -->
@@ -366,10 +325,7 @@
                         <label for="service-active" class="ml-2 block text-sm text-gray-700">Active</label>
                     </div>
                     
-                    <div class="flex items-center">
-                        <input type="checkbox" id="service-featured" name="is_featured" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                        <label for="service-featured" class="ml-2 block text-sm text-gray-700">Featured</label>
-                    </div>
+                    
                 </div>
             </div>
             
@@ -435,7 +391,7 @@
         search: '',
         status: '',
         category: '',
-        sort: 'name_asc'
+        sort: 'DESC'
     };
     let pagesData={};
 
@@ -445,24 +401,22 @@
         getServices();
         
         // Add event listeners for filter inputs
-        document.getElementById('search-input').addEventListener('input', function(e) {
-            filterData.search = e.target.value;
-            getServices(1);
-        });
-        
-        document.getElementById('status-filter').addEventListener('change', function(e) {
-            filterData.status = e.target.value;
-            getServices(1);
-        });
-        
-        document.getElementById('category-filter').addEventListener('change', function(e) {
-            filterData.category = e.target.value;
-            getServices(1);
-        });
-        
-        document.getElementById('sort-filter').addEventListener('change', function(e) {
-            filterData.sort = e.target.value;
-            getServices(1);
+        let filterInputs = document.querySelectorAll('.filter');
+        filterInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                let searchValue = document.getElementById('search-input').value;
+                let statusValue = document.getElementById('status-filter').value;
+                let categoryValue = document.getElementById('category-filter').value;
+                let sortValue = document.getElementById('sort-filter').value;
+
+                filterData = {
+                    search: searchValue,
+                    status: statusValue,
+                    category: categoryValue,
+                    sort: sortValue
+                };
+                getServices(current_page, filterData);
+            });
         });
         
         // Clear filters button
@@ -514,8 +468,9 @@
         });
         
     });
+    getStatistics();
 
-    async function getServices(page = 1) {
+    async function getServices(page = 1, filterData = {search: '',  status: '', category: '' ,  sort: 'DESC'} ) {
         // Show loader animation
         const servicesContainer = document.getElementById('services-container');
         servicesContainer.innerHTML = `
@@ -542,6 +497,18 @@
         
         try {
             let url=`/api/barberShop/services?page=${page}`;
+            if (filterData.search) {
+                url += `&search=${encodeURIComponent(filterData.search)}`;
+            }
+            if (filterData.status) {
+                url += `&status=${encodeURIComponent(filterData.status)}`;
+            }
+            if (filterData.category) {
+                url += `&category=${encodeURIComponent(filterData.category)}`;
+            }
+            if (filterData.sort) {
+                url += `&sort=${encodeURIComponent(filterData.sort)}`;
+            }
             await fetch(url, {
                 method: 'POST',
                 body: formData
@@ -591,6 +558,84 @@
         }
     }
 
+    async function getStatistics() {
+        await fetch('/api/barberShop/services/statistics', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ shopId: {{auth()->user()->barberShop->id}} })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            let statisticsContainer = document.getElementById('statistics');
+            statisticsContainer.innerHTML = `
+                <div class="bg-white rounded-lg shadow p-4 transition transform hover:-translate-y-1 hover:shadow-lg animate-fade-in-up" style="animation-delay: 0ms">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 rounded-md bg-blue-100 p-3 transition-all duration-300 ease-in-out hover:bg-blue-200 hover:rotate-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <h4 class="text-lg font-medium text-gray-900 animate-count-up" data-count="${data.total_services}">${data.total_services}</h4>
+                            <p class="text-sm font-medium text-gray-500">Total Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4 transition transform hover:-translate-y-1 hover:shadow-lg animate-fade-in-up" style="animation-delay: 100ms">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 rounded-md bg-green-100 p-3 transition-all duration-300 ease-in-out hover:bg-green-200 hover:scale-110">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <h4 class="text-lg font-medium text-gray-900 animate-count-up" data-count="${data.active_services}">${data.active_services}</h4>
+                            <p class="text-sm font-medium text-gray-500">Active Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4 transition transform hover:-translate-y-1 hover:shadow-lg animate-fade-in-up" style="animation-delay: 200ms">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 rounded-md bg-red-100 p-3 transition-all duration-300 ease-in-out hover:bg-red-200 hover:rotate-[-12deg]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <h4 class="text-lg font-medium text-gray-900 animate-count-up" data-count="${data.inactive_services}">${data.inactive_services}</h4>
+                            <p class="text-sm font-medium text-gray-500">Inactive Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4 transition transform hover:-translate-y-1 hover:shadow-lg animate-fade-in-up" style="animation-delay: 300ms">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 rounded-md bg-yellow-100 p-3 transition-all duration-300 ease-in-out hover:bg-yellow-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <h4 class="text-lg font-medium text-gray-900 animate-count-up" data-count="${data.avg_price}">
+                                $${parseFloat(data.avg_price).toFixed(2)}
+                            </h4>
+                            <p class="text-sm font-medium text-gray-500">Average Price</p>
+                        </div>
+                    </div>
+                </div>`;
+                
+            
+        })
+        .catch(err => {
+            console.log('Error fetching statistics:', err);
+        });
+    }
+
     function renderServices() {
         const servicesContainer = document.getElementById('services-container');
         
@@ -619,9 +664,6 @@
         services.forEach(service => {
             // Create status badge
             let statusBadge = '';
-            if (service.is_featured) {
-                statusBadge = `<span class="popular-badge absolute top-3 right-3 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">Featured</span>`;
-            }
             
             const activeStatus = service.is_active ? 
                 `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>` : 
@@ -631,24 +673,24 @@
             const categoryName = service.type.charAt(0).toUpperCase() + service.type.slice(1);
             
             servicesHTML += `
-            <div class="service-card bg-white rounded-lg shadow-md overflow-hidden relative">
+            <div class="service-card bg-white rounded-lg shadow-md overflow-hidden relative animate-fade-in-up" style="animation-delay: ${services.indexOf(service) * 100}ms">
                 ${statusBadge}
                 <div class="relative h-48 overflow-hidden">
                     <img src="/storage/${service.image}" alt="${service.name}" class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black opacity-60"></div>
                     <div class="absolute bottom-0 left-0 p-4">
-                        <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded-md">${categoryName}</span>
+                        <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded-md animate-pulse">${categoryName}</span>
                     </div>
                     <div class="absolute top-0 right-0 m-3">
-                        <span class="price-tag inline-block px-3 py-1 text-sm font-bold rounded-lg shadow-lg">$${service.price}</span>
+                        <span class="price-tag inline-block px-3 py-1 text-sm font-bold rounded-lg shadow-lg animate-bounce-gentle">$${service.price}</span>
                     </div>
                 </div>
                 <div class="p-4">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-lg font-semibold text-gray-800">${service.name}</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 hover:text-primary-600 transition-colors">${service.name}</h3>
                         <div class="text-primary-600">
                             <span class="inline-flex items-center text-sm">
-                                <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="h-5 w-5 mr-1 animate-spin-slow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 ${service.duration} min
@@ -659,17 +701,17 @@
                     <div class="flex items-center justify-between">
                         ${activeStatus}
                         <div class="quick-actions flex space-x-2">
-                            <button onclick="openServiceModal(${service.id})" class="text-primary-600 hover:text-primary-800 transition-colors">
+                            <button onclick="openServiceModal(${service.id})" class="text-primary-600 hover:text-primary-800 transition-colors transform hover:scale-110">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </button>
-                            <button onclick="openDeleteModal(${service.id})" class="text-red-600 hover:text-red-800 transition-colors">
+                            <button onclick="openDeleteModal(${service.id})" class="text-red-600 hover:text-red-800 transition-colors transform hover:scale-110">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </button>
-                            <button onclick="toggleServiceStatus(${service.id},${service.is_active})" class="text-gray-600 hover:text-gray-800 transition-colors">
+                            <button onclick="toggleServiceStatus(${service.id},${!service.is_active})" class="text-gray-600 hover:text-gray-800 transition-colors transform hover:scale-110">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     ${service.is_active ? 
                                         `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />` : 
@@ -721,10 +763,7 @@
         });
     }
 
-    function getStatistics(allServices) {
-        
-    }
-
+   
     function openServiceModal(serviceId = null) {
         const modal = document.getElementById('serviceModal');
         const modalTitle = document.getElementById('modal-title');
@@ -742,7 +781,6 @@
             document.getElementById('service-duration').value = service.duration;
             document.getElementById('service-category').value = service.type;
             document.getElementById('service-active').checked = service.is_active;
-            document.getElementById('service-featured').checked = service.is_featured;
             
             modalTitle.textContent = 'Edit Service';
         } else {
@@ -773,7 +811,6 @@
         form.reset();
         document.getElementById('service-id').value = '';
         document.getElementById('service-active').checked = true;
-        document.getElementById('service-featured').checked = false;
     }
 
     async function saveService() {
@@ -811,7 +848,10 @@
         console.log(data);
         alert(isNewService ? 'Service created successfully!' : 'Service updated successfully!');
         document.getElementById('serviceModal').classList.add('hidden');
-        getServices(pagination.current_page);
+        getServices(current_page);
+        resetServiceForm();
+        getStatistics();
+
     })
     .catch(err => {
         console.log('Error saving service:', err);
@@ -835,7 +875,8 @@
                 // Service deleted successfully
                 getServices(current_page);
             
-                // Handle error
+                getStatistics();
+
                 
             })
             .catch(err => {
@@ -850,6 +891,8 @@
     }
 
     async function toggleServiceStatus(serviceId, status) {
+        console.log('Service ID:', serviceId, 'Status:', status);
+        
         await fetch(`/api/barberShop/services/toggle/${serviceId}`, {
             method: 'POST',
             headers: {
@@ -864,7 +907,8 @@
                 // Service status updated successfully
                 getServices(current_page);
             
-                // Handle error
+                getStatistics();
+
                 
             })
             .catch(err => {
