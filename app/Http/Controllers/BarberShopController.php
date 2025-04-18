@@ -13,10 +13,12 @@ use App\Mail\SendReconsiderationEmail;
 use App\Models\barberShop;
 use App\Http\Requests\StorebarberShopRequest;
 use App\Http\Requests\UpdatebarberShopRequest;
+use App\Models\Services;
 use App\Models\User;
 use App\Repositories\BarbershopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Mail;
 
 class BarberShopController extends Controller
@@ -249,6 +251,54 @@ class BarberShopController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 "message" => "Failed to send email: " . $e->getMessage()
+            ], 400);
+        }
+    }
+
+
+    public function getServices(Request $request){
+        // return response()->json([
+        //     "message" => $request->all()
+        // ], 200);
+        $barbershop = barberShop::findOrFail($request->shopId);
+        $services = Services::where('barber_shop_id', $barbershop->id)->orderBy('created_at','DESC')->paginate(6);
+        if ($services->isEmpty()) {
+            return response()->json([
+                "message" => "No services found for this barber shop"
+            ], 404);
+        }
+        return response()->json($services, 200);
+    }
+
+    public function addService(){
+        try {
+            $validated = request()->validate([
+                "name" => "required",
+                "description" => "required",
+                "price" => "required|numeric",
+                "duration" => "required|integer",
+                "image" => "nullable|image",
+                "type" => "required|in:Haircuts,Beard & Shave,Packages",
+                "is_active" => "nullable|boolean",
+            ]);
+
+
+            $barbershop = barberShop::findOrFail(request()->shopId);
+            $service = Services::create([
+                "barber_shop_id" => $barbershop->id,
+                "name" => $validated["name"],
+                "description" => $validated["description"],
+                "price" => $validated["price"],
+                "duration" => $validated["duration"],
+                "image" => request()->file('image')?->store('services', 'public'),
+                "type" => $validated["type"],
+                "is_active" => $validated["is_active"],
+                ]);
+
+            return response()->json($service, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Failed to add service: " . $e->getMessage()
             ], 400);
         }
     }

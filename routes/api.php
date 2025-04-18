@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BarberShopController;
+use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,3 +26,10 @@ Route::post('/admin/users/suspend',[UserController::class,'suspendUser']);
 Route::put('/admin/users/edit',[UserController::class,'editUser']);
 Route::get('/admin/users/statistics',[UserController::class,'getUsersStatistics']);
 
+
+//services
+Route::post('/barberShop/services',[BarberShopController::class,'getServices']);
+Route::post('/barberShop/services/add',[BarberShopController::class,'addService']);
+Route::post('/barberShop/services/update/{services:id}',[ServicesController::class,'update']);
+Route::delete('/barberShop/services/delete/{services:id}',[ServicesController::class,'destroy']);
+Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::class,'toggle']);

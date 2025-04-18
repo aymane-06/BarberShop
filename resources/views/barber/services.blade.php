@@ -129,7 +129,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Services Management</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Services Management </h1>
             <p class="mt-1 text-sm text-gray-600">Add, edit and manage your barbershop services</p>
         </div>
         <div class="mt-4 md:mt-0 flex space-x-3">
@@ -171,7 +171,7 @@
                 
                 <select id="category-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">Category: All</option>
-                    <option value="haircuts">Haircuts</option>
+                    <option value="Haircuts">Haircuts</option>
                     <option value="Beard & Shave">Beard & Shave</option>
                     <option value="Packages">Packages</option>
                 </select>
@@ -349,7 +349,7 @@
                     <label for="service-category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
                     <select id="service-category" name="category" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50" required>
                         <option value="">Select a category</option>
-                        <option value="haircuts">Haircuts</option>
+                        <option value="Haircuts">Haircuts</option>
                         <option value="Beard & Shave">Beard & Shave</option>
                         <option value="Packages">Packages</option>
                     </select>
@@ -430,14 +430,16 @@
 @section('additional_scripts')
 <script>
     let services = [];
-    let pagination = { current_page: 1, total: 0, per_page: 9 };
+    let pagination ;
     let filterData = {
         search: '',
         status: '',
         category: '',
         sort: 'name_asc'
     };
+    let pagesData={};
 
+    let current_page=1;
     document.addEventListener('DOMContentLoaded', function() {
         // Load services on page load
         getServices();
@@ -477,7 +479,7 @@
                 sort: 'name_asc'
             };
             
-            getServices(1);
+            getServices(current_page);
         });
         
         // Add new service button
@@ -511,18 +513,6 @@
             deleteService(serviceId);
         });
         
-        // Mobile pagination buttons
-        document.getElementById('prev-page-mobile').addEventListener('click', function() {
-            if (pagination.current_page > 1) {
-                getServices(pagination.current_page - 1);
-            }
-        });
-        
-        document.getElementById('next-page-mobile').addEventListener('click', function() {
-            if (pagination.current_page < Math.ceil(pagination.total / pagination.per_page)) {
-                getServices(pagination.current_page + 1);
-            }
-        });
     });
 
     async function getServices(page = 1) {
@@ -546,154 +536,48 @@
                 </div>
             </div>
         </div>`;
-
+        let formData = new FormData();
+        formData.append('shopId', {{ auth()->user()->barberShop->id }});
+        // console.log(formData);
+        
         try {
-            // In a real app, this would be an API call
-            // For this example, we'll simulate fetching data
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            let url=`/api/barberShop/services?page=${page}`;
+            await fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                    // console.log(data);
+                    
+                    services = data.data;
+                    pagination = data.links;
+                    current_page=data.current_page;
+                    pagesData={
+                        total: data.total,
+                        per_page: data.per_page,
+                        from: data.from,
+                        to: data.to,
+                        last_page: data.last_page
+                    };
+
+                    
+                    
+
+                  
+                });
             
-            // Sample data for demonstration
-            const mockServices = [
-                {
-                    id: 1,
-                    name: 'Classic Haircut',
-                    description: 'Traditional haircut with scissors and clippers',
-                    price: 25.00,
-                    duration: 30,
-                    category: 'haircut',
-                    is_active: true,
-                    is_featured: true,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                },
-                {
-                    id: 2,
-                    name: 'Beard Trim',
-                    description: 'Professional beard trimming and styling',
-                    price: 15.00,
-                    duration: 20,
-                    category: 'beard',
-                    is_active: true,
-                    is_featured: false,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                },
-                {
-                    id: 3,
-                    name: 'Hot Towel Shave',
-                    description: 'Relaxing hot towel shave with straight razor',
-                    price: 30.00,
-                    duration: 45,
-                    category: 'shave',
-                    is_active: true,
-                    is_featured: true,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                },
-                {
-                    id: 4,
-                    name: 'Hair Coloring',
-                    description: 'Professional hair coloring service',
-                    price: 60.00,
-                    duration: 90,
-                    category: 'coloring',
-                    is_active: true,
-                    is_featured: false,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                },
-                {
-                    id: 5,
-                    name: 'Kids Haircut',
-                    description: 'Haircut for children under 12',
-                    price: 18.00,
-                    duration: 20,
-                    category: 'haircut',
-                    is_active: true,
-                    is_featured: false,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                },
-                {
-                    id: 6,
-                    name: 'Facial Treatment',
-                    description: 'Refreshing facial treatment for men',
-                    price: 40.00,
-                    duration: 60,
-                    category: 'facial',
-                    is_active: false,
-                    is_featured: false,
-                    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                }
-            ];
-            
-            // Filter services based on search and filters
-            let filteredServices = [...mockServices];
-            
-            if (filterData.search) {
-                const searchTerm = filterData.search.toLowerCase();
-                filteredServices = filteredServices.filter(service => 
-                    service.name.toLowerCase().includes(searchTerm) || 
-                    service.description.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            if (filterData.status) {
-                if (filterData.status === 'active') {
-                    filteredServices = filteredServices.filter(service => service.is_active);
-                } else if (filterData.status === 'inactive') {
-                    filteredServices = filteredServices.filter(service => !service.is_active);
-                } else if (filterData.status === 'featured') {
-                    filteredServices = filteredServices.filter(service => service.is_featured);
-                }
-            }
-            
-            if (filterData.category) {
-                filteredServices = filteredServices.filter(service => service.category === filterData.category);
-            }
-            
-            // Sort services
-            filteredServices.sort((a, b) => {
-                switch (filterData.sort) {
-                    case 'name_asc':
-                        return a.name.localeCompare(b.name);
-                    case 'name_desc':
-                        return b.name.localeCompare(a.name);
-                    case 'price_asc':
-                        return a.price - b.price;
-                    case 'price_desc':
-                        return b.price - a.price;
-                    case 'duration_asc':
-                        return a.duration - b.duration;
-                    case 'duration_desc':
-                        return b.duration - a.duration;
-                    default:
-                        return a.name.localeCompare(b.name);
-                }
-            });
-            
-            // Pagination
-            const total = filteredServices.length;
-            const perPage = 6;
-            const lastPage = Math.ceil(total / perPage);
-            const from = (page - 1) * perPage;
-            const to = Math.min(from + perPage, total);
-            
-            services = filteredServices.slice(from, to);
-            
-            pagination = {
-                current_page: page,
-                last_page: lastPage,
-                total: total,
-                per_page: perPage,
-                from: from + 1,
-                to: to
-            };
+           
             
             // Update statistics
-            updateStatistics(mockServices);
+            // updateStatistics(mockServices);
             
             // Render services and pagination
             renderServices();
             renderPagination();
             
         } catch (error) {
-            console.error('Error fetching services:', error);
+            console.log('Error fetching services:',error);
             servicesContainer.innerHTML = `
             <div class="col-span-full text-center py-10">
                 <p class="text-red-500">Failed to load services. Please try again later.</p>
@@ -744,19 +628,19 @@
                 `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>`;
             
             // Format category
-            const categoryName = service.category.charAt(0).toUpperCase() + service.category.slice(1);
+            const categoryName = service.type.charAt(0).toUpperCase() + service.type.slice(1);
             
             servicesHTML += `
             <div class="service-card bg-white rounded-lg shadow-md overflow-hidden relative">
                 ${statusBadge}
                 <div class="relative h-48 overflow-hidden">
-                    <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105">
+                    <img src="/storage/${service.image}" alt="${service.name}" class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black opacity-60"></div>
                     <div class="absolute bottom-0 left-0 p-4">
                         <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded-md">${categoryName}</span>
                     </div>
                     <div class="absolute top-0 right-0 m-3">
-                        <span class="price-tag inline-block px-3 py-1 text-sm font-bold rounded-lg shadow-lg">$${service.price.toFixed(2)}</span>
+                        <span class="price-tag inline-block px-3 py-1 text-sm font-bold rounded-lg shadow-lg">$${service.price}</span>
                     </div>
                 </div>
                 <div class="p-4">
@@ -785,7 +669,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </button>
-                            <button onclick="toggleServiceStatus(${service.id})" class="text-gray-600 hover:text-gray-800 transition-colors">
+                            <button onclick="toggleServiceStatus(${service.id},${service.is_active})" class="text-gray-600 hover:text-gray-800 transition-colors">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     ${service.is_active ? 
                                         `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />` : 
@@ -803,85 +687,42 @@
         
         // Update pagination info
         document.getElementById('pagination-info').innerHTML = `
-            Showing <span class="font-medium">${pagination.from}</span> to <span class="font-medium">${pagination.to}</span> of <span class="font-medium">${pagination.total}</span> services
+            Showing <span class="font-medium">${pagesData.from}</span> to <span class="font-medium">${pagesData.to}</span> of <span class="font-medium">${pagesData.total}</span> services
         `;
     }
 
     function renderPagination() {
-        const paginationContainer = document.getElementById('pagination');
-        paginationContainer.innerHTML = '';
+        console.log(pagination);
         
-        // Previous button
-        const prevButton = document.createElement('button');
-        prevButton.classList.add('relative', 'inline-flex', 'items-center', 'px-2', 'py-2', 'rounded-l-md', 'border', 'border-gray-300', 'bg-white', 'text-sm', 'font-medium', 'text-gray-500', 'hover:bg-gray-50');
-        prevButton.innerHTML = `
-            <span class="sr-only">Previous</span>
-            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-        `;
-        
-        if (pagination.current_page > 1) {
-            prevButton.addEventListener('click', () => getServices(pagination.current_page - 1));
-        } else {
-            prevButton.classList.add('cursor-not-allowed');
-        }
-        
-        paginationContainer.appendChild(prevButton);
-        
-        // Page numbers
-        const totalPages = Math.ceil(pagination.total / pagination.per_page);
-        let startPage = Math.max(1, pagination.current_page - 2);
-        let endPage = Math.min(totalPages, startPage + 4);
-        
-        if (endPage - startPage < 4) {
-            startPage = Math.max(1, endPage - 4);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.classList.add('relative', 'inline-flex', 'items-center', 'px-4', 'py-2', 'border', 'text-sm', 'font-medium');
-            
-            if (i === pagination.current_page) {
-                pageButton.classList.add('z-10', 'bg-primary-50', 'border-primary-500', 'text-primary-600');
+        document.getElementById('pagination').innerHTML = ''; // Clear existing pagination
+        pagination.forEach(element => {
+            let pageButton = document.createElement('button');
+            pageButton.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500';
+            pageButton.innerHTML = element.label;
+
+            if(element.active) {
+                pageButton.classList.add('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'focus:ring-primary-500');
+            } else if (element.url) {
+                pageButton.classList.add('text-gray-700', 'hover:bg-gray-50');
             } else {
-                pageButton.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
-                pageButton.addEventListener('click', () => getServices(i));
+                pageButton.classList.add('text-gray-300', 'cursor-not-allowed');
             }
             
-            pageButton.textContent = i;
-            paginationContainer.appendChild(pageButton);
-        }
-        
-        // Next button
-        const nextButton = document.createElement('button');
-        nextButton.classList.add('relative', 'inline-flex', 'items-center', 'px-2', 'py-2', 'rounded-r-md', 'border', 'border-gray-300', 'bg-white', 'text-sm', 'font-medium', 'text-gray-500', 'hover:bg-gray-50');
-        nextButton.innerHTML = `
-            <span class="sr-only">Next</span>
-            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-        `;
-        
-        if (pagination.current_page < totalPages) {
-            nextButton.addEventListener('click', () => getServices(pagination.current_page + 1));
-        } else {
-            nextButton.classList.add('cursor-not-allowed');
-        }
-        
-        paginationContainer.appendChild(nextButton);
+            if (element.url) {
+                // Extract the page number from the URL
+                const pageNum = element.url.split('page=')[1];
+                // Use closure to preserve the page number
+                pageButton.onclick = function() {
+                    getServices(pageNum);
+                };
+            }
+            
+            document.getElementById('pagination').appendChild(pageButton);
+        });
     }
 
-    function updateStatistics(allServices) {
-        const totalServices = allServices.length;
-        const activeServices = allServices.filter(s => s.is_active).length;
-        const featuredServices = allServices.filter(s => s.is_featured).length;
-        const avgPrice = allServices.reduce((sum, service) => sum + service.price, 0) / totalServices;
+    function getStatistics(allServices) {
         
-        document.getElementById('total-services').textContent = totalServices;
-        document.getElementById('active-services').textContent = activeServices;
-        document.getElementById('featured-services').textContent = featuredServices;
-        document.getElementById('avg-price').textContent = '$' + avgPrice.toFixed(2);
     }
 
     function openServiceModal(serviceId = null) {
@@ -892,14 +733,14 @@
         if (serviceId) {
             // Edit existing service
             const service = services.find(s => s.id === serviceId) || 
-                            { name: '', description: '', price: 0, duration: 30, category: '', is_active: true, is_featured: false };
+                            { name: '', description: '', price: 0, duration: 30, type: '', is_active: true, is_featured: false };
             
             document.getElementById('service-id').value = serviceId;
             document.getElementById('service-name').value = service.name;
             document.getElementById('service-description').value = service.description;
             document.getElementById('service-price').value = service.price;
             document.getElementById('service-duration').value = service.duration;
-            document.getElementById('service-category').value = service.category;
+            document.getElementById('service-category').value = service.type;
             document.getElementById('service-active').checked = service.is_active;
             document.getElementById('service-featured').checked = service.is_featured;
             
@@ -919,7 +760,7 @@
         
         if (service) {
             document.getElementById('delete-service-name').textContent = service.name;
-            document.getElementById('delete-service-details').textContent = `$${service.price.toFixed(2)} • ${service.duration} minutes • ${service.category.charAt(0).toUpperCase() + service.category.slice(1)}`;
+            document.getElementById('delete-service-details').textContent = `$${service.price} • ${service.duration} minutes • ${service.type}`;
             
             document.getElementById('confirm-delete').setAttribute('data-service-id', serviceId);
             
@@ -935,55 +776,108 @@
         document.getElementById('service-featured').checked = false;
     }
 
-    function saveService() {
-        const serviceId = document.getElementById('service-id').value;
-        const isNewService = !serviceId;
-        
-        const serviceData = {
-            id: isNewService ? Date.now() : parseInt(serviceId), // Generate a temporary ID for new services
-            name: document.getElementById('service-name').value,
-            description: document.getElementById('service-description').value,
-            price: parseFloat(document.getElementById('service-price').value),
-            duration: parseInt(document.getElementById('service-duration').value),
-            category: document.getElementById('service-category').value,
-            is_active: document.getElementById('service-active').checked,
-            is_featured: document.getElementById('service-featured').checked,
-            image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' // Default image for now
-        };
-        
-        // In a real app, this would be an API call to save the service
-        // For this example, we'll just update our local array
-        console.log('Saving service:', serviceData);
-        
-        // Add success notification
-        alert(isNewService ? 'Service created successfully!' : 'Service updated successfully!');
-        
-        // Close modal and refresh services
-        document.getElementById('serviceModal').classList.add('hidden');
-        getServices(pagination.current_page);
+    async function saveService() {
+    const serviceId = document.getElementById('service-id').value;
+    const isNewService = !serviceId;
+
+    const formData = new FormData();
+    formData.append('shopId', '{{ auth()->user()->barberShop->id }}');
+    formData.append('name', document.getElementById('service-name').value);
+    formData.append('description', document.getElementById('service-description').value);
+    formData.append('price', document.getElementById('service-price').value);
+    formData.append('duration', document.getElementById('service-duration').value);
+    formData.append('type', document.getElementById('service-category').value);
+    formData.append('is_active', document.getElementById('service-active').checked ? 1 : 0);
+    
+    const imageFile = document.getElementById('service-image').files?.[0];
+    if (imageFile) {
+        formData.append('image', imageFile);
     }
 
-    function deleteService(serviceId) {
-        // In a real app, this would be an API call to delete the service
-        console.log('Deleting service:', serviceId);
-        
-        // Add success notification
+    if (!isNewService) {
+        formData.append('id', serviceId);
+    }
+    console.log(formData);
+    
+    await fetch(isNewService ? '/api/barberShop/services/add' : `/api/barberShop/services/update/${serviceId}`, {
+        method: 'POST', // Still use POST; Laravel handles PUT via _method if needed
+        body: formData,
+        headers: {
+            // Do NOT set 'Content-Type' manually when using FormData
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        alert(isNewService ? 'Service created successfully!' : 'Service updated successfully!');
+        document.getElementById('serviceModal').classList.add('hidden');
+        getServices(pagination.current_page);
+    })
+    .catch(err => {
+        console.log('Error saving service:', err);
+    });
+}
+
+
+   async function deleteService(serviceId) {
+    
+        await fetch(`/api/barberShop/services/delete/${serviceId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ shopId: '{{ auth()->user()->barberShop->id }}' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            // console.log(data);
+            
+                // Service deleted successfully
+                getServices(current_page);
+            
+                // Handle error
+                
+            })
+            .catch(err => {
+                alert('Failed to delete service. Please try again.');
+                console.log('Error deleting service:', err);
+            });
+            // Add success notification
         alert('Service deleted successfully!');
         
         // Close modal and refresh services
         document.getElementById('deleteServiceModal').classList.add('hidden');
-        getServices(pagination.current_page);
     }
 
-    function toggleServiceStatus(serviceId) {
-        // In a real app, this would be an API call to toggle the service status
+    async function toggleServiceStatus(serviceId, status) {
+        await fetch(`/api/barberShop/services/toggle/${serviceId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ is_active: status, shopId: '{{ auth()->user()->barberShop->id }}' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            // console.log(data);
+            
+                // Service status updated successfully
+                getServices(current_page);
+            
+                // Handle error
+                
+            })
+            .catch(err => {
+                alert('Failed to update service status. Please try again.');
+                console.log('Error updating service status:', err);
+            });
+        
         console.log('Toggling service status:', serviceId);
         
         // Add success notification
         alert('Service status updated!');
         
-        // Refresh services
-        getServices(pagination.current_page);
+       
     }
 </script>
 @endsection
