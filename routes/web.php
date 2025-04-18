@@ -37,9 +37,18 @@ Route::get('/profile', function () {
 Route::put('/profile', [AuthController::class, 'updateProfile'])->name('user.profile.update');
 
 
-Route::get('/barber/dashboard', function () {
+Route::get('/barberShop/dashboard', function () {
     return view('barber.dashboard');
 })->name('barber.dashboard');
+
+Route::get('/barberShop/Profile', function () {
+    return view('barber.profile');
+})->name('barberShop.profile');
+
+// barberShop.services
+Route::get('/barberShop/services', function () {
+    return view('barber.services');
+})->name('barberShop.services');
 
 Route::get('/barber/barberjoin', function () {
     return view('barber.barberJoin');
@@ -55,7 +64,7 @@ Route::post('/barber/barbershop/create', [BarberShopController::class, 'store'])
 Route::get('/barber/barbershop/Verification', function () {
     return view('barber.BarberVerification');
 })->name('barber.barberVerification');
-Route::post('/barber/barbershop/reject', [BarberShopController::class, 'reject'])->name('barber.barberVerification.reject');
+
 // Email verification routes
 Route::get('/email/verify', [AuthController::class, 'showEmailVerification'])->name('email.verifyUser');
 Route::get('/email/verify/{token}/{email}', [AuthController::class, 'verifyEmail'])->name('email.verify');

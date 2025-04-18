@@ -84,11 +84,41 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/barber/analytics" class="flex bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
-                                    <i class="fas fa-chart-line mr-3"></i>
-                                    Analytics
-                                </a>
-                            </li>
+                                <div class="relative">
+                                    <button onclick="toggleDropdown('shopDropdown')" class="flex items-center justify-between w-full bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-store mr-3"></i>
+                                            <span>Shop Management</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                    <div id="shopDropdown" class="hidden pl-4 py-2 space-y-1">
+                                        <a href="{{ route('barberShop.profile') }}" class="flex items-center bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-2 px-4 transition-all">
+                                            <i class="fas fa-id-card mr-3"></i>
+                                            Shop Profile
+                                        </a>
+                                        <a href="{{ route('barberShop.services') }}" class="flex items-center bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-2 px-4 transition-all">
+                                            <i class="fas fa-list-ul mr-3"></i>
+                                            Services Management
+                                        </a>
+                                        <a href="" class="flex items-center bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-2 px-4 transition-all">
+                                            <i class="fas fa-images mr-3"></i>
+                                            Gallery
+                                        </a>
+                                        <a href="" class="flex items-center bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-2 px-4 transition-all">
+                                            <i class="fas fa-cog mr-3"></i>
+                                            Settings
+                                        </a>
+                                    </div>
+
+                                    <script>
+                                        function toggleDropdown(id) {
+                                            const dropdown = document.getElementById(id);
+                                            dropdown.classList.toggle('hidden');
+                                        }
+                                    </script>
+                                </div>
+                            </li></div>
                         </ul>
                     </div>
                 </div>
@@ -112,9 +142,9 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="md:ml-60 h-screen">
+        <main class="md:ml-60 h-screen pt-16">
             <!-- Top Navbar -->
-            <header class="w-full h-16 z-40 flex items-center justify-between bg-white shadow-sm px-5">
+            <header class="fixed top-0 right-0 left-0 md:left-60 h-16 z-40 flex items-center justify-between bg-white shadow-sm px-5">
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-gray-500 hover:text-primary-600 focus:outline-none">
@@ -208,7 +238,7 @@
             </header>
             
             <!-- Page Content -->
-            <div class="content">
+            <div class="content px-4 py-3">
                 @yield('content')
             </div>
         </main>
