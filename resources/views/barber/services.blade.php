@@ -178,18 +178,19 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto">
                 <select id="status-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">Status: All</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                 </select>
                 
-                <select id="category-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
-                    <option value="">Category: All</option>
+                <select id="type-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                    <option value="">type: All</option>
                     <option value="Haircuts">Haircuts</option>
                     <option value="Beard & Shave">Beard & Shave</option>
                     <option value="Packages">Packages</option>
                 </select>
                 
                 <select id="sort-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                    <option value="DESC" selected>Last Created</option>
                     <option value="name_asc">Name (A-Z)</option>
                     <option value="name_desc">Name (Z-A)</option>
                     <option value="price_asc">Price (Low-High)</option>
@@ -305,9 +306,9 @@
                 </div>
                 
                 <div class="mb-4">
-                    <label for="service-category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <select id="service-category" name="category" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50" required>
-                        <option value="">Select a category</option>
+                    <label for="service-type" class="block text-sm font-medium text-gray-700 mb-1">type</label>
+                    <select id="service-type" name="type" class="w-full rounded-md border border-gray-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50" required>
+                        <option value="">Select a type</option>
                         <option value="Haircuts">Haircuts</option>
                         <option value="Beard & Shave">Beard & Shave</option>
                         <option value="Packages">Packages</option>
@@ -390,7 +391,7 @@
     let filterData = {
         search: '',
         status: '',
-        category: '',
+        type: '',
         sort: 'DESC'
     };
     let pagesData={};
@@ -406,13 +407,13 @@
             input.addEventListener('change', function() {
                 let searchValue = document.getElementById('search-input').value;
                 let statusValue = document.getElementById('status-filter').value;
-                let categoryValue = document.getElementById('category-filter').value;
+                let typeValue = document.getElementById('type-filter').value;
                 let sortValue = document.getElementById('sort-filter').value;
 
                 filterData = {
                     search: searchValue,
                     status: statusValue,
-                    category: categoryValue,
+                    type: typeValue,
                     sort: sortValue
                 };
                 getServices(current_page, filterData);
@@ -423,13 +424,13 @@
         document.getElementById('clear-filters').addEventListener('click', function() {
             document.getElementById('search-input').value = '';
             document.getElementById('status-filter').value = '';
-            document.getElementById('category-filter').value = '';
-            document.getElementById('sort-filter').value = 'name_asc';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('sort-filter').value = 'DESC';
             
             filterData = {
                 search: '',
                 status: '',
-                category: '',
+                type: '',
                 sort: 'name_asc'
             };
             
@@ -470,7 +471,7 @@
     });
     getStatistics();
 
-    async function getServices(page = 1, filterData = {search: '',  status: '', category: '' ,  sort: 'DESC'} ) {
+    async function getServices(page = 1, filterData = {sort: 'DESC'} ) {
         // Show loader animation
         const servicesContainer = document.getElementById('services-container');
         servicesContainer.innerHTML = `
@@ -491,64 +492,63 @@
                 </div>
             </div>
         </div>`;
-        let formData = new FormData();
-        formData.append('shopId', {{ auth()->user()->barberShop->id }});
-        // console.log(formData);
         
         try {
-            let url=`/api/barberShop/services?page=${page}`;
+            let formData = new FormData();
+            formData.append('shopId', @json(auth()->user()->barberShop->id));
+
+            
+            let url = `/api/barberShop/services?page=${page}`;
+            console.log(filterData);
+            
             if (filterData.search) {
                 url += `&search=${encodeURIComponent(filterData.search)}`;
             }
             if (filterData.status) {
                 url += `&status=${encodeURIComponent(filterData.status)}`;
             }
-            if (filterData.category) {
-                url += `&category=${encodeURIComponent(filterData.category)}`;
+            if (filterData.type) {
+                url += `&type=${encodeURIComponent(filterData.type)}`;
             }
             if (filterData.sort) {
                 url += `&sort=${encodeURIComponent(filterData.sort)}`;
             }
-            await fetch(url, {
+
+            const response = await fetch(url, {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 method: 'POST',
                 body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                    // console.log(data);
-                    
-                    services = data.data;
-                    pagination = data.links;
-                    current_page=data.current_page;
-                    pagesData={
-                        total: data.total,
-                        per_page: data.per_page,
-                        from: data.from,
-                        to: data.to,
-                        last_page: data.last_page
-                    };
-
-                    
-                    
-
-                  
-                });
+            });
             
-           
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
             
-            // Update statistics
-            // updateStatistics(mockServices);
+            const data = await response.json();
+            console.log(data);
             
-            // Render services and pagination
+            
+            services = data.data;
+            pagination = data.links;
+            current_page = data.current_page;
+            pagesData = {
+                total: data.total,
+                per_page: data.per_page,
+                from: data.from,
+                to: data.to,
+                last_page: data.last_page
+            };
+            
             renderServices();
             renderPagination();
-            
         } catch (error) {
-            console.log('Error fetching services:',error);
+            console.error('Error fetching services:', error);
             servicesContainer.innerHTML = `
             <div class="col-span-full text-center py-10">
                 <p class="text-red-500">Failed to load services. Please try again later.</p>
-                <button class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" onclick="getServices()">
+                <button class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" onclick="getServices(${current_page})">
                     <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
@@ -669,8 +669,8 @@
                 `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>` : 
                 `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>`;
             
-            // Format category
-            const categoryName = service.type.charAt(0).toUpperCase() + service.type.slice(1);
+            // Format type
+            const typeName = service.type.charAt(0).toUpperCase() + service.type.slice(1);
             
             servicesHTML += `
             <div class="service-card bg-white rounded-lg shadow-md overflow-hidden relative animate-fade-in-up" style="animation-delay: ${services.indexOf(service) * 100}ms">
@@ -679,7 +679,7 @@
                     <img src="/storage/${service.image}" alt="${service.name}" class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black opacity-60"></div>
                     <div class="absolute bottom-0 left-0 p-4">
-                        <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded-md animate-pulse">${categoryName}</span>
+                        <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-primary-600 rounded-md animate-pulse">${typeName}</span>
                     </div>
                     <div class="absolute top-0 right-0 m-3">
                         <span class="price-tag inline-block px-3 py-1 text-sm font-bold rounded-lg shadow-lg animate-bounce-gentle">$${service.price}</span>
@@ -779,7 +779,7 @@
             document.getElementById('service-description').value = service.description;
             document.getElementById('service-price').value = service.price;
             document.getElementById('service-duration').value = service.duration;
-            document.getElementById('service-category').value = service.type;
+            document.getElementById('service-type').value = service.type;
             document.getElementById('service-active').checked = service.is_active;
             
             modalTitle.textContent = 'Edit Service';
@@ -823,7 +823,7 @@
     formData.append('description', document.getElementById('service-description').value);
     formData.append('price', document.getElementById('service-price').value);
     formData.append('duration', document.getElementById('service-duration').value);
-    formData.append('type', document.getElementById('service-category').value);
+    formData.append('type', document.getElementById('service-type').value);
     formData.append('is_active', document.getElementById('service-active').checked ? 1 : 0);
     
     const imageFile = document.getElementById('service-image').files?.[0];

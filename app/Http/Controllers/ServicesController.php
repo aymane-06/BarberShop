@@ -6,6 +6,7 @@ use App\Models\barberShop;
 use App\Models\Services;
 use App\Http\Requests\StoreServicesRequest;
 use App\Http\Requests\UpdateServicesRequest;
+use App\Repositories\BarbershopRepository;
 use App\Repositories\ServicesRepository;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,20 @@ class ServicesController extends Controller
     public function index(Request $request)
     {
         $barbershop = barberShop::findOrFail($request->shopId);
-        $services = Services::where('barber_shop_id', $barbershop->id)->orderBy('created_at','DESC')->paginate(6);
+        $filter = [];
+        if ($request->has('search')) {
+            $filter['search'] = $request->search;
+        }
+        if ($request->has('type')) {
+            $filter['type'] = $request->type;
+        }
+        if ($request->has('status')) {
+            $filter['status'] = $request->status;
+        }
+        if ($request->has('sort')) {
+            $filter['sort'] = $request->sort;
+        }
+        $services = ServicesRepository::filterServices($barbershop->id, $filter);
         if ($services->isEmpty()) {
             return response()->json([
                 "message" => "No services found for this barber shop"

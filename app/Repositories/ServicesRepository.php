@@ -48,4 +48,49 @@ class ServicesRepository extends BaseRepository
             'avg_price' => self::getAVGPrice($barberShopId),
         ];
         }
+
+    public static function filterServices($barberShopId, $filters)
+    {
+        $query = Services::where('barber_shop_id', $barberShopId);
+
+        if (isset($filters['search'])) {
+            $query->where('name', 'like', '%' . $filters['search'] . '%');
+        }
+
+        if (isset($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (isset($filters['status'])) {
+            $query->where('is_active', $filters['status']);
+        }
+        
+        if (isset($filters['sort'])) {
+            switch ($filters['sort']) {
+            case 'DESC':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'duration_asc':
+                $query->orderBy('duration', 'asc');
+                break;
+            case 'duration_desc':
+                $query->orderBy('duration', 'desc');
+                break;
+            }
+        }
+
+        return $query->paginate(6);
+    } 
 }
