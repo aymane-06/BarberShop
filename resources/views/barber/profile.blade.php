@@ -81,7 +81,7 @@
 
         @if(session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md shadow-sm animate__animated animate__fadeInUp">
-                <div class="flex items-center"></div></div>
+                <div class="flex items-center">
                     <i class="fas fa-check-circle mr-3 text-green-500"></i>
                     <p>{{ session('success') }}</p>
                 </div>
@@ -101,7 +101,7 @@
             </div>
         @endif
 
-        <form action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('barberShop.profile.update',auth()->user()?->barbershop?->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -136,12 +136,12 @@
                         <label class="block text-sm font-medium text-gray-700 mb-3">Shop Avatar</label>
                         <div class="flex flex-col items-center">
                             <div class="w-32 h-32 bg-gray-100 rounded-full overflow-hidden mb-4 border-4 border-white shadow-lg">
-                                <img src="{{ auth()->user()?->barberShop->avatar ? asset('storage/' . auth()->user()?->barberShop->avatar) : asset('images/defaultauth()->user()?->barberShop-avatar.jpg') }}" alt="Shop avatar" class="w-full h-full object-cover">
+                                <img src="{{ auth()->user()?->barberShop->avatar ? asset('storage/' . auth()->user()?->barberShop->avatar) : asset('images/default-barbershop-avatar.jpg') }}" alt="Shop avatar" class="w-full h-full object-cover">
                             </div>
                             <div class="w-full">
                                 <div class="custom-file-input bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg py-3 px-4 text-center transition-all w-full">
                                     <i class="fas fa-cloud-upload-alt mr-2"></i> Choose Avatar
-                                    <input type="file" name="avatar" id="avatar" class="hidden" accept="image/*">
+                                    <input type="file" name="avatar" id="avatar" class="absolute opacity-0 w-full h-full top-0 left-0 cursor-pointer" accept="image/*">
                                 </div>
                                 <p class="mt-2 text-xs text-center text-gray-500">PNG, JPG up to 2MB</p>
                             </div>
@@ -152,12 +152,12 @@
                         <label class="block text-sm font-medium text-gray-700 mb-3">Cover Image</label>
                         <div class="flex flex-col items-center">
                             <div class="w-full h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-lg">
-                                <img src="{{ auth()->user()?->barberShop->cover ? asset('storage/' . auth()->user()?->barberShop->cover) : asset('images/defaultauth()->user()?->barberShop-cover.jpg') }}" alt="Shop cover" class="w-full h-full object-cover">
+                                <img src="{{ auth()->user()?->barberShop->cover ? asset('storage/' . auth()->user()?->barberShop->cover) : asset('images/default-barbershop-cover.jpg') }}" alt="Shop cover" class="w-full h-full object-cover">
                             </div>
                             <div class="w-full">
                                 <div class="custom-file-input bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg py-3 px-4 text-center transition-all w-full">
                                     <i class="fas fa-image mr-2"></i> Choose Cover Image
-                                    <input type="file" name="cover" id="cover" class="hidden" accept="image/*">
+                                    <input type="file" name="cover" id="cover" class="absolute opacity-0 w-full h-full top-0 left-0 cursor-pointer" accept="image/*">
                                 </div>
                                 <p class="mt-2 text-xs text-center text-gray-500">Recommended size: 1200x300px</p>
                             </div>

@@ -99,7 +99,32 @@ class BarberShopController extends Controller
      */
     public function update(UpdatebarberShopRequest $request, barberShop $barberShop)
     {
-        //
+        $validated = $request->validate([
+            "name" => "required",
+            "description" => "required",
+            "address" => "required",
+            "city" => "required",
+            "zip" => "required",
+            "phone" => "required",
+            "email" => "required|email",
+            "barbers" => "required|array",
+            'avatar' => 'nullable|image',
+            'cover' => 'nullable|image',
+            'slug' => 'required',
+            'website' => 'nullable|url',
+            'social_links' => 'nullable|array',
+            'working_hours' => 'nullable|array',
+        ]);
+        if($request->avatar){
+            $validated['avatar'] = $request->file('avatar')->store('barber-shops', 'public');
+        }
+        if($request->cover){
+            $validated['cover'] = $request->file('cover')->store('barber-shops', 'public');
+        }
+
+        $barberShop->update($validated);
+
+        return redirect()->route('barberShop.profile')->with('success', 'Barber shop updated successfully');
     }
 
     /**

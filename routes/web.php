@@ -44,11 +44,15 @@ Route::get('/barberShop/dashboard', function () {
 Route::get('/barberShop/Profile', function () {
     return view('barber.profile');
 })->name('barberShop.profile');
+Route::put('/barberShop/Profile/{barberShop:id}',[BarberShopController::class, 'update'])->name('barberShop.profile.update');
+
 
 // barberShop.services
 Route::get('/barberShop/services', function () {
     return view('barber.services');
 })->name('barberShop.services');
+// barber.profile.update
+
 
 Route::get('/barber/barberjoin', function () {
     return view('barber.barberJoin');
