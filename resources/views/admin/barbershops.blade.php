@@ -139,7 +139,7 @@
     <div class="bg-white rounded-lg shadow mb-6 p-4">
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
-                <form action="">
+                <div >
                 <div class="relative">
                     <input id="search-input" type="text" class="filter w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500" placeholder="Search barbershops by name, location, or services...">
                     <div class="absolute left-3 top-2.5">
@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto pt-3">
                 <select id="status-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">All Status</option>
                     <option value="Pending Verification">Pending</option>
@@ -183,7 +183,7 @@
                 Clear Filters
             </button>
         </div>
-        </form>
+</div>
         <div id="active-filters" class="mt-3 flex flex-wrap gap-2">
             <!-- Active filters will be dynamically added here -->
         </div>
@@ -225,7 +225,7 @@
 
 <!-- Rejection Modal -->
 <div id="rejectionModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
-    <form id="rejectionForm" action="{{ route('barber.barberVerification.reject') }}" method="POST">
+    <form id="rejectionForm" action="" method="POST">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden">
         <div class="bg-red-50 px-4 py-3 border-b border-red-100">
             <div class="flex items-center justify-between">
