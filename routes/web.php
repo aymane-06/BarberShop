@@ -22,9 +22,7 @@ Route::get('/search-results', function () {
     return view('pages.search-results');
 })->name('search-results');
 
-Route::get('/barbershop-detail', function () {
-    return view('pages.barber-detail');
-})->name('barbershop-detail');
+Route::get('/barbershop-detail/{barberShop:id}',[BarberShopController::class, 'show'])->name('barbershop-detail');
 
 Route::get('/Booking-confirm', function () {
     return view('pages.Booking-confirm');

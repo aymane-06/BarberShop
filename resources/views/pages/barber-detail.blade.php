@@ -2,6 +2,9 @@
 @section('additional_styles')
 
     <style>
+        *{
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Poppins', sans-serif;
             scroll-behavior: smooth;
@@ -64,7 +67,7 @@
                 <!-- Barber Image -->
                 <div class="md:w-1/3 mb-6 md:mb-0 md:pr-8">
                     <div class="relative rounded-lg overflow-hidden shadow-md h-64 md:h-auto">
-                        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Classic Cuts Barber Shop" class="w-full h-full object-cover">
+                        <img src="/storage/{{ $barberShop->cover }}" alt="Classic Cuts Barber Shop" class="w-full h-full object-cover">
                         <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow">
                             €€
                         </div>
@@ -75,7 +78,7 @@
                 <div class="md:w-2/3">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">Classic Cuts Barber Shop</h1>
+                            <h1 class="text-3xl font-bold text-gray-900">{{ $barberShop->name }}</h1>
                             <div class="flex items-center mt-2 mb-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-star rating-star"></i>
@@ -95,15 +98,32 @@
                     <div class="space-y-3 text-gray-600">
                         <div class="flex items-center">
                             <i class="fas fa-map-marker-alt w-5 text-center mr-2"></i>
-                            <span>15 Rue Saint-Honoré, Paris 1er</span>
+                            <span>{{ $barberShop->city.', '.$barberShop->address.', '.$barberShop->zip}}</span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-phone-alt w-5 text-center mr-2"></i>
-                            <span>+33 1 42 96 XX XX</span>
+                            <span>{{ $barberShop->phone }}</span>
                         </div>
                         <div class="flex items-center">
                             <i class="far fa-clock w-5 text-center mr-2"></i>
-                            <span>Open today: 9:00 AM - 7:00 PM</span>
+                            @php
+                                $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                                $today = $days[date('w')];
+                                $hours = json_decode(json_encode($barberShop->working_hours));
+                                
+                                if (isset($hours->$today)) {
+                                    if (isset($hours->$today->closed) && $hours->$today->closed == "1") {
+                                        $status = "Closed today";
+                                    } else {
+                                        $openTime = date('g:i A', strtotime($hours->$today->open));
+                                        $closeTime = date('g:i A', strtotime($hours->$today->close));
+                                        $status = "Open today: $openTime - $closeTime";
+                                    }
+                                } else {
+                                    $status = "Hours not available";
+                                }
+                            @endphp
+                            <span>{{ $status }}</span>
                         </div>
                     </div>
                     
@@ -112,11 +132,11 @@
                             <i class="far fa-calendar-check mr-2"></i>
                             Book Appointment
                         </a>
-                        <a href="tel:+33142967890" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium px-6 py-3 rounded-md transition-colors shadow-sm inline-flex items-center">
+                        <a href="tel:{{ $barberShop->phone }}" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium px-6 py-3 rounded-md transition-colors shadow-sm inline-flex items-center">
                             <i class="fas fa-phone-alt mr-2"></i>
                             Call
                         </a>
-                        <a href="#" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium px-6 py-3 rounded-md transition-colors shadow-sm inline-flex items-center">
+                        <a href="{{ 'https://www.google.com/maps?q=' . urlencode($barberShop->name.','.$barberShop->city . ', ' . $barberShop->address . ', ' . $barberShop->zip) }}" target="_blank" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-medium px-6 py-3 rounded-md transition-colors shadow-sm inline-flex items-center">
                             <i class="fas fa-directions mr-2"></i>
                             Directions
                         </a>
@@ -158,102 +178,49 @@
                 <div id="services" class="tab-content bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Services</h2>
                     <div class="space-y-4">
-                        <!-- Service Category: Haircuts -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Haircuts</h3>
-                            <div class="space-y-4">
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Classic Haircut</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Precision cut with clippers and scissors, includes styling</p>
-                                        <p class="text-xs text-gray-500 mt-2">30 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€25</p>
-                                        <button class="mt-2 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Premium Haircut</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Includes consultation, precision cut, styling, and hot towel finish</p>
-                                        <p class="text-xs text-gray-500 mt-2">45 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€35</p>
-                                        <button class="mt-2 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Buzz Cut</h4>
-                                        <p class="text-sm text-gray-600 mt-1">All-over clipper cut with consistent length</p>
-                                        <p class="text-xs text-gray-500 mt-2">15 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€15</p>
-                                        <button class="mt-2 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @php
+                            $serviceTypes = ['Haircuts', 'Beard & Shave', 'Packages'];
+                            $groupedServices = collect($barberShop->services)
+                                ->where('is_active', true)
+                                ->groupBy('type');
+                                //dd($groupedServices);
+                        @endphp
                         
-                        <!-- Service Category: Beard & Shave -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Beard & Shave</h3>
-                            <div class="space-y-4">
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Beard Trim</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Shape and trim your beard to perfection</p>
-                                        <p class="text-xs text-gray-500 mt-2">20 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€18</p>
-                                        <button class="mt-2 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Hot Towel Shave</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Traditional straight razor shave with hot towels and massage</p>
-                                        <p class="text-xs text-gray-500 mt-2">35 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€30</p>
-                                        <button class="mt-2 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
+                        @foreach($serviceTypes as $type)
+                            @if($groupedServices->has($type) && $groupedServices[$type]->count() > 0)
+                                <div class="{{ !$loop->first ? 'mt-8' : '' }}">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-3">{{ $type }}</h3>
+                                    <div class="space-y-4">
+                                        @foreach($groupedServices[$type] as $service)
+                                            <!-- Service Item -->
+                                            <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
+                                                <div>
+                                                    <h4 class="service_name font-medium text-gray-900">{{ $service->name }}</h4>
+                                                    <p class="text-sm text-gray-600 mt-1">{{ $service->description }}</p>
+                                                    <p class="text-xs text-gray-500 mt-2">{{ $service->duration }} min</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="flex  font-semibold text-primary-600">
+                                                €<p class="service_price">{{ $service->price }}</p>
+                                                </div>
+                                                    <button class="mt-2 text-sm bg-white text-primary-600 border border-primary-600 hover:bg-primary-600 hover:text-white px-3 py-1 rounded service-select-btn" 
+                                                        data-service-id="{{ $service->id }}" 
+                                                        onclick="toggleServiceSelection(this)">
+                                                        Select
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endif
+                        @endforeach
                         
-                        <!-- Service Category: Packages -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Packages</h3>
-                            <div class="space-y-4">
-                                <!-- Service Item -->
-                                <div class="service-card bg-gray-50 rounded-lg p-4 flex justify-between hover:shadow-md">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Full Service</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Premium haircut, beard trim, and hot towel treatment</p>
-                                        <p class="text-xs text-gray-500 mt-2">60 min</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-semibold text-primary-600">€50</p>
-                                        <div class="text-xs text-green-600 line-through mb-1">€58</div>
-                                        <button class="mt-1 text-sm bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded">Select</button>
-                                    </div>
-                                </div>
+                        @if($groupedServices->count() == 0)
+                            <div class="text-center py-8 text-gray-500">
+                                <p>No services available at the moment.</p>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
                 
@@ -433,27 +400,75 @@
     <!-- Booking Widget -->
     <div id="book-appointment" class="bg-white rounded-lg shadow-sm p-6 sticky top-32" data-aos="fade-up">
         <h2 class="text-xl font-bold text-gray-900 mb-4">Book an Appointment</h2>
-        
+        <!-- Selected Services -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Selected Services</label>
+            <div class="bg-gray-50 rounded-md p-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Services selected</span>
+                    <span id="selected-services-count" class="bg-primary-100 text-primary-800 px-2 py-1 rounded-full text-xs font-medium">0</span>
+                </div>
+                <div id="selected-services-list" class="mt-3 space-y-2">
+                    <!-- Selected services will be listed here dynamically -->
+                    <p class="text-sm text-gray-500 italic">No services selected yet</p>
+                </div>
+                <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="flex justify-between">
+                        <span class="font-medium ">Total</span>
+                        <div>
+                        €<span class="font-medium services_Total_price mr-0">0</span>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        Estimated duration: 0 min
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Date Selector -->
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Select Date</label>
             <div class="flex space-x-2 overflow-x-auto pb-2 hide-scrollbar">
-                <button class="date-btn min-w-[4.5rem] px-3 py-2 border rounded-md text-center text-sm bg-primary-600 text-white">
-                    <div class="font-medium">Today</div>
-                    <div class="text-xs">May 20</div>
-                </button>
-                <button class="date-btn min-w-[4.5rem] px-3 py-2 border rounded-md text-center text-sm hover:border-primary-600">
-                    <div class="font-medium">Tue</div>
-                    <div class="text-xs">May 21</div>
-                </button>
-                <button class="date-btn min-w-[4.5rem] px-3 py-2 border rounded-md text-center text-sm hover:border-primary-600">
-                    <div class="font-medium">Wed</div>
-                    <div class="text-xs">May 22</div>
-                </button>
-                <button class="date-btn min-w-[4.5rem] px-3 py-2 border rounded-md text-center text-sm hover:border-primary-600">
-                    <div class="font-medium">Thu</div>
-                    <div class="text-xs">May 23</div>
-                </button>
+            @php
+                $today = now();
+                $workingHours = json_decode(json_encode($barberShop->working_hours));
+            @endphp
+            
+            @for ($i = 0; $i < 7; $i++)
+                @php
+                $date = $today->copy()->addDays($i); // Creates a new date object for each day
+                $dayName = strtolower($date->format('l'));// Gets the lowercase day name (e.g., "monday")
+                $isOpen = isset($workingHours->$dayName) && 
+                     (!isset($workingHours->$dayName->closed) || $workingHours->$dayName->closed != "1");
+                $displayName = $i === 0 ? 'Today' : $date->format('D');// Shows "Today" for current day, short day name for others
+                $dateValue = $date->format('Y-m-d');// Gets the date in 'Y-m-d' format for the input value
+                @endphp
+                
+                <div class="min-w-[4.5rem] relative">
+                    <input type="radio" 
+                           name="appointment_date" 
+                           id="date-{{ $i }}" 
+                           value="{{ $dateValue }}" 
+                           class="hidden peer"
+                           {{ $i === 0 ? 'checked' : '' }}
+                           {{ !$isOpen ? 'disabled' : '' }}>
+                    <label 
+                        for="date-{{ $i }}" 
+                        class="block w-full px-3 py-2 border border-primary-500 rounded-md text-center text-sm 
+                               transition-colors duration-200 cursor-pointer
+                               text-primary-500 hover:bg-primary-50 
+                               peer-checked:bg-primary-500 peer-checked:text-white
+                               {{ !$isOpen ? 'opacity-50 cursor-not-allowed pointer-events-none' : '' }}">
+                        <span class="flex flex-col items-center justify-center w-full h-full">
+                            <div class="font-medium">{{ $displayName }}</div>
+                            <div class="text-xs">{{ $date->format('M j') }}</div>
+                            @if (!$isOpen)
+                                <div class="text-xs mt-1 text-gray-500 peer-checked:text-white">Closed</div>
+                            @endif
+                        </span>
+                    </label>
+                </div>
+            @endfor
             </div>
         </div>
         
@@ -548,6 +563,103 @@
             this.classList.add('selected');
         });
     });
+
+    let selectedCount = 0;
+    function toggleServiceSelection(ServiceSelectBtn) {
+        const serviceId = ServiceSelectBtn.getAttribute('data-service-id');
+        const selectedServices = document.querySelectorAll('.service-select-btn.selected');
+        // Get the service details
+            const serviceCard = ServiceSelectBtn.closest('.service-card');
+            const serviceName = serviceCard.querySelector('.service_name').innerText;
+            const servicePrice = serviceCard.querySelector('.service_price').innerText;
+            const serviceDuration = serviceCard.querySelector('.text-xs.text-gray-500').innerText;
+            const services_Total_price= document.querySelector('.services_Total_price');
+        
+        // Check if the button is already selected
+        if (ServiceSelectBtn.classList.contains('selected')) {
+            selectedCount--;       
+            // Remove the service from the selected services list
+            const selectedServicesList = document.getElementById('selected-services-list');
+            const serviceToRemove = selectedServicesList.querySelector(`.service-item-${serviceId}`);
+            if (serviceToRemove) {
+                selectedServicesList.removeChild(serviceToRemove);
+            }
+            
+            // If no services left, show "No services selected yet" message
+            if (selectedCount === 0) {
+                selectedServicesList.innerHTML = '<p class="text-sm text-gray-500 italic">No services selected yet</p>';
+            }
+            
+            
+            // Update total price by subtracting the deselected service price
+            services_Total_price.innerText = (parseFloat(services_Total_price.innerText) - parseFloat(servicePrice)).toFixed(2);
+            // Deselect the button
+            ServiceSelectBtn.classList.remove('selected', 'bg-primary-600', 'text-white');
+            ServiceSelectBtn.classList.add('bg-white', 'text-primary-600', 'border', 'border-primary-600', 'hover:bg-primary-600', 'hover:text-white');
+            ServiceSelectBtn.innerText = 'Select';
+            
+            // Deselect the parent service card
+            serviceCard.classList.remove('bg-primary-50', 'bg-primary-100');
+            serviceCard.classList.add('bg-gray-50');
+            
+            // Reset text colors in the service card
+            const serviceTexts = serviceCard.querySelectorAll('h4, p');
+            serviceTexts.forEach(text => {
+            text.classList.remove('text-white', 'text-primary-100');
+            });
+        } else {
+            
+            selectedCount++;
+            
+
+            // Get the selected services list container
+            const selectedServicesList = document.getElementById('selected-services-list');
+
+            // If this is the first selected service, clear the "No services selected yet" message
+            if (selectedCount === 1) {
+                selectedServicesList.innerHTML = '';
+            }
+
+            // Create a new service entry
+            const serviceEntry = document.createElement('div');
+            serviceEntry.classList.add('flex', 'justify-between', 'items-center', 'text-sm', `service-item-${serviceId}`);
+            serviceEntry.setAttribute('data-selected-service-id', serviceId);
+            serviceEntry.innerHTML = `
+                <div>
+                    <div class="font-medium">${serviceName}</div>
+                    <div class="text-xs text-gray-500">${serviceDuration}</div>
+                </div>
+                <div class="font-medium">${servicePrice}</div>
+            `;
+
+            
+            // Add the service to the selected services list
+            selectedServicesList.appendChild(serviceEntry);
+
+             // Update total price by subtracting the adding service price
+             services_Total_price.innerText = (parseFloat(services_Total_price.innerText) + parseFloat(servicePrice)).toFixed(2);
+
+            // Select the button
+            ServiceSelectBtn.classList.add('selected', 'bg-primary-600', 'text-white');
+            ServiceSelectBtn.classList.remove('bg-white', 'text-primary-600', 'border', 'border-primary-600', 'hover:bg-primary-600', 'hover:text-white');
+            ServiceSelectBtn.innerText = 'Selected';
+            
+            // Select the parent service card with better contrast
+            const serviceCard = ServiceSelectBtn.closest('.service-card');
+            serviceCard.classList.remove('bg-gray-50');
+            serviceCard.classList.add('bg-primary-50');
+            
+            // Set appropriate text colors for better visibility
+            const serviceTexts = serviceCard.querySelectorAll('h4, p');
+            serviceTexts.forEach(text => {
+            text.classList.remove('text-gray-900', 'text-gray-600');
+            });
+        }
+        
+        // Update the selected services count
+        document.getElementById('selected-services-count').innerText = selectedCount;
+
+    }
 </script>
 @endsection
 

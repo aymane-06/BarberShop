@@ -83,7 +83,7 @@ class BarberShopController extends Controller
      */
     public function show(barberShop $barberShop)
     {
-        //
+        return view('pages.barber-detail', compact('barberShop'));
     }
 
     /**
