@@ -659,6 +659,14 @@
     }
 
     async function getWorkingHouers() {
+        let workingHouresContainer = document.getElementById('working_houres');
+        // Show loading animation while fetching working hours
+        workingHouresContainer.innerHTML = `
+            <div class="col-span-3 flex justify-center items-center py-6">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+                <span class="ml-3 text-gray-600">Loading available times...</span>
+            </div>
+        `;
         const response = await fetch('/api/barberShop/{{ $barberShop->id }}/working-hours');
         const data = await response.json();
         
@@ -667,7 +675,6 @@
         let workingHours = data[dayName];
         console.log(workingHours);
         
-        let workingHouresContainer = document.getElementById('working_houres');
         
         // Clear previous time slots
         workingHouresContainer.innerHTML = '';
