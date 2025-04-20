@@ -99,6 +99,7 @@ class BarberShopController extends Controller
      */
     public function update(UpdatebarberShopRequest $request, barberShop $barberShop)
     {
+        // dd($request->all());
         $validated = $request->validate([
             "name" => "required",
             "description" => "required",
@@ -279,6 +280,12 @@ class BarberShopController extends Controller
                 "message" => "Failed to send email: " . $e->getMessage()
             ], 400);
         }
+    }
+
+    public function getWorkingHours(Request $request, barberShop $barberShop){
+        // dd($barberShop->working_hours);
+        $working_hours = $barberShop->working_hours;
+        return response()->json($working_hours, 200);
     }
 
 

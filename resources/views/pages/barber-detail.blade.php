@@ -197,7 +197,7 @@
                                                 <div>
                                                     <h4 class="service_name font-medium text-gray-900">{{ $service->name }}</h4>
                                                     <p class="text-sm text-gray-600 mt-1">{{ $service->description }}</p>
-                                                    <p class="text-xs text-gray-500 mt-2">{{ $service->duration }} min</p>
+                                                    <p class="text-xs text-gray-500 mt-2"><span class="duration">{{ $service->duration }}</span> min</p>
                                                 </div>
                                                 <div class="text-right">
                                                     <div class="flex  font-semibold text-primary-600">
@@ -420,7 +420,7 @@
                         </div>
                     </div>
                     <div class="text-xs text-gray-500 mt-1">
-                        Estimated duration: 0 min
+                        Estimated duration: <span class="services_Total_duration">0</span> min
                     </div>
                 </div>
             </div>
@@ -450,15 +450,15 @@
                            id="date-{{ $i }}" 
                            value="{{ $dateValue }}" 
                            class="hidden peer"
-                           {{ $i === 0 ? 'checked' : '' }}
+                           {{ $i === 0 && $isOpen  ? 'checked' : '' }}
                            {{ !$isOpen ? 'disabled' : '' }}>
                     <label 
                         for="date-{{ $i }}" 
                         class="block w-full px-3 py-2 border border-primary-500 rounded-md text-center text-sm 
-                               transition-colors duration-200 cursor-pointer
+                               transition-colors duration-200 
                                text-primary-500 hover:bg-primary-50 
                                peer-checked:bg-primary-500 peer-checked:text-white
-                               {{ !$isOpen ? 'opacity-50 cursor-not-allowed pointer-events-none' : '' }}">
+                               {{ !$isOpen ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer' }}">
                         <span class="flex flex-col items-center justify-center w-full h-full">
                             <div class="font-medium">{{ $displayName }}</div>
                             <div class="text-xs">{{ $date->format('M j') }}</div>
@@ -475,27 +475,19 @@
         <!-- Staff Selector -->
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Select Staff</label>
-            <select class="w-full border border-gray-300 rounded-md p-2 focus:ring-primary-600 focus:border-primary-600">
-                <option value="">Any available</option>
-                <option value="thomas">Thomas Martin</option>
-                <option value="david">David Leclerc</option>
-                <option value="antoine">Antoine Dupont</option>
+            <select name="barber" class="w-full border border-gray-300 rounded-md p-2 focus:ring-primary-600 focus:border-primary-600">
+               @foreach ($barberShop->barbers as $barber)
+                    <option value="{{ $barber }}">{{ $barber }}</option>
+               
+               @endforeach
             </select>
         </div>
         
         <!-- Time Slots -->
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Select Time</label>
-            <div class="grid grid-cols-3 gap-2">
-                <button class="time-slot booked px-2 py-3 border rounded-md text-center text-sm">9:00</button>
-                <button class="time-slot booked px-2 py-3 border rounded-md text-center text-sm">9:30</button>
-                <button class="time-slot px-2 py-3 border rounded-md text-center text-sm hover:border-primary-600">10:00</button>
-                <button class="time-slot px-2 py-3 border rounded-md text-center text-sm hover:border-primary-600">10:30</button>
-                <button class="time-slot px-2 py-3 border rounded-md text-center text-sm hover:border-primary-600">11:00</button>
-                <button class="time-slot booked px-2 py-3 border rounded-md text-center text-sm">11:30</button>
-                <button class="time-slot px-2 py-3 border rounded-md text-center text-sm hover:border-primary-600">12:00</button>
-                <button class="time-slot px-2 py-3 border rounded-md text-center text-sm hover:border-primary-600">12:30</button>
-                <button class="time-slot selected px-2 py-3 border rounded-md text-center text-sm">14:00</button>
+            <div id="working_houres" class="grid grid-cols-3 gap-2">
+                
             </div>
         </div>
         
@@ -572,8 +564,9 @@
             const serviceCard = ServiceSelectBtn.closest('.service-card');
             const serviceName = serviceCard.querySelector('.service_name').innerText;
             const servicePrice = serviceCard.querySelector('.service_price').innerText;
-            const serviceDuration = serviceCard.querySelector('.text-xs.text-gray-500').innerText;
+            const serviceDuration = serviceCard.querySelector('.duration').innerText;
             const services_Total_price= document.querySelector('.services_Total_price');
+            const services_Total_duration= document.querySelector('.services_Total_duration');
         
         // Check if the button is already selected
         if (ServiceSelectBtn.classList.contains('selected')) {
@@ -593,6 +586,8 @@
             
             // Update total price by subtracting the deselected service price
             services_Total_price.innerText = (parseFloat(services_Total_price.innerText) - parseFloat(servicePrice)).toFixed(2);
+            // Update the total duration
+            services_Total_duration.innerText = parseInt(services_Total_duration.innerText) - parseInt(serviceDuration);
             // Deselect the button
             ServiceSelectBtn.classList.remove('selected', 'bg-primary-600', 'text-white');
             ServiceSelectBtn.classList.add('bg-white', 'text-primary-600', 'border', 'border-primary-600', 'hover:bg-primary-600', 'hover:text-white');
@@ -638,6 +633,8 @@
 
              // Update total price by subtracting the adding service price
              services_Total_price.innerText = (parseFloat(services_Total_price.innerText) + parseFloat(servicePrice)).toFixed(2);
+            // Update the total duration
+            services_Total_duration.innerText = parseInt(services_Total_duration.innerText) + parseInt(serviceDuration);
 
             // Select the button
             ServiceSelectBtn.classList.add('selected', 'bg-primary-600', 'text-white');
@@ -660,6 +657,96 @@
         document.getElementById('selected-services-count').innerText = selectedCount;
 
     }
+
+    async function getWorkingHouers() {
+        const response = await fetch('/api/barberShop/{{ $barberShop->id }}/working-hours');
+        const data = await response.json();
+        
+        let appointment_date = document.querySelector('input[name="appointment_date"]:checked').value;
+        let dayName = new Date(appointment_date).toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        let workingHours = data[dayName];
+        console.log(workingHours);
+        
+        let workingHouresContainer = document.getElementById('working_houres');
+        
+        // Clear previous time slots
+        workingHouresContainer.innerHTML = '';
+        
+        if (!workingHours || workingHours.closed === "1") {
+            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500">The barber shop is closed on this day.</p>';
+            return;
+        }
+        
+        // Calculate number of hours
+        let startHour = workingHours.open;
+        let endHour = workingHours.close;
+        let hours = parseFloat(endHour) - parseFloat(startHour);
+        
+        if (hours <= 0) {
+            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500 col-span-3 ">The barber shop is closed on this day.</p>';
+            return;
+        }
+        
+        // Create time slots at hourly intervals
+        for (let i = 0; i < hours; i++) {
+        // Parse time string (e.g. "09:00") to get hours and add increment
+        let [hours, minutes] = startHour.split(':').map(num => parseInt(num, 10));
+        let slotTime = new Date();
+        slotTime.setHours(hours + i, minutes);
+        // console.log(slotTime.setHours(hours + i, minutes));
+        
+
+        //pad start add 0 if less than 10 example 09:00
+        let hour = slotTime.getHours().toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+        
+        // Create the time slot structure
+            let timeSlot = document.createElement('div');
+            
+            // Input radio
+            let input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'appointment_hour';
+            input.id = 'hour-' + i;
+            input.value = hour;
+            input.className = 'hidden peer';
+            if (i === 0) {
+                input.checked = true;
+            }
+            
+            // Label
+            let label = document.createElement('label');
+            label.htmlFor = 'hour-' + i;
+            label.className = 'time-slot block w-full px-2 py-2 border border-gray-300 rounded-md text-center text-sm cursor-pointer transition-colors hover:bg-gray-50 peer-checked:bg-primary-500 peer-checked:text-white peer-checked:border-primary-600';
+            label.textContent = hour;
+            
+            // Append to time slot
+            timeSlot.appendChild(input);
+            timeSlot.appendChild(label);
+            
+            // Append to container
+            workingHouresContainer.appendChild(timeSlot);
+        }
+    }
+
+
+    
+    
+    getWorkingHouers();
+
+
+    // Event listener for date change
+    document.querySelectorAll('input[name="appointment_date"]').forEach(input => {
+        input.addEventListener('change', function() {
+            getWorkingHouers();
+        });
+    });
+
+
+
+
+
+
+
 </script>
 @endsection
 

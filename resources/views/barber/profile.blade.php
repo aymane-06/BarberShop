@@ -322,20 +322,9 @@
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                    <input type="text" name="barbers[{{ $index }}][name]" 
-                                           value="{{ is_array($barber) ? ($barber['name'] ?? '') : $barber }}" 
+                                    <input type="text" name="barbers[]" 
+                                           value="{{ $barber ?? '' }}" 
                                            class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Position</label>
-                                    <input type="text" name="barbers[{{ $index }}][position]" 
-                                           value="{{ is_array($barber) ? ($barber['position'] ?? '') : '' }}" 
-                                           class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                                    <textarea name="barbers[{{ $index }}][bio]" rows="2" 
-                                              class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{{ is_array($barber) ? ($barber['bio'] ?? '') : '' }}</textarea>
                                 </div>
                             </div>
                         </div>

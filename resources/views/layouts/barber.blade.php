@@ -54,7 +54,7 @@
                     <div class="p-4">
                         <ul class="space-y-1">
                             <li>
-                                <a href="/barber/dashboard" class="flex items-center bg-primary-100 rounded-xl font-bold text-primary-700 py-3 px-4">
+                                <a href="{{ Route('barber.dashboard') }}" class="flex items-center bg-primary-100 rounded-xl font-bold text-primary-700 py-3 px-4">
                                     <i class="fas fa-tachometer-alt mr-3"></i>
                                     Dashboard
                                 </a>
