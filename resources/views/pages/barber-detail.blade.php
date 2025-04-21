@@ -399,9 +399,27 @@
 <div class="md:w-1/3">
     <!-- Booking Widget -->
     <div id="book-appointment" class="bg-white rounded-lg shadow-sm p-6 sticky top-32" data-aos="fade-up">
+        @if ($errors->any())
+            <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+            <p class="text-sm text-red-600 font-medium mb-2">Please fix the following errors:</p>
+            <ul class="text-xs text-red-500 list-disc ml-4">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            </div>
+        @endif
         <h2 class="text-xl font-bold text-gray-900 mb-4">Book an Appointment</h2>
         <!-- Selected Services -->
         <div class="mb-6">
+            <form id="booking-form" action="{{ route('bookings.create',$barberShop) }}" method="POST">
+                @csrf
+                <div id="bookingDetails" class="">
+                <input type="hidden" name="appointment_date" id="appointment_date" value="">
+                <input type="hidden" name="duration" id="duration" value="">
+                <input type="hidden" name="barber" id="barber" value="">
+                <input type="hidden" name="hour" id="hour" value="">
+                </div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Selected Services</label>
             <div class="bg-gray-50 rounded-md p-4">
                 <div class="flex justify-between items-center">
@@ -476,6 +494,7 @@
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-2">Select Staff</label>
             <select name="barber" class="w-full border border-gray-300 rounded-md p-2 focus:ring-primary-600 focus:border-primary-600">
+                <option value="" disabled selected>Select a barber</option>
                @foreach ($barberShop->barbers as $barber)
                     <option value="{{ $barber }}">{{ $barber }}</option>
                
@@ -495,6 +514,7 @@
         <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-md transition-colors shadow-sm text-center">
             Confirm Booking
         </button>
+                            </form>
         <p class="text-xs text-gray-500 text-center mt-3">Free cancellation up to 24 hours before</p>
     </div>
 </div>
@@ -558,6 +578,7 @@
 
     let selectedCount = 0;
     function toggleServiceSelection(ServiceSelectBtn) {
+        let bookingDetails = document.getElementById('bookingDetails');
         const serviceId = ServiceSelectBtn.getAttribute('data-service-id');
         const selectedServices = document.querySelectorAll('.service-select-btn.selected');
         // Get the service details
@@ -570,13 +591,21 @@
         
         // Check if the button is already selected
         if (ServiceSelectBtn.classList.contains('selected')) {
-            selectedCount--;       
+            selectedCount--; 
+            //Remove to bookingDetails
+            
+            const servicesInput = bookingDetails.querySelector(`input[name="services[]"][value="${serviceId}"]`);
+            if (servicesInput) {
+                bookingDetails.removeChild(servicesInput);
+            }
+            
             // Remove the service from the selected services list
             const selectedServicesList = document.getElementById('selected-services-list');
             const serviceToRemove = selectedServicesList.querySelector(`.service-item-${serviceId}`);
             if (serviceToRemove) {
                 selectedServicesList.removeChild(serviceToRemove);
             }
+
             
             // If no services left, show "No services selected yet" message
             if (selectedCount === 0) {
@@ -588,6 +617,8 @@
             services_Total_price.innerText = (parseFloat(services_Total_price.innerText) - parseFloat(servicePrice)).toFixed(2);
             // Update the total duration
             services_Total_duration.innerText = parseInt(services_Total_duration.innerText) - parseInt(serviceDuration);
+            document.getElementById('duration').value = services_Total_duration.innerText;
+
             // Deselect the button
             ServiceSelectBtn.classList.remove('selected', 'bg-primary-600', 'text-white');
             ServiceSelectBtn.classList.add('bg-white', 'text-primary-600', 'border', 'border-primary-600', 'hover:bg-primary-600', 'hover:text-white');
@@ -614,6 +645,12 @@
             if (selectedCount === 1) {
                 selectedServicesList.innerHTML = '';
             }
+            //add to bookingDetails
+            let servicesInput = document.createElement('input');
+            servicesInput.type = 'hidden';
+            servicesInput.name = 'services[]';
+            servicesInput.value = serviceId;
+            bookingDetails.appendChild(servicesInput);
 
             // Create a new service entry
             const serviceEntry = document.createElement('div');
@@ -635,6 +672,7 @@
              services_Total_price.innerText = (parseFloat(services_Total_price.innerText) + parseFloat(servicePrice)).toFixed(2);
             // Update the total duration
             services_Total_duration.innerText = parseInt(services_Total_duration.innerText) + parseInt(serviceDuration);
+            document.getElementById('duration').value = services_Total_duration.innerText;
 
             // Select the button
             ServiceSelectBtn.classList.add('selected', 'bg-primary-600', 'text-white');
@@ -670,7 +708,12 @@
         const response = await fetch('/api/barberShop/{{ $barberShop->id }}/working-hours');
         const data = await response.json();
         
-        let appointment_date = document.querySelector('input[name="appointment_date"]:checked').value;
+        let appointment_date = document.querySelector('input[name="appointment_date"]:checked');
+        if (!appointment_date) {
+            appointment_date = document.querySelector('input[name="appointment_date"]').value;
+        } else {
+            appointment_date = appointment_date.value;
+        }
         let dayName = new Date(appointment_date).toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
         let workingHours = data[dayName];
         console.log(workingHours);
@@ -680,7 +723,7 @@
         workingHouresContainer.innerHTML = '';
         
         if (!workingHours || workingHours.closed === "1") {
-            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500">The barber shop is closed on this day.</p>';
+            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500 col-span-3">The barber shop is closed on this day.</p>';
             return;
         }
         
@@ -690,7 +733,7 @@
         let hours = parseFloat(endHour) - parseFloat(startHour);
         
         if (hours <= 0) {
-            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500 col-span-3 ">The barber shop is closed on this day.</p>';
+            workingHouresContainer.innerHTML = '<p class="text-center py-4 text-gray-500 col-span-3  ">The barber shop is closed on this day.</p>';
             return;
         }
         
@@ -733,20 +776,54 @@
             // Append to container
             workingHouresContainer.appendChild(timeSlot);
         }
+        //default value for hour
+    let hour = document.querySelector('input[name="appointment_hour"]:checked');
+    if (hour) {
+        // Set the default value for the hidden input field
+        hour = hour.value;
+        // Set the default value for the hidden input field
+    document.getElementById('hour').value = hour;
+    }
+        // Event listener for time slot selection
+        document.querySelectorAll('input[name="appointment_hour"]').forEach(input => {
+            input.addEventListener('change', function() {
+                // Update the hour in the hidden input field
+                document.getElementById('hour').value = this.value;
+            });
+        });
+
     }
 
 
     
     
     getWorkingHouers();
+    //default value for appointment_date
+    let appointment_date = document.querySelector('input[type="radio"][name="appointment_date"]:checked');
+    if (appointment_date) {
+        appointment_date = appointment_date.value;
+    } else {
+        appointment_date = document.querySelector('input[name="appointment_date"]').value;
+    }
+    document.getElementById('appointment_date').value = appointment_date;
+    
 
+    // Event listener for barber selection
+    document.querySelector('select[name="barber"]').addEventListener('change', function() {
+        // Update the barber in the hidden input field
+        document.getElementById('barber').value = this.value;
+    });
 
     // Event listener for date change
     document.querySelectorAll('input[name="appointment_date"]').forEach(input => {
         input.addEventListener('change', function() {
             getWorkingHouers();
+            // Update the appointment date in the hidden input field
+            document.getElementById('appointment_date').value = this.value;
         });
     });
+
+
 
 
 

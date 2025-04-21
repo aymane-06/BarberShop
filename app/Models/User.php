@@ -66,4 +66,7 @@ class User extends Authenticatable
     protected function reconsiderBarberShops(){
         return $this->hasMany(BarberShop::class);
     }
+    protected function bookings(){
+        return $this->hasMany(Booking::class);
+    }
 }

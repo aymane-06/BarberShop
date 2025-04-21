@@ -64,6 +64,9 @@ class barberShop extends Model
     protected function services(){
         return $this->hasMany(Services::class);
     }
+    protected function bookings(){
+        return $this->hasMany(Booking::class);
+    }
 
     
 

@@ -33,6 +33,10 @@ class Services extends Model
     {
         return $this->image ? asset('storage/' . $this->image) : null;
     }
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'Booking_Services', 'service_id', 'booking_id');
+    }
 }
 
 

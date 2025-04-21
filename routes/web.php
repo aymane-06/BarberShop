@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BarberShopController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -24,9 +25,7 @@ Route::get('/search-results', function () {
 
 Route::get('/barbershop-detail/{barberShop:id}',[BarberShopController::class, 'show'])->name('barbershop-detail');
 
-Route::get('/Booking-confirm', function () {
-    return view('pages.Booking-confirm');
-})->name('Booking-confirm');
+
 
 Route::get('/profile', function () {
     return view('user.profile');
@@ -41,6 +40,7 @@ Route::get('/barberShop/dashboard', function () {
 
 Route::get('/barberShop/Profile', function () {
     return view('barber.profile');
+    // barber.profile.update
 })->name('barberShop.profile');
 Route::put('/barberShop/Profile/{barberShop:id}',[BarberShopController::class, 'update'])->name('barberShop.profile.update');
 
@@ -49,7 +49,8 @@ Route::put('/barberShop/Profile/{barberShop:id}',[BarberShopController::class, '
 Route::get('/barberShop/services', function () {
     return view('barber.services');
 })->name('barberShop.services');
-// barber.profile.update
+
+
 
 
 Route::get('/barber/barberjoin', function () {
@@ -110,4 +111,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 
-
+//Booking routes
+Route::post('/bookings/create/{barberShop}', [BookingController::class, 'store'])->name('bookings.create');
+Route::get('/Booking-confirm/{booking}',[BookingController::class,'show'])->name('Booking-confirm');
+Route::post('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->name('Booking.cancel');
+//reschedule
+Route::post('/Booking/reschedule/{booking}',[BookingController::class,'reschedule'])->name('Booking.reschedule');
