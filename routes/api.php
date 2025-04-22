@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BarberShopController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -36,5 +37,10 @@ Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::cla
 Route::post('/barberShop/services/statistics',[ServicesController::class,'getServicesStatistics']);
 
 //barbers
-// /api/barberShop/{{ $barberShop->id }}/working-hours
+
 Route::get('/barberShop/{barberShop:id}/working-hours',[BarberShopController::class,'getWorkingHours']);
+///api/barber/appointments
+Route::get('/barberShop/{barberShop:id}/appointments',[BookingController::class,'getAppointments']);
+Route::put('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->name('Booking.APicancel');
+Route::put('/Booking/approve/{booking}',[BookingController::class,'approve'])->name('Booking.APIapprove');
+

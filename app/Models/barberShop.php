@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Booking;
 
 class barberShop extends Model
 {
@@ -64,8 +65,9 @@ class barberShop extends Model
     protected function services(){
         return $this->hasMany(Services::class);
     }
-    protected function bookings(){
-        return $this->hasMany(Booking::class);
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'barbershop_id');
     }
 
     

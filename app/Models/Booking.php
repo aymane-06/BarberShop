@@ -32,6 +32,7 @@ class Booking extends Model
     {
         return $this->belongsTo(barberShop::class, 'barbershop_id');
     }
+    
     public function services()
     {
         return $this->belongsToMany(Services::class, 'Booking_Services', 'booking_id', 'service_id');

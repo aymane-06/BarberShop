@@ -49,6 +49,10 @@ Route::put('/barberShop/Profile/{barberShop:id}',[BarberShopController::class, '
 Route::get('/barberShop/services', function () {
     return view('barber.services');
 })->name('barberShop.services');
+//barberShop appointments
+Route::get('/barberShop/appointments', function () {
+    return view('barber.appointments');
+})->name('barberShop.appointments');
 
 
 

@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Jobs\sendBookingCanellationEmail;
 use App\Jobs\sendBookingConfirmationEmail;
 use App\Jobs\sendBookingReschduling;
+use App\Jobs\SendUserBookingCancelationJob;
+use App\Jobs\SendUserBookingConfirmation;
+use App\Jobs\SendUserCustomEmail;
 use App\Mail\BookingCancelation;
 use App\Mail\BookingConfirmation;
 use App\Mail\BookingReschduling;
+use App\Mail\SendUserBookingCancelation;
+use App\Mail\UserBookingConfirmation;
 use App\Models\barberShop;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
@@ -126,6 +131,8 @@ class BookingController extends Controller
         // Validate the request data
         $request->validate([
             'cancel_reason' => 'nullable|string|max:255',
+            'notify_client'=> 'nullable|boolean',
+            'notes' => 'nullable|string|max:255',
         ]);
 
         // Update the booking status to 'cancelled'
@@ -133,6 +140,17 @@ class BookingController extends Controller
             'status' => 'cancelled',
             'UserNotes' => $request->input('cancel_reason'),
         ]);
+
+        if($request->method() == 'PUT'){
+            if($request->input('notify_client')) {
+                // Notify the client about the cancellation
+                SendUserBookingCancelationJob::dispatch($booking,$request->input('cancel_reason'), $request->input('notes'));
+            }
+            return response()->json([
+                'message' => 'Booking cancelled successfully.',
+                'booking' => $booking,
+            ]);
+        }
 
         sendBookingCanellationEmail::dispatch($booking);
 
@@ -161,5 +179,36 @@ class BookingController extends Controller
         sendBookingReschduling::dispatch($booking);
 
         return redirect()->route('Booking-confirm',compact('booking'))->with('success', 'Booking rescheduled successfully.');
+    }
+
+    public function getAppointments(barberShop $barberShop)
+    {
+        
+        $appointments = $barberShop->bookings()->with(['user', 'services'])->paginate(6);
+
+        return response()->json( $appointments);
+    }
+
+    public function approve(Booking $booking,UpdateBookingRequest $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'notes' => 'nullable|string|max:255',
+            'notify_client' => 'nullable|boolean',
+        ]);
+
+        // Update the booking status to 'confirmed'
+        $booking->update([
+            'status' => 'confirmed',
+            'UserNotes' => $request->input('notes'),
+        ]);
+
+        // Notify the client about the confirmation
+        // sendBookingConfirmationEmail::dispatch($booking);
+        SendUserBookingConfirmation::dispatch($booking, $request->input('notes'));
+        return response()->json([
+            'message' => 'Booking approved successfully.',
+            'booking' => $booking,
+        ]);
     }
 }

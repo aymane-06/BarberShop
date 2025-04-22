@@ -60,7 +60,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/barber/appointments" class="flex bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
+                                <a href="{{ route('barberShop.appointments') }}" class="flex bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
                                     <i class="fas fa-calendar-alt mr-3"></i>
                                     Appointments
                                 </a>
