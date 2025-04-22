@@ -43,4 +43,5 @@ Route::get('/barberShop/{barberShop:id}/working-hours',[BarberShopController::cl
 Route::get('/barberShop/{barberShop:id}/appointments',[BookingController::class,'getAppointments']);
 Route::put('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->name('Booking.APicancel');
 Route::put('/Booking/approve/{booking}',[BookingController::class,'approve'])->name('Booking.APIapprove');
-
+// Booking/reschedule/${appointmentId}
+Route::put('/Booking/reschedule/{booking}',[BookingController::class,'rescheduleApi'])->name('Booking.APIreschedule');

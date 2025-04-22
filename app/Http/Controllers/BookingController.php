@@ -13,6 +13,7 @@ use App\Mail\BookingConfirmation;
 use App\Mail\BookingReschduling;
 use App\Mail\SendUserBookingCancelation;
 use App\Mail\UserBookingConfirmation;
+use App\Mail\UserBookingReschduling;
 use App\Models\barberShop;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
@@ -208,6 +209,34 @@ class BookingController extends Controller
         SendUserBookingConfirmation::dispatch($booking, $request->input('notes'));
         return response()->json([
             'message' => 'Booking approved successfully.',
+            'booking' => $booking,
+        ]);
+    }
+
+    
+    public function rescheduleApi(UpdateBookingRequest $request, Booking $booking)
+    {
+        // Validate the request data
+        $request->validate([
+            'new_date' => 'required|date',
+            'new_time' => 'required|date_format:H:i',
+            'notes' => 'nullable|string|max:255',
+            'notify_client' => 'nullable|boolean',
+        ]);
+
+        // Update the booking details
+        $booking->update([
+            'booking_date' => $request->input('new_date'),
+            'time' => $request->input('new_time'),
+            'UserNotes' => $request->input('notes'),
+            'status' => 'confirmed',
+        ]);
+
+        // Notify the client about the rescheduling
+        Mail::to($booking->user->email)->send(new UserBookingReschduling($booking));
+
+        return response()->json([
+            'message' => 'Booking rescheduled successfully.',
             'booking' => $booking,
         ]);
     }

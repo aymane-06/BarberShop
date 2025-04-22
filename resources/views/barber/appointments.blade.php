@@ -324,6 +324,67 @@
     </div>
 </div>
 
+<!-- Reschedule Appointment Modal -->
+<div id="rescheduleModal" class="fixed inset-0 z-50 overflow-auto hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 sm:mx-auto">
+        <div class="absolute top-0 right-0 pt-4 pr-4">
+            <button onclick="closeRescheduleModal()" type="button" class="close-modal text-gray-400 hover:text-gray-500 focus:outline-none">
+                <span class="sr-only">Close</span>
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 mx-auto mb-4">
+                <svg class="h-6 w-6 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-center text-gray-900 mb-6">Reschedule Appointment</h3>
+            
+            <input type="hidden" id="reschedule-appointment-id">
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">New Date</label>
+                <input type="date" onchange="getWorkingHouers()" id="reschedule-date" min="{{ date('Y-m-d') }}" class="w-full rounded-md border border-gray-300 py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">New Time</label>
+                <select id="reschedule-time" class="w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
+                    <option value="">Select a time...</option>
+                    <!-- Will be populated dynamically based on available slots -->
+                </select>
+                <p class="mt-2 text-xs text-gray-500">Available time slots will appear after selecting a date.</p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Reason for rescheduling (optional)</label>
+                <textarea id="reschedule-reason" rows="3" class="w-full rounded-md border border-gray-300 py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500" placeholder="Add any additional details..."></textarea>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex items-center">
+                    <input id="notify-client-reschedule" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" checked>
+                    <label for="notify-client-reschedule" class="ml-2 block text-sm text-gray-700">
+                        Notify client about rescheduling
+                    </label>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeRescheduleModal()" type="button" class="close-modal inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Cancel
+                </button>
+                <button type="button" id="confirm-reschedule" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+                    Confirm Reschedule
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('additional_scripts')
@@ -684,7 +745,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                                <button class="text-amber-600 hover:text-amber-900" title="Reschedule Appointment">
+                                <button onclick="openRescheduleModal(${appointment.id})" class="text-amber-600 hover:text-amber-900" title="Reschedule Appointment">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
@@ -877,5 +938,109 @@
             showToast('Failed to approve appointment: ' + error.message, 'error');
         }
     }
+    //rescheduleModal
+    function openRescheduleModal(appointmentId){
+        const modal = document.getElementById('rescheduleModal');
+        document.getElementById('reschedule-appointment-id').value = appointmentId;
+        
+        // Reset the form
+        document.getElementById('reschedule-date').value = '';
+        document.getElementById('reschedule-time').value = '';
+        document.getElementById('reschedule-reason').value = '';
+        document.getElementById('notify-client-reschedule').checked = true;
+        
+        // Show the modal
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+    }
+    async function getWorkingHouers() {
+        const appointment_date = document.getElementById('reschedule-date').value;
+        const reschedule_time = document.getElementById('reschedule-time');
+        const response = await fetch('/api/barberShop/{{ auth()->user()->barberShop->id }}/working-hours');
+        const data = await response.json();
+        
+        
+        let dayName = new Date(appointment_date).toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        let workingHours = data[dayName];
+        console.log(workingHours);
+        if(workingHours.closed){
+            reschedule_time.innerHTML = `<option value="">Closed</option>`;
+            reschedule_time.disabled = true;
+        }
+        else{
+            reschedule_time.innerHTML = `<option value="">Select a time...</option>`;
+            reschedule_time.disabled = false;
+            let startTime = workingHours.open.split(':');
+            let endTime = workingHours.close.split(':');
+            let startHour = parseInt(startTime[0]);
+            let endHour = parseInt(endTime[0]);
+            let startMinute = parseInt(startTime[1]);
+            let endMinute = parseInt(endTime[1]);
+            
+            for(let i=startHour; i<=endHour; i++){
+                for(let j = 0; j < 60; j += 30) {
+                    // Skip times after closing hour
+                    if(i === endHour && j > endMinute) continue;
+                    
+                    // Format hours and minutes with leading zeros
+                    let hour = i.toString().padStart(2, '0');
+                    let minute = j.toString().padStart(2, '0');
+                    let time = `${hour}:${minute}`;
+                    
+                    // Add option to select element
+                    reschedule_time.innerHTML += `<option value="${time}">${time}</option>`;
+                }
+            }
+        }
+    }
+    function closeRescheduleModal(){
+        const modal = document.getElementById('rescheduleModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    // Confirm reschedule handler
+    document.getElementById('confirm-reschedule').addEventListener('click', confirmReschedule);
+
+    // Reschedule the appointment
+    async function confirmReschedule() {
+        const appointmentId = document.getElementById('reschedule-appointment-id').value;
+        const date = document.getElementById('reschedule-date').value;
+        const time = document.getElementById('reschedule-time').value;
+        const reason = document.getElementById('reschedule-reason').value;
+        const notifyClient = document.getElementById('notify-client-reschedule').checked;
+
+        try {
+            const response = await fetch(`/api/Booking/reschedule/${appointmentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    new_date: date,
+                    new_time: time,
+                    notes: reason,
+                    notify_client: notifyClient
+                })
+            });
+            
+            if (response.ok) {
+                // Close modal and refresh appointments
+                closeRescheduleModal();
+                loadAppointments();
+                
+                // Show success message
+                showToast('Appointment rescheduled successfully', 'success');
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to reschedule appointment');
+            }
+        } catch (error) {
+            console.error('Error rescheduling appointment:', error);
+            showToast('Failed to reschedule appointment: ' + error.message, 'error');
+        }
+    }
+
 </script>
 @endsection
