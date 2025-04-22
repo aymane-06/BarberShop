@@ -45,3 +45,5 @@ Route::put('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->nam
 Route::put('/Booking/approve/{booking}',[BookingController::class,'approve'])->name('Booking.APIapprove');
 // Booking/reschedule/${appointmentId}
 Route::put('/Booking/reschedule/{booking}',[BookingController::class,'rescheduleApi'])->name('Booking.APIreschedule');
+// /booking/{{ auth()->user()->barberShop->id }}/statistics
+Route::get('/booking/{barberShop:id}/statistics',[BookingController::class,'getBookingsStatistics']);

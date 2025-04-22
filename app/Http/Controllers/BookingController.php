@@ -7,6 +7,7 @@ use App\Jobs\sendBookingConfirmationEmail;
 use App\Jobs\sendBookingReschduling;
 use App\Jobs\SendUserBookingCancelationJob;
 use App\Jobs\SendUserBookingConfirmation;
+use App\Jobs\SendUserBookingReschudling;
 use App\Jobs\SendUserCustomEmail;
 use App\Mail\BookingCancelation;
 use App\Mail\BookingConfirmation;
@@ -19,6 +20,7 @@ use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Models\Services;
+use App\Repositories\BookingRepository;
 use Illuminate\Http\Client\Request;
 use Mail;
 
@@ -233,11 +235,15 @@ class BookingController extends Controller
         ]);
 
         // Notify the client about the rescheduling
-        Mail::to($booking->user->email)->send(new UserBookingReschduling($booking));
-
+        SendUserBookingReschudling::dispatch($booking);
         return response()->json([
             'message' => 'Booking rescheduled successfully.',
             'booking' => $booking,
         ]);
+    }
+
+    public function getBookingsStatistics(barberShop $barberShop){
+        $bookingStatistics = BookingRepository::bookingStatistics($barberShop->id);
+        return response()->json($bookingStatistics);
     }
 }

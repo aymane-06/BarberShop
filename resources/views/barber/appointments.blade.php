@@ -146,6 +146,82 @@
             </button>
         </div>
     </div>
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <!-- Pending Appointments Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+            <div class="p-3 rounded-full bg-amber-100 text-amber-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="ml-5">
+                <p class="text-gray-500 text-sm">Pending Appointments</p>
+                <div class="flex items-center">
+                <h3 class="font-bold text-xl text-gray-900" id="stats-pending">--</h3>
+                <span class="ml-2 text-sm text-amber-600" id="stats-pending-trend">--</span>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-gray-500 text-sm">Upcoming</p>
+                    <div class="flex items-center">
+                        <h3 class="font-bold text-xl text-gray-900" id="stats-upcoming">--</h3>
+                        <span class="ml-2 text-sm text-green-600" id="stats-upcoming-trend">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Appointments Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-gray-500 text-sm">Completed</p>
+                    <div class="flex items-center">
+                        <h3 class="font-bold text-xl text-gray-900" id="stats-completed">--</h3>
+                        <span class="ml-2 text-sm text-blue-600" id="stats-completed-trend">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancellation Rate Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-red-100 text-red-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-gray-500 text-sm">Cancellation Rate</p>
+                    <div class="flex items-center">
+                        <h3 class="font-bold text-xl text-gray-900" id="stats-cancelled">--</h3>
+                        <span class="ml-2 text-sm text-red-600" id="stats-cancelled-trend">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
 
     <!-- Appointments Table -->
     <div id="appointments-table" class="bg-white rounded-lg shadow overflow-hidden">
@@ -385,6 +461,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('additional_scripts')
@@ -443,6 +520,7 @@
                 // Close modal and refresh appointments
                 closeCancelModal();
                 loadAppointments();
+                loadStatistics();
                 
                 // Show success message
                 showToast('Appointment cancelled successfully', 'success');
@@ -751,11 +829,7 @@
                                     </svg>
                                 </button>
                             ` : ''}
-                            <button class="text-green-600 hover:text-green-900" title="Send Email to Client">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </button>
+
                         </div>
                     </div>
                 </td>
@@ -926,6 +1000,7 @@
                 // Close modal and refresh appointments
                 closeApproveModal();
                 loadAppointments();
+                loadStatistics()
                 
                 // Show success message
                 showToast('Appointment approved successfully', 'success');
@@ -1029,6 +1104,7 @@
                 // Close modal and refresh appointments
                 closeRescheduleModal();
                 loadAppointments();
+                loadStatistics();
                 
                 // Show success message
                 showToast('Appointment rescheduled successfully', 'success');
@@ -1041,6 +1117,177 @@
             showToast('Failed to reschedule appointment: ' + error.message, 'error');
         }
     }
+
+
+    //Statistics
+
+    document.addEventListener('DOMContentLoaded', function() {
+            loadStatistics();
+        });
+        
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/booking/{{ auth()->user()->barberShop->id }}/statistics');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Statistics data:', data);
+                    
+                    updateStatistics(data);
+                } else {
+                    console.error('Failed to load statistics');
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        function updateStatistics(data) {
+            // Update total appointments
+            document.getElementById('stats-pending').textContent = data.pending_bookings || 0;
+            
+            // Update upcoming appointments
+            document.getElementById('stats-upcoming').textContent = data.confirmed_bookings || 0;
+            
+            // Update completed appointments
+            document.getElementById('stats-completed').textContent = data.completed_bookings || 0;
+            
+            // Update cancellation rate
+            const cancelRate = (parseFloat(data.cancelled_bookings_rate) || 0).toFixed(2);
+            document.getElementById('stats-cancelled').textContent = cancelRate + '%';
+        }
+        // Row hover effect with animation
+        document.addEventListener('mouseover', function(e) {
+            const row = e.target.closest('tr[data-id]');
+            if (row) {
+                row.classList.add('scale-transition');
+                setTimeout(() => row.classList.remove('scale-transition'), 300);
+            }
+        });
+
+        // Add animations for status changes
+        function animateStatusChange(element) {
+            element.classList.add('status-change-animation');
+            setTimeout(() => element.classList.remove('status-change-animation'), 1000);
+        }
+
+        // Animated counter for statistics
+        function animateCounter(element, targetValue) {
+            const duration = 1500;
+            const startValue = parseInt(element.textContent) || 0;
+            const increment = targetValue > startValue;
+            const change = Math.abs(targetValue - startValue);
+            const stepTime = Math.abs(Math.floor(duration / change));
+            
+            let currentValue = startValue;
+            const counter = setInterval(() => {
+                currentValue = increment ? currentValue + 1 : currentValue - 1;
+                element.textContent = currentValue;
+                
+                if ((increment && currentValue >= targetValue) || 
+                    (!increment && currentValue <= targetValue)) {
+                    clearInterval(counter);
+                    element.textContent = targetValue;
+                }
+            }, stepTime);
+        }
+
+        // Enhance loading animation with pulse effect
+        function enhanceLoaderAnimation() {
+            const loader = document.querySelector('.barber-pole-loader');
+            if (loader) {
+                loader.classList.add('pulse-effect');
+            }
+        }
+
+        // Add refresh animation
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            this.classList.add('spin-once');
+            setTimeout(() => this.classList.remove('spin-once'), 1000);
+        });
+
+        // Add to your existing style element
+        const animationStyles = document.createElement('style');
+        animationStyles.textContent = `
+            .scale-transition {
+                animation: row-scale 0.3s ease-out;
+            }
+            
+            @keyframes row-scale {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.01); }
+                100% { transform: scale(1); }
+            }
+            
+            .status-change-animation {
+                animation: status-pulse 1s ease-in-out;
+            }
+            
+            @keyframes status-pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+            
+            .spin-once {
+                animation: spin-button 1s ease-in-out;
+            }
+            
+            @keyframes spin-button {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .pulse-effect {
+                animation: pulse 2s infinite;
+            }
+            
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(66, 153, 225, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(66, 153, 225, 0); }
+            }
+            
+            .appointment-row-enter {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(animationStyles);
+
+        // Apply animations when rendering appointments
+        const originalRenderAppointments = renderAppointments;
+        renderAppointments = function() {
+            originalRenderAppointments();
+            
+            // Add entrance animation to rows
+            const rows = document.querySelectorAll('#appointments-body tr');
+            rows.forEach((row, index) => {
+                setTimeout(() => {
+                    row.classList.add('appointment-row-enter');
+                }, index * 100);
+            });
+            
+            // Animate statistics
+            const statElements = [
+                document.getElementById('stats-pending'),
+                document.getElementById('stats-upcoming'),
+                document.getElementById('stats-completed')
+            ];
+            
+            statElements.forEach(el => {
+                if (el && el.textContent !== '--') {
+                    animateCounter(el, parseInt(el.textContent));
+                }
+            });
+            
+            // Enhanced loader
+            enhanceLoaderAnimation();
+        };
+        
 
 </script>
 @endsection
