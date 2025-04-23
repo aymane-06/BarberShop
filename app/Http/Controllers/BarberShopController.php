@@ -29,7 +29,9 @@ class BarberShopController extends Controller
      */
     public function index()
     {
-        //
+        $barberShop = auth()->user()->barberShop;
+        $Apointments = $barberShop->bookings()->where('status','confirmed')->with(['user', 'services'])->get();
+        return view('barber.dashboard', compact('barberShop','Apointments'));
     }
 
     /**
@@ -287,6 +289,8 @@ class BarberShopController extends Controller
         $working_hours = $barberShop->working_hours;
         return response()->json($working_hours, 200);
     }
+
+    
 
 
     

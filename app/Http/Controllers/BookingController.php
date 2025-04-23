@@ -6,6 +6,7 @@ use App\Jobs\sendBookingCanellationEmail;
 use App\Jobs\sendBookingConfirmationEmail;
 use App\Jobs\sendBookingReschduling;
 use App\Jobs\SendUserBookingCancelationJob;
+use App\Jobs\SendUserBookingCompleted;
 use App\Jobs\SendUserBookingConfirmation;
 use App\Jobs\SendUserBookingReschudling;
 use App\Jobs\SendUserCustomEmail;
@@ -13,7 +14,9 @@ use App\Mail\BookingCancelation;
 use App\Mail\BookingConfirmation;
 use App\Mail\BookingReschduling;
 use App\Mail\SendUserBookingCancelation;
+use App\Mail\UserBookingCompleted;
 use App\Mail\UserBookingConfirmation;
+use App\Mail\UserBookingReminder;
 use App\Mail\UserBookingReschduling;
 use App\Models\barberShop;
 use App\Models\Booking;
@@ -21,7 +24,8 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Models\Services;
 use App\Repositories\BookingRepository;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
+
 use Mail;
 
 class BookingController extends Controller
@@ -145,10 +149,10 @@ class BookingController extends Controller
         ]);
 
         if($request->method() == 'PUT'){
-            if($request->input('notify_client')) {
+            
                 // Notify the client about the cancellation
                 SendUserBookingCancelationJob::dispatch($booking,$request->input('cancel_reason'), $request->input('notes'));
-            }
+            
             return response()->json([
                 'message' => 'Booking cancelled successfully.',
                 'booking' => $booking,
@@ -184,13 +188,23 @@ class BookingController extends Controller
         return redirect()->route('Booking-confirm',compact('booking'))->with('success', 'Booking rescheduled successfully.');
     }
 
-    public function getAppointments(barberShop $barberShop)
+    public function getAppointments(barberShop $barberShop,Request $request)
     {
-        
-        $appointments = $barberShop->bookings()->with(['user', 'services'])->paginate(6);
+        // dd($barberShop->id);
+        // dd($request->all());
+        // Filter bookings based on the provided filters
+        $filter = $request->all();
+        // dd($filter);
 
-        return response()->json( $appointments);
+        $appointments = BookingRepository::filterBookings($barberShop, $filter);
+        return response()->json($appointments);
     }
+    // {
+        
+    //     $appointments = $barberShop->bookings()->with(['user', 'services'])->paginate(6);
+
+    //     return response()->json( $appointments);
+    // }
 
     public function approve(Booking $booking,UpdateBookingRequest $request)
     {
@@ -245,5 +259,52 @@ class BookingController extends Controller
     public function getBookingsStatistics(barberShop $barberShop){
         $bookingStatistics = BookingRepository::bookingStatistics($barberShop->id);
         return response()->json($bookingStatistics);
+    }
+
+    public function getConfirmedAppointments(Request $request, barberShop $barberShop){
+        // dd($barberShop->working_hours);
+        $confirmed_appointments = $barberShop->bookings()->where('status','confirmed')->with(['user', 'services'])->get();
+        return response()->json($confirmed_appointments, 200);
+    }
+    public function complete(Request $request, Booking $booking){
+        // Validate the request data
+        $request->validate([
+            'notes' => 'nullable|string|max:255',
+            'notify_client' => 'nullable|boolean',
+        ]);
+
+        // Update the booking status to 'completed'
+        $booking->update([
+            'status' => 'completed',
+            'UserNotes' => $request->input('notes'),
+            'payment_status' => 'paid', // Update payment status if needed
+            'payment_method' => 'cash', // Update payment method if needed
+        ]);
+
+        // Notify the client about the completion
+        SendUserBookingCompleted::dispatch($booking);
+        // SendUserBookingReschudling::dispatch($booking);
+        return response()->json([
+            'message' => 'Booking completed successfully.',
+            'booking' => $booking,
+        ]);
+    }
+
+    public function remind(Booking $booking, Request $request){
+        // Validate the request data
+        // dd($booking,$request->all());
+        $validated = $request->validate([
+            'notes' => 'nullable|string|max:255',
+        ]);
+        
+        // Fix: Extract the message string from the validated array
+        $message = $validated['notes'] ?? 'Your appointment is coming up soon!';
+        
+        Mail::to($booking->user->email)->send(new UserBookingReminder($booking, $message));
+        
+        return response()->json([
+            'message' => 'Reminder sent successfully.',
+            'booking' => $booking,
+        ],200);
     }
 }

@@ -2,47 +2,47 @@
 
 @section('additional_styles')
 <style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #7c3aed, #4f46e5);
+        --secondary-gradient: linear-gradient(135deg, #4338ca, #3b82f6);
+        --accent-gradient: linear-gradient(135deg, #ec4899, #8b5cf6);
+        --success-gradient: linear-gradient(135deg, #10b981, #059669);
+        --warning-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+        --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --glass-effect: rgba(255, 255, 255, 0.2);
+        --glass-border: rgba(255, 255, 255, 0.3);
+    }
+    
     body {
         font-family: 'Poppins', sans-serif;
         scroll-behavior: smooth;
+        background-color: #f8f9fc;
     }
     
     .dashboard-gradient {
-        background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%);
+        background: linear-gradient(145deg, #f8faff 0%, #f0f4ff 100%);
+        min-height: 100vh;
     }
     
     .dashboard-header-gradient {
-        background: linear-gradient(135deg, rgba(109, 40, 217, 0.95) 0%, rgba(91, 33, 182, 0.8) 100%);
-    }
-    
-    .card-hover {
-        transition: all 0.3s ease;
-    }
-    
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stat-card {
-        overflow: hidden;
+        background: var(--primary-gradient);
+        border-radius: 0 0 2rem 2rem;
+        box-shadow: var(--shadow-lg);
         position: relative;
-        z-index: 1;
+        z-index: 10;
+        padding: 2.5rem 0;
     }
     
-    .stat-card::before {
+    .dashboard-header-gradient::before {
         content: '';
         position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(124, 58, 237, 0.1);
-        z-index: -1;
-    }
-    
-    .pulse {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
@@ -94,6 +94,14 @@
     .bounce-in {
         animation: bounceIn 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
         opacity: 0;
+    }
+    #calendar {
+    min-height: 800px;  /* Add this */
+    margin-top: 2rem;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
     
     @keyframes bounceIn {
@@ -236,6 +244,75 @@
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
+    :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #4caf50;
+            --task-color: #ff9800;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            padding: 24px;
+        }
+
+        .view-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover {
+            opacity: 0.9;
+        }
+
+        .fc-event {
+    /* Keep important properties */
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 4px 8px !important;
+    font-size: 0.9em !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+}
+
+        .fc-event-task {
+    background: var(--task-color) !important;
+    border-left: 4px solid #e65100 !important;
+}
+
+        .fc-event-appointment {
+    background: var(--primary-color) !important;
+    border-left: 4px solid #283593 !important;
+}
+
+        .fc-daygrid-day-number {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .fc-today-button {
+            background: var(--secondary-color) !important;
+            border-color: var(--secondary-color) !important;
+        }
 </style>
 @endsection
 
@@ -367,141 +444,9 @@
                     </div>
                 </div>
 
-                <!-- Today's Schedule -->
-                <div class="bg-white rounded-xl shadow-sm p-6 card-hover rotate-in" id="schedule-card">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800">Today's Schedule</h2>
-                            <p class="text-gray-500 text-sm">{{ now()->format('l, F j, Y') }}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="p-2 text-gray-500 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-100">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="p-2 text-gray-500 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-100">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Timeline Schedule -->
-                    <div class="relative overflow-x-auto">
-                        <div class="flex min-h-[500px]">
-                            <!-- Time Indicators -->
-                            <div class="flex-shrink-0 w-16 flex flex-col text-sm text-gray-500">
-                                <div class="h-20 flex items-center">9:00</div>
-                                <div class="h-20 flex items-center">10:00</div>
-                                <div class="h-20 flex items-center">11:00</div>
-                                <div class="h-20 flex items-center">12:00</div>
-                                <div class="h-20 flex items-center">13:00</div>
-                                <div class="h-20 flex items-center">14:00</div>
-                                <div class="h-20 flex items-center">15:00</div>
-                                <div class="h-20 flex items-center">16:00</div>
-                                <div class="h-20 flex items-center">17:00</div>
-                            </div>
-                            
-                            <!-- Schedule Content -->
-                            <div class="flex-grow border-l border-gray-200 pl-4 relative">
-                                <!-- Current time indicator -->
-                                <div class="absolute left-0 right-0 flex items-center" style="top: 120px;">
-                                    <div class="h-0.5 w-3 bg-red-500"></div>
-                                    <div class="h-0.5 flex-grow bg-red-500 bg-opacity-60 relative shimmer">
-                                        <div class="absolute -top-2 -left-2.5 w-5 h-5 rounded-full bg-red-500 border-2 border-white pulse"></div>
-                                    </div>
-                                    <span class="text-xs bg-red-500 text-white px-2 py-1 rounded">Now</span>
-                                </div>
-                                
-                                <!-- Appointment 1 -->
-                                <div class="absolute left-4 right-4" style="top: 30px;">
-                                    <div class="bg-primary-100 border-l-4 border-primary-600 rounded-r-lg p-3 slide-in-right" style="animation-delay: 0.3s">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex-grow min-w-0">
-                                                <h4 class="font-semibold text-primary-800 truncate">John Doe</h4>
-                                                <p class="text-xs text-primary-600">9:30 - 10:15</p>
-                                                <div class="flex flex-wrap items-center mt-1 gap-2">
-                                                    <span class="bg-primary-200 text-primary-700 text-xs px-2 py-0.5 rounded service-tag">Haircut</span>
-                                                    <span class="bg-primary-200 text-primary-700 text-xs px-2 py-0.5 rounded service-tag">Beard Trim</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex space-x-1 flex-shrink-0 ml-2">
-                                                <button class="p-1.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors">
-                                                    <i class="fas fa-phone-alt"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors">
-                                                    <i class="fas fa-comment"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Appointment 2 -->
-                                <div class="absolute left-4 right-4" style="top: 180px;">
-                                    <div class="bg-green-100 border-l-4 border-green-600 rounded-r-lg p-3 slide-in-right" style="animation-delay: 0.5s">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex-grow min-w-0">
-                                                <h4 class="font-semibold text-green-800 truncate">Mike Johnson</h4>
-                                                <p class="text-xs text-green-600">12:00 - 13:00</p>
-                                                <div class="flex flex-wrap items-center mt-1 gap-2">
-                                                    <span class="bg-green-200 text-green-700 text-xs px-2 py-0.5 rounded service-tag">Full Service</span>
-                                                    <span class="bg-green-200 text-green-700 text-xs px-2 py-0.5 rounded service-tag">Hair Coloring</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex space-x-1 flex-shrink-0 ml-2">
-                                                <button class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-full transition-colors">
-                                                    <i class="fas fa-phone-alt"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-full transition-colors">
-                                                    <i class="fas fa-comment"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-full transition-colors">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Appointment 3 -->
-                                <div class="absolute left-4 right-4" style="top: 260px;">
-                                    <div class="bg-blue-100 border-l-4 border-blue-600 rounded-r-lg p-3 slide-in-right" style="animation-delay: 0.7s">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex-grow min-w-0">
-                                                <h4 class="font-semibold text-blue-800 truncate">Sarah Williams</h4>
-                                                <p class="text-xs text-blue-600">14:30 - 15:15</p>
-                                                <div class="flex flex-wrap items-center mt-1 gap-2">
-                                                    <span class="bg-blue-200 text-blue-700 text-xs px-2 py-0.5 rounded service-tag">Haircut</span>
-                                                    <span class="bg-blue-200 text-blue-700 text-xs px-2 py-0.5 rounded service-tag">Hair Styling</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex space-x-1 flex-shrink-0 ml-2">
-                                                <button class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
-                                                    <i class="fas fa-phone-alt"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
-                                                    <i class="fas fa-comment"></i>
-                                                </button>
-                                                <button class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Add Appointment Button -->
-                    <div class="mt-6 text-center">
-                        <button class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors inline-flex items-center hover:scale-105 transform transition-transform duration-300">
-                            <i class="fas fa-plus mr-2"></i> Add Appointment
-                        </button>
-                    </div>
-                </div>
+                <!--  Schedule -->
+                <div id="calendar"></div>
+                
                 
                 
                 <!-- Recent Reviews -->
@@ -611,41 +556,437 @@
                             <i class="fas fa-plus mr-2"></i> Add Review
                         </button>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - 1/3 Width -->
+            <div class="xl:w-1/3 space-y-8">
+                <!-- Add your right column content here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AppointmentDetailsModal -->
+<div id="appointmentDetailsModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity" id="modal-backdrop"></div>
+        
+        <div class="relative bg-white w-full max-w-md rounded-xl shadow-2xl p-6 transform transition-all scale-in">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+                <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-calendar-check text-primary-600 mr-2"></i>
+                    <span id="modal-title">Appointment Details</span>
+                </h3>
+                <button type="button" id="closeModalBtn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Content -->
+            <div class="space-y-4">
+                <div class="bg-primary-50 p-3 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-600">Booking Reference:</span>
+                        <span id="modal-bookingRef" class="font-mono text-sm bg-white py-1 px-2 rounded border border-primary-200"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-gray-600">Status:</span>
+                        <span id="modal-status" class="py-1 px-3 text-xs font-medium rounded-full"></span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Client</label>
+                        <div id="modal-client" class="font-medium text-gray-800"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                        <div id="modal-email" class="font-medium text-gray-800 text-sm"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Date & Time</label>
+                        <div id="modal-datetime" class="font-medium text-gray-800"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Duration</label>
+                        <div id="modal-duration" class="font-medium text-gray-800"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Services</label>
+                    <div id="modal-services" class="flex flex-wrap gap-2"></div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Amount</label>
+                        <div id="modal-amount" class="font-medium text-gray-800 text-lg"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Payment</label>
+                        <div id="modal-payment" class="font-medium"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="mt-6 flex justify-between">
+                <div>
+                    <button type="button" id="cancelAppointmentBtn" class="py-2 px-4 border border-red-200 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors flex items-center">
+                        <i class="fas fa-times mr-2"></i> Cancel Appointment
+                    </button>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="button" id="CompleteAppointmentBtn" class="py-2 px-4 border border-primary-200 text-primary-600 hover:bg-primary-50 rounded-md text-sm font-medium transition-colors flex items-center">
+                        <i class="fas fa-check mr-2"></i> Completed
+                    </button>
+                    <button type="button" id="sendReminderBtn" class="py-2 px-4 bg-primary-600 text-white hover:bg-primary-700 rounded-md text-sm font-medium transition-colors flex items-center">
+                        <i class="fas fa-bell mr-2"></i> Send Reminder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 
 @section('additional_scripts')
+<!-- FullCalendar & Chart.js CDN -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/dist/date-fns.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Chart.js Setup -->
 <script>
-    // Performance Overview Chart
-    var ctx = document.getElementById('performanceChart').getContext('2d');
-    var performanceChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Appointments',
-                data: [12, 19, 3, 5, 2, 3, 7],
-                backgroundColor: 'rgba(124, 58, 237, 0.1)',
-                borderColor: 'rgba(124, 58, 237, 1)',
-                borderWidth: 2,
-                tension: 0.3
-            }, {
-                label: 'Revenue',
-                data: [100, 200, 150, 300, 200, 250, 150],
-                backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                borderColor: 'rgba(29, 185, 84, 1)',
-                borderWidth: 2,
-                tension: 0.3
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    const ctx = document.getElementById('performanceChart');
+    if (ctx) {
+        const performanceChart = new Chart(ctx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Appointments',
+                        data: [12, 19, 3, 5, 2, 3, 7],
+                        backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                        borderColor: 'rgba(124, 58, 237, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Revenue',
+                        data: [100, 200, 150, 300, 200, 250, 150],
+                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                        borderColor: 'rgba(29, 185, 84, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
+        });
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        async function getConfirmedAppointments() {
+            try {
+                const response = await fetch('/api/barberShop/{{ $barberShop->id }}/confirmed-appointments');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const appointments = await response.json();
+
+                const events = appointments.map(appointment => {
+                    const startDate = appointment.booking_date.split('T')[0];
+                    const startTime = appointment.time;
+                    const startDateTime = `${startDate}T${startTime}`;
+                    const start = new Date(startDateTime);
+                    const end = new Date(start.getTime() + (appointment.duration * 60000));
+
+                    const serviceNames = appointment.services.map(service => service.name).join(', ');
+                    const clientName = appointment.user ? appointment.user.name : 'Client';
+
+                    return {
+                        id: appointment.id,
+                        title: `${serviceNames} - ${clientName}`,
+                        start: startDateTime,
+                        end: new Date(end.getTime() - (end.getTimezoneOffset() * 60000)).toISOString(),
+                        backgroundColor: '#3f51b5',
+                        borderColor: '#283593',
+                        textColor: '#ffffff',
+                        extendedProps: {
+                            type: 'appointment',
+                            bookingRef: appointment.booking_reference,
+                            clientName: clientName,
+                            clientEmail: appointment.user ? appointment.user.email : '',
+                            barberName: appointment.barber_name,
+                            services: appointment.services,
+                            amount: appointment.amount,
+                            paymentStatus: appointment.payment_status,
+                            duration: appointment.duration
+                        }
+                    };
+                });
+
+                initializeCalendar(events);
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+                initializeCalendar([]);
+            }
         }
+
+        function initializeCalendar(events) {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridDay',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                editable: false,
+                events: events,
+                eventDidMount: function (info) {
+                    info.el.classList.add('fc-event-appointment');
+                },
+                eventClick: function (info) {
+                    const event = info.event;
+                    if (!event.extendedProps) return;
+                    openAppointmentDetailsModal(event);
+                }
+            });
+
+            calendar.render();
+        }
+
+        function openAppointmentDetailsModal(event) {
+            const modal = document.getElementById('appointmentDetailsModal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const CompleteAppointmentBtn = document.getElementById('CompleteAppointmentBtn');
+            const cancelAppointmentBtn = document.getElementById('cancelAppointmentBtn');
+            const sendReminderBtn = document.getElementById('sendReminderBtn');
+
+            function setModalTextContent(id, text) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+            }
+
+            function setModalStatus(status) {
+                const el = document.getElementById('modal-status');
+                el.textContent = status;
+                el.className = 'py-1 px-3 text-xs font-medium rounded-full';
+                if (status === 'paid') el.classList.add('bg-green-100', 'text-green-800');
+                else if (status === 'pending') el.classList.add('bg-yellow-100', 'text-yellow-800');
+                else el.classList.add('bg-red-100', 'text-red-800');
+            }
+
+            function populateModalServices(services) {
+                const el = document.getElementById('modal-services');
+                el.innerHTML = '';
+                services.forEach(service => {
+                    const span = document.createElement('span');
+                    span.className = 'bg-primary-100 text-primary-800 text-xs py-1 px-2 rounded-full service-tag';
+                    span.textContent = service.name;
+                    el.appendChild(span);
+                });
+            }
+
+            function setModalPaymentStatus(status) {
+                const container = document.getElementById('modal-payment');
+                container.innerHTML = '';
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                const dot = document.createElement('span');
+                dot.className = 'w-2 h-2 rounded-full mr-2';
+                if (status === 'paid') dot.classList.add('bg-green-500');
+                else if (status === 'pending') dot.classList.add('bg-yellow-500');
+                else dot.classList.add('bg-red-500');
+                div.appendChild(dot);
+                div.append(status.charAt(0).toUpperCase() + status.slice(1));
+                container.appendChild(div);
+            }
+
+            setModalTextContent('modal-title', 'Appointment Details');
+            setModalTextContent('modal-bookingRef', event.extendedProps.bookingRef);
+            setModalStatus(event.extendedProps.paymentStatus);
+            setModalTextContent('modal-client', event.extendedProps.clientName);
+            setModalTextContent('modal-email', event.extendedProps.clientEmail);
+
+            const time = event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const date = event.start.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            setModalTextContent('modal-datetime', `${date}, ${time}`);
+            setModalTextContent('modal-duration', `${event.extendedProps.duration} minutes`);
+            populateModalServices(event.extendedProps.services);
+            setModalTextContent('modal-amount', `€${event.extendedProps.amount}`);
+            setModalPaymentStatus(event.extendedProps.paymentStatus);
+
+            modal.classList.remove('hidden');
+
+            closeModalBtn.onclick = modalBackdrop.onclick = () => modal.classList.add('hidden');
+
+            CompleteAppointmentBtn.onclick = () => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to mark this appointment as completed?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#7c3aed',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'Yes, complete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/api/Booking/complete/${event.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire(
+                                'Completed!',
+                                'The appointment has been marked as completed.',
+                                'success'
+                            );
+                            event.remove();
+                            modal.classList.add('hidden');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while trying to mark the appointment as completed',
+                                'error'
+                            );
+                        });
+                    }
+                });
+            };
+
+            cancelAppointmentBtn.onclick = () => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to cancel this appointment?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#7c3aed',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'Yes, cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/api/Booking/cancel/${event.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ notify_client: true })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire(
+                                'Cancelled!',
+                                'The appointment has been cancelled.',
+                                'success'
+                            );
+                            event.remove();
+                            modal.classList.add('hidden');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while trying to cancel the appointment.',
+                                'error'
+                            );
+                        });
+                    }
+                });
+
+                
+            };
+
+            sendReminderBtn.onclick = () => {
+                Swal.fire({
+                    title: 'Send Appointment Reminder',
+                    html: `
+                        <textarea id="reminderMessage" class="w-full p-2 border border-gray-300 rounded-md" 
+                        placeholder="Add a custom message (optional)" rows="4"></textarea>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#7c3aed',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'Send Reminder'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const message = document.getElementById('reminderMessage').value;
+                        
+                        Swal.fire({
+                            title: 'Sending...',
+                            text: 'Please wait while we send the reminder',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        fetch(`/api/barber/appointments/remind/${event.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ notes: message })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.close();
+                                Swal.fire(
+                                    'Reminder Sent!',
+                                    'The client has been notified about their appointment.',
+                                    'success'
+                                );
+                            
+                        })
+                        .catch(error => {
+                            console.log('Error:', error);
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while sending the reminder.',
+                                'error'
+                            );
+                        });
+                    }
+                });
+                
+            };
+        }
+
+        getConfirmedAppointments();
     });
 </script>
+
+    
+   
+
+
+</script>
+
 @endsection
                 

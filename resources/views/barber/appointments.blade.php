@@ -119,22 +119,17 @@
                     <option value="confirmed">Confirmed</option>
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
-                    <option value="no-show">No Show</option>
                 </select>
                 
                 <select id="date-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
                     <option value="">All Dates</option>
                     <option value="today">Today</option>
                     <option value="tomorrow">Tomorrow</option>
-                    <option value="this-week">This Week</option>
-                    <option value="next-week">Next Week</option>
+                    <option value="week">This Week</option>
                     <option value="past">Past Appointments</option>
                 </select>
                 
-                <select id="service-filter" class="filter rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-500">
-                    <option value="">All Services</option>
-                    <!-- Will be populated with available services -->
-                </select>
+                
             </div>
         </div>
         <div class="flex justify-end mt-3">
@@ -654,7 +649,6 @@
             // Add filters to URL if they exist
             if (filterOptions.status) url += `&status=${filterOptions.status}`;
             if (filterOptions.date) url += `&date_filter=${filterOptions.date}`;
-            if (filterOptions.service) url += `&service_id=${filterOptions.service}`;
             if (filterOptions.search) url += `&search=${filterOptions.search}`;
             
             const response = await fetch(url);
@@ -663,7 +657,7 @@
                 
             // Update appointments array
             appointments = data.data;
-            console.log(appointments);
+            // console.log(appointments);
             
             currentPage = data.current_page;
             totalPages = data.last_page;
@@ -916,15 +910,15 @@
     function applyFilters() {
         const statusFilter = document.getElementById('status-filter').value;
         const dateFilter = document.getElementById('date-filter').value;
-        const serviceFilter = document.getElementById('service-filter').value;
         const searchInput = document.getElementById('search-input').value;
         
         filterOptions = {
             status: statusFilter,
             date: dateFilter,
-            service: serviceFilter,
             search: searchInput
         };
+        console.log(filterOptions);
+        
         
         loadAppointments();
     }

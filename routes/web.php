@@ -34,9 +34,7 @@ Route::get('/profile', function () {
 Route::put('/profile', [AuthController::class, 'updateProfile'])->name('user.profile.update');
 
 
-Route::get('/barberShop/dashboard', function () {
-    return view('barber.dashboard');
-})->name('barber.dashboard');
+Route::get('/barberShop/dashboard',[BarberShopController::class,'index'])->name('barber.dashboard');
 
 Route::get('/barberShop/Profile', function () {
     return view('barber.profile');

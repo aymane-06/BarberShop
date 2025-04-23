@@ -43,7 +43,8 @@ Route::get('/barberShop/{barberShop:id}/working-hours',[BarberShopController::cl
 Route::get('/barberShop/{barberShop:id}/appointments',[BookingController::class,'getAppointments']);
 Route::put('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->name('Booking.APicancel');
 Route::put('/Booking/approve/{booking}',[BookingController::class,'approve'])->name('Booking.APIapprove');
-// Booking/reschedule/${appointmentId}
+Route::put('/Booking/complete/{booking}',[BookingController::class,'complete'])->name('Booking.APIcomplete');
 Route::put('/Booking/reschedule/{booking}',[BookingController::class,'rescheduleApi'])->name('Booking.APIreschedule');
-// /booking/{{ auth()->user()->barberShop->id }}/statistics
 Route::get('/booking/{barberShop:id}/statistics',[BookingController::class,'getBookingsStatistics']);
+Route::get('/barberShop/{barberShop:id}/confirmed-appointments',[BookingController::class,'getConfirmedAppointments']);
+Route::post('/barber/appointments/remind/{booking}',[BookingController::class,'remind'])->name('Booking.remind');
