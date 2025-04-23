@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarberShopController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -117,5 +118,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::post('/bookings/create/{barberShop}', [BookingController::class, 'store'])->name('bookings.create');
 Route::get('/Booking-confirm/{booking}',[BookingController::class,'show'])->name('Booking-confirm');
 Route::post('/Booking/cancel/{booking}',[BookingController::class,'cancel'])->name('Booking.cancel');
-//reschedule
+
 Route::post('/Booking/reschedule/{booking}',[BookingController::class,'reschedule'])->name('Booking.reschedule');
+
+//rating Routes
+Route::post('/Booking/rate/{barberShop}',[RatingController::class,'store'])->name('rating.store');

@@ -85,6 +85,8 @@ class BarberShopController extends Controller
      */
     public function show(barberShop $barberShop)
     {
+        // dd($barberShop->ratings()->get());
+        $barberShop->ratings=$barberShop->ratings()->get();
         return view('pages.barber-detail', compact('barberShop'));
     }
 

@@ -69,6 +69,10 @@ class barberShop extends Model
     {
         return $this->hasMany(Booking::class, 'barbershop_id');
     }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'barbershop_id', 'id');
+    }
 
     
 

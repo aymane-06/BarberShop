@@ -635,13 +635,13 @@
             
             <!-- Modal Footer -->
             <div class="mt-6 flex justify-between">
-                <div>
+                <div class="flex space-x-2">
                     <button type="button" id="cancelAppointmentBtn" class="py-2 px-4 border border-red-200 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors flex items-center">
                         <i class="fas fa-times mr-2"></i> Cancel Appointment
                     </button>
-                </div>
-                <div class="flex space-x-3">
-                    <button type="button" id="CompleteAppointmentBtn" class="py-2 px-4 border border-primary-200 text-primary-600 hover:bg-primary-50 rounded-md text-sm font-medium transition-colors flex items-center">
+                
+                
+                    <button type="button" id="CompleteAppointmentBtn" class="py-2 px-4 border border-green-200 text-green-600 hover:bg-green-50 rounded-md text-sm font-medium transition-colors flex items-center">
                         <i class="fas fa-check mr-2"></i> Completed
                     </button>
                     <button type="button" id="sendReminderBtn" class="py-2 px-4 bg-primary-600 text-white hover:bg-primary-700 rounded-md text-sm font-medium transition-colors flex items-center">

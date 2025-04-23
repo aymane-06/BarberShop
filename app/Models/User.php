@@ -69,4 +69,7 @@ class User extends Authenticatable
     protected function bookings(){
         return $this->hasMany(Booking::class);
     }
+    protected function ratings(){
+        return $this->hasMany(Rating::class, 'user_id');
+    }
 }

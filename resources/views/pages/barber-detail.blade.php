@@ -54,6 +54,131 @@
             color: #7c3aed;
             border-bottom-color: #7c3aed;
         }
+        .radio {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: row-reverse;
+}
+
+.radio > input {
+  position: absolute;
+  appearance: none;
+}
+
+.radio > label {
+  cursor: pointer;
+  font-size: 30px;
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.radio > label > svg {
+  fill: #666;
+  transition: fill 0.3s ease;
+}
+
+.radio > label::before,
+.radio > label::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #ff9e0b;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease;
+  animation: particle-explosion 1s ease-out;
+}
+
+.radio > label::before {
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+}
+
+.radio > label::after {
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+}
+
+.radio > label:hover::before,
+.radio > label:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.5);
+}
+
+.radio > label:hover {
+  transform: scale(1.2);
+  animation: pulse 0.6s infinite alternate;
+}
+
+.radio > label:hover > svg,
+.radio > label:hover ~ label > svg {
+  fill: #ff9e0b;
+  filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+  animation: shimmer 1s ease infinite alternate;
+}
+
+.radio > input:checked + label > svg,
+.radio > input:checked + label ~ label > svg {
+  fill: #ff9e0b;
+  filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+  animation: pulse 0.8s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes particle-explosion {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(255, 158, 11, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(255, 158, 11, 1));
+  }
+}
+
+.radio > input:checked + label:hover > svg,
+.radio > input:checked + label:hover ~ label > svg {
+  fill: #e58e09;
+}
+
+.radio > label:hover > svg,
+.radio > label:hover ~ label > svg {
+  fill: #ff9e0b;
+}
+
+.radio input:checked ~ label svg {
+  fill: #ffa723;
+}
+
     </style>
     @endsection
 
@@ -81,13 +206,27 @@
                             <h1 class="text-3xl font-bold text-gray-900">{{ $barberShop->name }}</h1>
                             <div class="flex items-center mt-2 mb-4">
                                 <div class="flex items-center">
-                                    <i class="fas fa-star rating-star"></i>
-                                    <i class="fas fa-star rating-star"></i>
-                                    <i class="fas fa-star rating-star"></i>
-                                    <i class="fas fa-star rating-star"></i>
-                                    <i class="fas fa-star-half-alt rating-star"></i>
+                                    @php
+                                        $avgRating = $barberShop->ratings()->avg('rating') ?? 0;
+                                        $fullStars = floor($avgRating);
+                                        $halfStar = $avgRating - $fullStars >= 0.5;
+                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star rating-star"></i>
+                                    @endfor
+
+                                    @if ($halfStar)
+                                        <i class="fas fa-star-half-alt rating-star"></i>
+                                    @endif
+
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star rating-star"></i>
+                                    @endfor
+                                    <span class="ml-1 text-gray-700">{{ number_format($avgRating, 1) }}</span>
                                 </div>
-                                <span class="ml-2 text-gray-600">(124 reviews)</span>
+                                <span class="ml-2 text-gray-600">({{ $barberShop->ratings()->count() }} ratings)</span>
                             </div>
                         </div>
                         <button class="text-gray-400 hover:text-primary-600 transition-colors">
@@ -156,7 +295,7 @@
                 <button class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent focus:outline-none" data-target="gallery">
                     Gallery
                 </button>
-                <button class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent focus:outline-none" data-target="reviews">
+                <button class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent focus:outline-none" data-target="ratings">
                     Reviews
                 </button>
                 <button class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent focus:outline-none" data-target="team">
@@ -250,81 +389,241 @@
                 </div>
                 
                 <!-- Reviews Section -->
-                <div id="reviews" class="tab-content hidden bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
+                <div id="ratings" class="tab-content hidden bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">Reviews</h2>
                         <span class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">4.5 <i class="fas fa-star text-yellow-500 text-xs"></i> (124)</span>
                     </div>
                     
-                    <!-- Review filters -->
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <button class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">All</button>
-                        <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full text-sm">5 Stars (86)</button>
-                        <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full text-sm">4 Stars (28)</button>
-                        <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full text-sm">3 Stars (7)</button>
-                        <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full text-sm">2 Stars (2)</button>
-                        <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-full text-sm">1 Star (1)</button>
+                    
+                    <!-- Add a review button -->
+                    <div class="mb-6">
+                        <button id="add-review-btn" class="bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded-md transition-colors shadow-sm text-sm">
+                            <i class="fas fa-plus mr-2"></i>Add Your Review
+                        </button>
+                    </div>
+                    
+                    <!-- Add Review Form (Hidden by default) -->
+                    <div id="review-form-container" class="mb-6 hidden bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <h3 class="text-lg font-medium mb-4">Write a Review</h3>
+                        <form id="review-form" action="{{ route('rating.store',$barberShop) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="rating">Rating</label>
+                                <!-- From Uiverse.io by LeonKohli --> 
+                                <div class="radio">
+                                  <input id="rating-5" type="radio" name="rating" value="5" />
+                                  <label for="rating-5" title="5 stars">
+                                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                      <path
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      ></path>
+                                    </svg>
+                                  </label>
+                                                            
+                                  <input id="rating-4" type="radio" name="rating" value="4" />
+                                  <label for="rating-4" title="4 stars">
+                                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                      <path
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      ></path>
+                                    </svg>
+                                  </label>
+                                                            
+                                  <input id="rating-3" type="radio" name="rating" value="3" />
+                                  <label for="rating-3" title="3 stars">
+                                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                      <path
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      ></path>
+                                    </svg>
+                                  </label>
+                                                            
+                                  <input id="rating-2" type="radio" name="rating" value="2" />
+                                  <label for="rating-2" title="2 stars">
+                                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                      <path
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      ></path>
+                                    </svg>
+                                  </label>
+                                                            
+                                  <input id="rating-1" type="radio" name="rating" value="1" />
+                                  <label for="rating-1" title="1 star">
+                                    <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                      <path
+                                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                                      ></path>
+                                    </svg>
+                                  </label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="service">Service Received</label>
+                                <select name="service" id="service" class="w-full border border-gray-300 rounded-md p-2 focus:ring-primary-600 focus:border-primary-600">
+                                    <option value="" disabled selected>Select a service</option>
+                                    @foreach($barberShop->services as $service)
+                                        <option value="{{ $service->name }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="review_text">Your Review</label>
+                                <textarea id="review_text" name="review_text" rows="4" class="w-full border border-gray-300 rounded-md p-2 focus:ring-primary-600 focus:border-primary-600" placeholder="Share your experience..."></textarea>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button type="button" id="cancel-review-btn" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-md transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded-md transition-colors">
+                                    Submit Review
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     
                     <!-- Review list -->
                     <div class="space-y-6">
-                        <!-- Review Item -->
-                        <div class="border-b pb-6">
-                            <div class="flex justify-between mb-2">
-                                <div class="flex items-center">
-                                    <div class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                                        <span>MB</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium">Maxime Bertrand</h4>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <div class="flex">
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
+                        @if(isset($barberShop->ratings) && count($barberShop->ratings) > 0)
+                            @foreach($barberShop->ratings as $review)
+                         
+                                <!-- Review Item -->
+                                <div class="border-b pb-6">
+                                    <div class="flex justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <div class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                                                <span>{{ strtoupper(substr($review->user->name ?? 'Anonymous', 0, 2)) }}</span>
                                             </div>
-                                            <span class="ml-2">2 weeks ago</span>
+                                            <div>
+                                                <h4 class="font-medium">{{ $review->user->name ?? 'Anonymous' }}</h4>
+                                                <div class="flex items-center text-sm text-gray-500">
+                                                    <div class="flex">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            @if($i <= $review->rating)
+                                                                <i class="fas fa-star rating-star text-xs"></i>
+                                                            @else
+                                                                <i class="far fa-star rating-star text-xs"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <span class="ml-2">{{ $review->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            <span>{{ $review->service ?? 'General Review' }}</span>
                                         </div>
                                     </div>
+                                    <p class="text-gray-600 mt-2">{{ $review->comment }}</p>
                                 </div>
-                                <div class="text-sm text-gray-500">
-                                    <span>Classic Haircut</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 mt-2">Excellent service from start to finish. Thomas is a true professional who listens to what you want and delivers every time. The atmosphere is relaxed and the hot towel finish is an amazing touch!</p>
-                        </div>
-                        
-                        <!-- Review Item -->
-                        <div class="border-b pb-6">
-                            <div class="flex justify-between mb-2">
-                                <div class="flex items-center">
-                                    <div class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                                        <span>LC</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium">Lucas Chambon</h4>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <div class="flex">
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="fas fa-star rating-star text-xs"></i>
-                                                <i class="far fa-star rating-star text-xs"></i>
+                            @endforeach
+                        @else
+                            <!-- Fallback review display for demo -->
+                            <!-- Review Item -->
+                            <div class="border-b pb-6">
+                                <div class="flex justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                                            <span>MB</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">Maxime Bertrand</h4>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <div class="flex">
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                </div>
+                                                <span class="ml-2">2 weeks ago</span>
                                             </div>
-                                            <span class="ml-2">1 month ago</span>
                                         </div>
                                     </div>
+                                    <div class="text-sm text-gray-500">
+                                        <span>Classic Haircut</span>
+                                    </div>
                                 </div>
-                                <div class="text-sm text-gray-500">
-                                    <span>Full Service</span>
-                                </div>
+                                <p class="text-gray-600 mt-2">Excellent service from start to finish. Thomas is a true professional who listens to what you want and delivers every time. The atmosphere is relaxed and the hot towel finish is an amazing touch!</p>
                             </div>
-                            <p class="text-gray-600 mt-2">Great haircut and beard trim. Would have given stars but the price is a bit high for me. Will definitely be back for the quality though!</p>
-                        </div>
+                            
+                            <!-- Review Item -->
+                            <div class="border-b pb-6">
+                                <div class="flex justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                                            <span>LC</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">Lucas Chambon</h4>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <div class="flex">
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="fas fa-star rating-star text-xs"></i>
+                                                    <i class="far fa-star rating-star text-xs"></i>
+                                                </div>
+                                                <span class="ml-2">1 month ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        <span>Full Service</span>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 mt-2">Great haircut and beard trim. Would have given 5 stars but the price is a bit high for me. Will definitely be back for the quality though!</p>
+                            </div>
+                        @endif
                     </div>
+                    
+                    @if(isset($barberShop->ratings) && count($barberShop->ratings) > 5)
+                        <div class="mt-6 text-center">
+                            <button class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+                                Load More Reviews
+                            </button>
+                        </div>
+                    @endif
                 </div>
+
+                <script>
+                    // Add this to your existing additional_scripts section
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Review form toggle
+                        const addReviewBtn = document.getElementById('add-review-btn');
+                        const cancelReviewBtn = document.getElementById('cancel-review-btn');
+                        const reviewFormContainer = document.getElementById('review-form-container');
+                        
+                        if (addReviewBtn && reviewFormContainer) {
+                            addReviewBtn.addEventListener('click', function() {
+                                reviewFormContainer.classList.remove('hidden');
+                                addReviewBtn.classList.add('hidden');
+                            });
+                        }
+                        
+                        if (cancelReviewBtn && reviewFormContainer && addReviewBtn) {
+                            cancelReviewBtn.addEventListener('click', function() {
+                                reviewFormContainer.classList.add('hidden');
+                                addReviewBtn.classList.remove('hidden');
+                                resetReviewForm();
+                            });
+                        }
+                        
+                        
+                        function resetReviewForm() {
+                            // Reset form fields
+                            document.getElementById('review-form').reset();
+                            
+                            // Reset star rating
+                            const ratingBtns = document.querySelectorAll('.rating-btn');
+                            ratingBtns.forEach(btn => {
+                                btn.classList.remove('text-yellow-500');
+                                btn.classList.add('text-gray-300');
+                            });
+                            document.getElementById('rating-value').value = '';
+                        }
+                    });
+                </script>
             <!-- Team Section -->
 <div id="team" class="tab-content hidden bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Meet Our Team</h2>

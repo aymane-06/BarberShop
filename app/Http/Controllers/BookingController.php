@@ -8,6 +8,7 @@ use App\Jobs\sendBookingReschduling;
 use App\Jobs\SendUserBookingCancelationJob;
 use App\Jobs\SendUserBookingCompleted;
 use App\Jobs\SendUserBookingConfirmation;
+use App\Jobs\SendUserBookingReminder;
 use App\Jobs\SendUserBookingReschudling;
 use App\Jobs\SendUserCustomEmail;
 use App\Mail\BookingCancelation;
@@ -300,7 +301,8 @@ class BookingController extends Controller
         // Fix: Extract the message string from the validated array
         $message = $validated['notes'] ?? 'Your appointment is coming up soon!';
         
-        Mail::to($booking->user->email)->send(new UserBookingReminder($booking, $message));
+        // Mail::to($booking->user->email)->send(new UserBookingReminder($booking, $message));
+        SendUserBookingReminder::dispatch($booking, $message);
         
         return response()->json([
             'message' => 'Reminder sent successfully.',

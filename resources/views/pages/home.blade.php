@@ -104,66 +104,7 @@
         </div>
       </div>
       
-      <!-- Floating appointment card -->
-      <div class="w-full lg:w-2/5" data-aos="fade-up" data-aos-delay="300">
-        <div class="relative">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-400 rounded-full opacity-20 animate-pulse hidden lg:block"></div>
-          <div class="backdrop-blur-lg bg-white/10 p-6 rounded-xl border border-white/20 shadow-2xl transition-all duration-500 hover:shadow-primary-500/30">
-        <h3 class="text-lg font-semibold text-white mb-4">Find Your Perfect Barber</h3>
-        
-        <!-- Location Search -->
-        <div class="mb-4">
-          <label for="location" class="block text-white text-sm mb-2">Your Location</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <i class="fas fa-map-marker-alt text-gray-400"></i>
-            </div>
-            <input type="text" id="location" name="location" placeholder="Enter your city or zip code" 
-               class="w-full py-3 pl-10 pr-4 bg-white/20 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-white placeholder-gray-300">
-          </div>
-        </div>
-        
-        <!-- Date Selection -->
-        <div class="mb-4">
-          <label for="date" class="block text-white text-sm mb-2">Preferred Date</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <i class="fas fa-calendar text-gray-400"></i>
-            </div>
-            <input type="date" id="date" name="date" 
-               class="w-full py-3 pl-10 pr-4 bg-white/20 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-white">
-          </div>
-        </div>
-        
-        <!-- Quick Date Selection -->
-        <div class="flex space-x-2 mb-4">
-              <label class="relative flex-1 group">
-                <input type="radio" name="quick_date" value="{{ date('Y-m-d') }}" class="peer sr-only">
-                <div class="flex-1 bg-white/20 hover:bg-primary-600/50 peer-checked:bg-primary-600/50 text-white text-sm py-2 rounded-lg transition-colors text-center cursor-pointer w-full">
-                  Today
-                </div>
-              </label>
-              <label class="relative flex-1 group">
-                <input type="radio" name="quick_date" value="{{ date('Y-m-d', strtotime('+1 day')) }}" class="peer sr-only">
-                <div class="flex-1 bg-white/20 hover:bg-primary-600/50 peer-checked:bg-primary-600/50 text-white text-sm py-2 rounded-lg transition-colors text-center cursor-pointer w-full">
-                  Tomorrow
-                </div>
-              </label>
-              <label class="relative flex-1 group">
-                <input type="radio" name="quick_date" value="{{ date('Y-m-d', strtotime('+7 day')) }}" class="peer sr-only">
-                <div class="flex-1 bg-white/20 hover:bg-primary-600/50 peer-checked:bg-primary-600/50 text-white text-sm py-2 rounded-lg transition-colors text-center cursor-pointer w-full">
-                  Next Week
-                </div>
-              </label>
-        </div>
-
-        <button class="w-full bg-white text-primary-700 py-3 rounded-md font-medium hover:bg-primary-50 transition-colors flex items-center justify-center">
-          <i class="fas fa-search mr-2"></i>
-          Find Available Barbers
-        </button>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 </section>
