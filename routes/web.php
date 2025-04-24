@@ -123,3 +123,4 @@ Route::post('/Booking/reschedule/{booking}',[BookingController::class,'reschedul
 
 //rating Routes
 Route::post('/Booking/rate/{barberShop}',[RatingController::class,'store'])->name('rating.store');
+Route::put('/Booking/rate/{rating}',[RatingController::class,'update'])->name('rating.update');

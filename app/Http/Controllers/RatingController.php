@@ -67,7 +67,18 @@ class RatingController extends Controller
      */
     public function update(UpdateRatingRequest $request, Rating $rating)
     {
-        //
+        // dd($request->all(),$rating->id);
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'service' => 'nullable|string|max:255',
+            'review_text' => 'nullable|string|max:255',
+        ]);
+        $rating->rating = $request->rating;
+        $rating->services = $request->service;
+        $rating->comment = $request->review_text;
+        $rating->save();
+        // dd($rating);
+        return redirect()->back()->with('success', 'Rating updated successfully');
     }
 
     /**

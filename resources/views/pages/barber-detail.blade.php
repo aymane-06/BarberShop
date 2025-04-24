@@ -392,17 +392,32 @@
                 <div id="ratings" class="tab-content hidden bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">Reviews</h2>
-                        <span class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">4.5 <i class="fas fa-star text-yellow-500 text-xs"></i> (124)</span>
+                        <span class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">{{ number_format($barberShop->ratings()->avg('rating'),1) }} <i class="fas fa-star text-yellow-500 text-xs"></i> ({{$barberShop->ratings()->count()}})</span>
                     </div>
                     
                     
                     <!-- Add a review button -->
+                     @if(auth()->user()?->bookings->where('barbershop_id', $barberShop->id)->count() > 0)
+
                     <div class="mb-6">
-                        <button id="add-review-btn" class="bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded-md transition-colors shadow-sm text-sm">
-                            <i class="fas fa-plus mr-2"></i>Add Your Review
-                        </button>
+                        @php
+                            $hasReviewed = false;
+                            if (auth()->check()) {
+                                $hasReviewed = $barberShop->ratings()->where('user_id', auth()->id())->exists();
+                            }
+                        @endphp
+                        
+                        @if(!$hasReviewed)
+                            <button id="add-review-btn" class="bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded-md transition-colors shadow-sm text-sm">
+                                <i class="fas fa-plus mr-2"></i>Add Your Review
+                            </button>
+                        @else
+                            <div class="text-sm text-gray-600 italic">
+                                <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                                You've already submitted a review
+                            </div>
+                        @endif
                     </div>
-                    
                     <!-- Add Review Form (Hidden by default) -->
                     <div id="review-form-container" class="mb-6 hidden bg-gray-50 rounded-lg p-4 border border-gray-200">
                         <h3 class="text-lg font-medium mb-4">Write a Review</h3>
@@ -481,7 +496,7 @@
                             </div>
                         </form>
                     </div>
-                    
+                    @endif
                     <!-- Review list -->
                     <div class="space-y-6">
                         @if(isset($barberShop->ratings) && count($barberShop->ratings) > 0)
@@ -510,8 +525,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="text-sm text-gray-500">
-                                            <span>{{ $review->service ?? 'General Review' }}</span>
+                                        <div class="flex flex-col items-end">
+                                            <span class="text-sm text-gray-500">{{ $review->services ?? 'General Review' }}</span>
+                                            @if(auth()->check() && auth()->id() == $review->user_id)
+                                                <button onclick="openEditRaview('{{ $review->rating }}','{{ $review->comment }}','{{ $review->id }}')" class="mt-2 text-xs text-primary-600 hover:text-primary-800">
+                                                    <i class="fas fa-edit mr-1"></i>Edit
+                                                </button>
+                                            @endif
                                         </div>
                                     </div>
                                     <p class="text-gray-600 mt-2">{{ $review->comment }}</p>
@@ -586,44 +606,7 @@
                     @endif
                 </div>
 
-                <script>
-                    // Add this to your existing additional_scripts section
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Review form toggle
-                        const addReviewBtn = document.getElementById('add-review-btn');
-                        const cancelReviewBtn = document.getElementById('cancel-review-btn');
-                        const reviewFormContainer = document.getElementById('review-form-container');
-                        
-                        if (addReviewBtn && reviewFormContainer) {
-                            addReviewBtn.addEventListener('click', function() {
-                                reviewFormContainer.classList.remove('hidden');
-                                addReviewBtn.classList.add('hidden');
-                            });
-                        }
-                        
-                        if (cancelReviewBtn && reviewFormContainer && addReviewBtn) {
-                            cancelReviewBtn.addEventListener('click', function() {
-                                reviewFormContainer.classList.add('hidden');
-                                addReviewBtn.classList.remove('hidden');
-                                resetReviewForm();
-                            });
-                        }
-                        
-                        
-                        function resetReviewForm() {
-                            // Reset form fields
-                            document.getElementById('review-form').reset();
-                            
-                            // Reset star rating
-                            const ratingBtns = document.querySelectorAll('.rating-btn');
-                            ratingBtns.forEach(btn => {
-                                btn.classList.remove('text-yellow-500');
-                                btn.classList.add('text-gray-300');
-                            });
-                            document.getElementById('rating-value').value = '';
-                        }
-                    });
-                </script>
+                
             <!-- Team Section -->
 <div id="team" class="tab-content hidden bg-white rounded-lg shadow-sm p-6 mb-8" data-aos="fade-up">
     <h2 class="text-2xl font-bold text-gray-900 mb-6">Meet Our Team</h2>
@@ -1122,7 +1105,78 @@
         });
     });
 
+document.addEventListener('DOMContentLoaded', function() {
+                        // Review form toggle
+                        const addReviewBtn = document.getElementById('add-review-btn');
+                        const cancelReviewBtn = document.getElementById('cancel-review-btn');
+                        const reviewFormContainer = document.getElementById('review-form-container');
+                        
+                        if (addReviewBtn && reviewFormContainer) {
+                            addReviewBtn.addEventListener('click', function() {
+                                reviewFormContainer.classList.remove('hidden');
+                                addReviewBtn.classList.add('hidden');
+                            });
+                        }
+                        
+                        if (cancelReviewBtn && reviewFormContainer && addReviewBtn) {
+                            cancelReviewBtn.addEventListener('click', function() {
+                                reviewFormContainer.classList.add('hidden');
+                                addReviewBtn.classList.remove('hidden');
+                                resetReviewForm();
+                            });
+                        }
+                        
+                        function resetReviewForm() {
+                            // Reset form fields
+                            document.getElementById('review-form').reset();
+                            
+                            // Reset star rating
+                            const ratingBtns = document.querySelectorAll('.rating-btn');
+                            ratingBtns.forEach(btn => {
+                                btn.classList.remove('text-yellow-500');
+                                btn.classList.add('text-gray-300');
+                            });
+                        }
+                    });
 
+                    function openEditRaview(rating, comment, reviewId) {
+                        const reviewFormContainer = document.getElementById('review-form-container');
+                        const addReviewBtn = document.getElementById('add-review-btn');
+                        
+                        if (reviewFormContainer) {
+                            reviewFormContainer.classList.remove('hidden');
+                            
+                            if (addReviewBtn) {
+                                addReviewBtn.classList.add('hidden');
+                            }
+                            
+                            // Pre-fill the form with existing review data
+                            if (rating) {
+                                document.getElementById(`rating-${rating}`).checked = true;
+                            }
+                            
+                            if (comment) {
+                                document.getElementById('review_text').value = comment;
+                            }
+                            
+                            // Change the form action to update instead of create
+                            const form = document.getElementById('review-form');
+                            if (form) {
+                                form.action = `/Booking/rate/${reviewId}`;
+                                
+                                // Add or update the _method hidden field for Laravel method spoofing
+            let methodField = form.querySelector('input[name="_method"]');
+            if (!methodField) {
+                methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                form.appendChild(methodField);
+            }
+            methodField.value = 'PUT';
+                                
+                            }
+                        }
+                    }
 
 
 
