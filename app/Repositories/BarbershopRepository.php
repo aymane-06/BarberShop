@@ -59,7 +59,7 @@ class BarbershopRepository extends BaseRepository
         $lastMonthCount = BarberShop::where('created_at', '<', now()->startOfMonth())->count();
         $newBarberShopsPercentage = $lastMonthCount > 0 
             ? round((($total - $lastMonthCount) / $lastMonthCount) * 100) 
-            : 0;
+            : round(($total*100));
             
         return [
             'totalBarberShops' => $total,
