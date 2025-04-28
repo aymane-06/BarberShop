@@ -726,7 +726,7 @@
                         id: appointment.id,
                         title: `${serviceNames} - ${clientName}`,
                         start: startDateTime,
-                        end: new Date(end.getTime() - (end.getTimezoneOffset() * 60000)).toISOString(),
+                        end: end.toISOString(),
                         backgroundColor: '#3f51b5',
                         borderColor: '#283593',
                         textColor: '#ffffff',

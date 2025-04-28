@@ -191,6 +191,151 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                    <!-- Google Maps Location Picker -->
+                    <div class="input-focus-effect mb-4">
+                        <label for="location_picker" class="block text-sm font-medium text-gray-700 mb-1">Pin Your Location*</label>
+                        <div class="mb-2">
+                            <input id="location_search" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Search for your location">
+                        </div>
+                        <div id="map" class="w-full h-64 rounded-lg border border-gray-300"></div>
+                        
+                    </div>
+                    <script>
+                        // Google Maps initialization
+                        let map;
+                        let marker;
+                        let pos = { lat: 31.7917, lng: -7.0926 }; // Default position (Morocco)
+                        
+                        // Get user's current position if available
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    pos = {
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude,
+                                    };
+                                },
+                                () => {
+                                    console.log("Error: The Geolocation service failed.");
+                                }
+                            );
+                        }
+                        
+                        function initMap() {
+                            // Create the map with default location
+                            map = new google.maps.Map(document.getElementById("map"), {
+                                center: pos,
+                                zoom: 13,
+                                mapTypeControl: true,
+                                streetViewControl: true,
+                                fullscreenControl: true,
+                            });
+                            
+                            // Create a marker at the default location
+                            marker = new google.maps.Marker({
+                                position: pos,
+                                map: map,
+                                animation: google.maps.Animation.DROP,
+                            });
+                            
+                            // Update hidden inputs with initial position
+                            updateCoordinates(pos);
+                            
+                            // Add click event listener to the map
+                            map.addListener("click", (event) => {
+                                // Move marker to clicked position
+                                marker.setPosition(event.latLng);
+                                
+                                // Update coordinates
+                                updateCoordinates(event.latLng);
+                                
+                                // Try to get address from coordinates (reverse geocoding)
+                                const geocoder = new google.maps.Geocoder();
+                                geocoder.geocode({ location: event.latLng }, (results, status) => {
+                                    if (status === "OK" && results[0]) {
+                                        document.getElementById('address').value = results[0].formatted_address || '';
+                                        
+                                        // Extract city and zip code
+                                        for (const component of results[0].address_components) {
+                                            if (component.types.includes('locality')) {
+                                                document.getElementById('city').value = component.long_name || '';
+                                            }
+                                            if (component.types.includes('postal_code')) {
+                                                document.getElementById('zip').value = component.long_name || '';
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                            
+                            // Add search box functionality
+                            const input = document.getElementById("location_search");
+                            const searchBox = new google.maps.places.SearchBox(input);
+                            
+                            map.addListener("bounds_changed", () => {
+                                searchBox.setBounds(map.getBounds());
+                            });
+                            
+                            searchBox.addListener("places_changed", () => {
+                                const places = searchBox.getPlaces();
+                                
+                                if (places.length === 0) {
+                                    return;
+                                }
+                                
+                                const place = places[0];
+                                
+                                if (!place.geometry || !place.geometry.location) {
+                                    console.log("Returned place contains no geometry");
+                                    return;
+                                }
+                                
+                                // Set map center and marker position to the searched location
+                                map.setCenter(place.geometry.location);
+                                marker.setPosition(place.geometry.location);
+                                map.setZoom(15);
+                                
+                                // Update form fields
+                                updateCoordinates(place.geometry.location);
+                                
+                                // Try to fill address fields if available
+                                if (place.address_components) {
+                                    document.getElementById('address').value = place.formatted_address || '';
+                                    
+                                    for (const component of place.address_components) {
+                                        if (component.types.includes('locality')) {
+                                            document.getElementById('city').value = component.long_name || '';
+                                        }
+                                        if (component.types.includes('postal_code')) {
+                                            document.getElementById('zip').value = component.long_name || '';
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        
+                        function updateCoordinates(position) {
+                            // Check if position is a LatLng object or a simple object
+                            let lat, lng;
+                            
+                            if (typeof position.lat === 'function') {
+                                lat = position.lat();
+                                lng = position.lng();
+                            } else {
+                                lat = position.lat;
+                                lng = position.lng;
+                            }
+                            
+                            // Update hidden input fields
+                            document.getElementById('latitude').value = lat;
+                            document.getElementById('longitude').value = lng;
+                        }
+                    </script>
+                    
+                    <!-- Hidden fields for latitude and longitude -->
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initMap" async defer></script>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- City -->

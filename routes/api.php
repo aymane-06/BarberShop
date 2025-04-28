@@ -36,7 +36,8 @@ Route::delete('/barberShop/services/delete/{services:id}',action: [ServicesContr
 Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::class,'toggle']);
 Route::post('/barberShop/services/statistics',[ServicesController::class,'getServicesStatistics']);
 
-//barbers
+
+Route::get('/barberShops',[BarberShopController::class,'getActiveBarberShops']);
 
 Route::get('/barberShop/{barberShop:id}/working-hours',[BarberShopController::class,'getWorkingHours']);
 ///api/barber/appointments

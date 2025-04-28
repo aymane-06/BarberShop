@@ -26,10 +26,7 @@ class BarberShopFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'barbers' => json_encode([
-                
-                     $this->faker->name(),
-                     $this->faker->name(),
-                
+                $this->faker->name(),
             ]),
             'avatar' => null,
             'cover' => null,

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('additional_styles')
+
 <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -48,7 +49,7 @@
 @section('content')
 
     <!-- Search Results Header -->
-    <div class="bg-gray-100 border-b">
+    <div  class="bg-gray-100 border-b search">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="mb-6" data-aos="fade-down">
                 <h1 class="text-3xl font-bold text-gray-800">Barber Search Results</h1>
@@ -56,7 +57,7 @@
             </div>
             
             <!-- Search Form -->
-            <form action="/search-results.php" method="GET" class="bg-white shadow-sm rounded-lg p-4 flex flex-wrap items-center gap-3" data-aos="fade-up">
+            <div  class="bg-white shadow-sm rounded-lg p-4 flex flex-wrap justify-center items-center gap-3" data-aos="fade-up">
                 <div class="flex-grow min-w-[200px]">
                     <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
                     <div class="relative">
@@ -64,32 +65,33 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </span>
                         <input type="text" id="location" name="location" placeholder="City or zip code" 
-                            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            value="<?php echo isset($_GET['location']) ? htmlspecialchars($_GET['location']) : ''; ?>">
+                            class="filter w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            value="">
                     </div>
                 </div>
                 <div class="w-full sm:w-auto">
                     <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Service</label>
-                    <select id="service" name="service" class="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <select id="service" name="service" class="filter w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                         <option value="">All Services</option>
-                        <option value="haircut" <?php echo isset($_GET['service']) && $_GET['service'] === 'haircut' ? 'selected' : ''; ?>>Haircut</option>
-                        <option value="beard" <?php echo isset($_GET['service']) && $_GET['service'] === 'beard' ? 'selected' : ''; ?>>Beard Trim</option>
-                        <option value="shave" <?php echo isset($_GET['service']) && $_GET['service'] === 'shave' ? 'selected' : ''; ?>>Shave</option>
-                        <option value="coloring" <?php echo isset($_GET['service']) && $_GET['service'] === 'coloring' ? 'selected' : ''; ?>>Hair Coloring</option>
+                        <option value="Haircuts">Haircut</option>
+                        <option value="Beard & Shave">Beard & Shave</option>
+                        <option value="Packages">Packages</option>
                     </select>
                 </div>
                 <div class="w-full sm:w-auto">
                     <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
                     <input type="date" id="date" name="date" 
-                        class="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                        value="<?php echo isset($_GET['date']) ? htmlspecialchars($_GET['date']) : date('Y-m-d'); ?>">
+                        class="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 filter"
+                        value=""
+                        min="{{ date('Y-m-d') }}">
+
                 </div>
                 <div class="w-full sm:w-auto flex items-end">
-                    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 h-[42px]">
+                    <button type="button" class="filter w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 h-[42px]">
                         <i class="fas fa-search mr-2"></i>Search
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -109,51 +111,26 @@
                 <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
                     <h3 class="font-bold text-lg mb-4">Filters</h3>
                     
-                    <!-- Services -->
-                    <div class="mb-6">
-                        <h4 class="font-medium text-gray-700 mb-2">Services</h4>
-                        <div class="space-y-2">
-                            <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded" checked>
-                                <span class="ml-2">Haircut</span>
-                            </label>
-                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                <span class="ml-2">Beard Trim</span>
-                            </label>
-                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                <span class="ml-2">Hair Styling</span>
-                            </label>
-                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                <span class="ml-2">Hot Towel Shave</span>
-                            </label>
-                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                <span class="ml-2">Hair Coloring</span>
-                            </label>
-                        </div>
-                    </div>
+                    
                     
                     <!-- Price Range -->
                     <div class="mb-6">
                         <h4 class="font-medium text-gray-700 mb-2">Price Range</h4>
                         <div class="space-y-2">
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                <input type="radio" name="price" class="form-radio h-4 w-4 text-primary-600" checked>
+                                <input type="radio" name="price" value="" class="filter form-radio h-4 w-4 text-primary-600" checked>
                                 <span class="ml-2">Any Price</span>
                             </label>
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="radio" name="price" class="form-radio h-4 w-4 text-primary-600">
+                                <input type="radio" value="9" name="price" class="filter form-radio h-4 w-4 text-primary-600">
                                 <span class="ml-2">€ (Budget)</span>
                             </label>
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="radio" name="price" class="form-radio h-4 w-4 text-primary-600">
+                                <input type="radio" value="99" name="price" class="filter form-radio h-4 w-4 text-primary-600">
                                 <span class="ml-2">€€ (Standard)</span>
                             </label>
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="radio" name="price" class="form-radio h-4 w-4 text-primary-600">
+                                <input type="radio" value="999" name="price" class="filter form-radio h-4 w-4 text-primary-600">
                                 <span class="ml-2">€€€ (Premium)</span>
                             </label>
                         </div>
@@ -164,7 +141,7 @@
                         <h4 class="font-medium text-gray-700 mb-2">Rating</h4>
                         <div class="space-y-2">
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="radio" name="rating" class="form-radio h-4 w-4 text-primary-600">
+                                <input type="radio" value="5"  name="rating" class="filter form-radio h-4 w-4 text-primary-600">
                                 <span class="ml-2 flex items-center">
                                     <i class="fas fa-star rating-star"></i>
                                     <i class="fas fa-star rating-star"></i>
@@ -175,7 +152,7 @@
                                 </span>
                             </label>
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                <input type="radio" name="rating" class="form-radio h-4 w-4 text-primary-600" checked>
+                                <input type="radio" value="4" name="rating" class="filter form-radio h-4 w-4 text-primary-600">
                                 <span class="ml-2 flex items-center">
                                     <i class="fas fa-star rating-star"></i>
                                     <i class="fas fa-star rating-star"></i>
@@ -186,7 +163,7 @@
                                 </span>
                             </label>
                             <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                <input type="radio" name="rating" class="form-radio h-4 w-4 text-primary-600">
+                                <input type="radio" value="3" name="rating" class="filter form-radio h-4 w-4 text-primary-600" >
                                 <span class="ml-2 flex items-center">
                                     <i class="fas fa-star rating-star"></i>
                                     <i class="fas fa-star rating-star"></i>
@@ -196,28 +173,23 @@
                                     <span class="ml-1">& up</span>
                                 </span>
                             </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="0" name="rating" checked class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2 flex items-center">
+                                    <i class="far fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <span class="ml-1">No rating</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
                     
-                    <!-- Availability -->
-                    <div class="mb-6">
-                        <h4 class="font-medium text-gray-700 mb-2">Availability</h4>
-                        <div class="mb-3">
-                            <label class="block text-sm text-gray-600 mb-1">Date</label>
-                            <input type="date" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Time</label>
-                            <select class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300">
-                                <option value="">Any time</option>
-                                <option value="morning">Morning (8AM - 12PM)</option>
-                                <option value="afternoon">Afternoon (12PM - 5PM)</option>
-                                <option value="evening">Evening (5PM - 10PM)</option>
-                            </select>
-                        </div>
-                    </div>
                     
-                    <button class="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
+                    
+                    <button class="filter w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
                         Apply Filters
                     </button>
                 </div>
@@ -234,53 +206,26 @@
                     </div>
                     <div class="p-4">
                         <!-- Filter Content (same as desktop) -->
-                        <!-- Services -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Services</h4>
-                            <div class="space-y-2">
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded" checked>
-                                    <span class="ml-2">Haircut</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                    <span class="ml-2">Beard Trim</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                    <span class="ml-2">Hair Styling</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                    <span class="ml-2">Hot Towel Shave</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded">
-                                    <span class="ml-2">Hair Coloring</span>
-                                </label>
-                            </div>
-                        </div>
-                        
                         <!-- Price Range -->
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-2">Price Range</h4>
                             <div class="space-y-2">
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                    <input type="radio" name="mobile-price" class="form-radio h-4 w-4 text-primary-600" checked>
-                                    <span class="ml-2">Any Price</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="radio" name="mobile-price" class="form-radio h-4 w-4 text-primary-600">
-                                    <span class="ml-2">€ (Budget)</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="radio" name="mobile-price" class="form-radio h-4 w-4 text-primary-600">
-                                    <span class="ml-2">€€ (Standard)</span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="radio" name="mobile-price" class="form-radio h-4 w-4 text-primary-600">
-                                    <span class="ml-2">€€€ (Premium)</span>
-                                </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
+                                <input type="radio" name="price" value="" class="filter form-radio h-4 w-4 text-primary-600" checked>
+                                <span class="ml-2">Any Price</span>
+                            </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="9" name="price" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2">€ (Budget)</span>
+                            </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="99" name="price" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2">€€ (Standard)</span>
+                            </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="999" name="price" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2">€€€ (Premium)</span>
+                            </label>
                             </div>
                         </div>
                         
@@ -288,62 +233,44 @@
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-2">Rating</h4>
                             <div class="space-y-2">
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="radio" name="mobile-rating" class="form-radio h-4 w-4 text-primary-600">
-                                    <span class="ml-2 flex items-center">
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <span class="ml-1">& up</span>
-                                    </span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
-                                    <input type="radio" name="mobile-rating" class="form-radio h-4 w-4 text-primary-600" checked>
-                                    <span class="ml-2 flex items-center">
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="far fa-star rating-star"></i>
-                                        <span class="ml-1">& up</span>
-                                    </span>
-                                </label>
-                                <label class="flex items-center filter-option p-2 rounded cursor-pointer">
-                                    <input type="radio" name="mobile-rating" class="form-radio h-4 w-4 text-primary-600">
-                                    <span class="ml-2 flex items-center">
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="fas fa-star rating-star"></i>
-                                        <i class="far fa-star rating-star"></i>
-                                        <i class="far fa-star rating-star"></i>
-                                        <span class="ml-1">& up</span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <!-- Availability -->
-                        <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Availability</h4>
-                            <div class="mb-3">
-                                <label class="block text-sm text-gray-600 mb-1">Date</label>
-                                <input type="date" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-gray-600 mb-1">Time</label>
-                                <select class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300">
-                                    <option value="">Any time</option>
-                                    <option value="morning">Morning (8AM - 12PM)</option>
-                                    <option value="afternoon">Afternoon (12PM - 5PM)</option>
-                                    <option value="evening">Evening (5PM - 10PM)</option>
-                                </select>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="5"  name="rating" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2 flex items-center">
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <span class="ml-1">& up</span>
+                                </span>
+                            </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer active">
+                                <input type="radio" value="4" name="rating" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2 flex items-center">
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <span class="ml-1">& up</span>
+                                </span>
+                            </label>
+                            <label class="flex items-center filter-option p-2 rounded cursor-pointer">
+                                <input type="radio" value="3" name="rating" class="filter form-radio h-4 w-4 text-primary-600">
+                                <span class="ml-2 flex items-center">
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="fas fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <i class="far fa-star rating-star"></i>
+                                    <span class="ml-1">& up</span>
+                                </span>
+                            </label>
                             </div>
                         </div>
                     </div>
                     <div class="p-4 border-t sticky bottom-0 bg-white">
-                        <button class="w-full bg-primary-600 text-white py-3 px-4 rounded-md hover:bg-primary-700 transition-colors">
+                        <button class="filter w-full bg-primary-600 text-white py-3 px-4 rounded-md hover:bg-primary-700 transition-colors">
                             Apply Filters
                         </button>
                     </div>
@@ -354,14 +281,14 @@
             <div class="flex-1">
                 <!-- Sort Options -->
                 <div class="flex justify-between items-center mb-6">
-                    <p class="text-gray-600">Showing 1-10 of 24 results</p>
+                    <p class="text-gray-600 pageData"></p>
                     <div class="relative">
-                        <select class="appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-4 pr-8 rounded leading-tight focus:outline-none focus:ring-2 focus:ring-primary-300">
-                            <option>Recommended</option>
-                            <option>Highest Rated</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                            <option>Most Popular</option>
+                        <select id="sort" class="filter appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-4 pr-8 rounded leading-tight focus:outline-none focus:ring-2 focus:ring-primary-300">
+                            <option value="">Recommended</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="PriceASC">Price: Low to High</option>
+                            <option value="PriceDESC">Price: High to Low</option>
+                            <option value="bookings">Most Popular</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <i class="fas fa-chevron-down text-xs"></i>
@@ -371,200 +298,12 @@
                 
                 <!-- Results Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-                    <!-- Result Card 1 -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover" data-aos="fade-up">
-                        <a href="/barber-detail/1" class="block">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=300&q=80" alt="Classic Cuts Barbershop" class="w-full h-48 object-cover">
-                                <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
-                                    €€
-                                </div>
-                            </div>
-                            <div class="p-5">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="font-bold text-lg text-gray-900">Classic Cuts Barbershop</h3>
-                                        <div class="flex items-center mt-1 mb-2">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-star rating-star text-sm"></i>
-                                                <i class="fas fa-star rating-star text-sm"></i>
-                                                <i class="fas fa-star rating-star text-sm"></i>
-                                                <i class="fas fa-star rating-star text-sm"></i>
-                                                <i class="fas fa-star-half-alt rating-star text-sm"></i>
-                                            </div>
-                                            <span class="ml-1 text-sm text-gray-600">(126 reviews)</span>
-                                        </div>
-                                    </div>
-                                    <button class="text-gray-400 hover:text-primary-600 transition-colors">
-                                        <i class="far fa-heart text-xl"></i>
-                                    </button>
-                                </div>
-                                <div class="flex items-center text-gray-600 text-sm">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>
-                                    <span>16 Rue de Rivoli, Paris 1er</span>
-                                </div>
-                                <!-- Completing the first barber card -->
-<div class="flex items-center text-gray-600 text-sm mt-2">
-    <i class="fas fa-cut mr-2"></i>
-    <span>Haircut, Beard Trim, Hot Towel Shave</span>
-</div>
-<div class="mt-4 flex justify-between items-center">
-    <span class="text-primary-600 font-medium">From €25</span>
-    <span class="text-sm text-gray-500">Next available: Today</span>
-</div>
-</div>
-</a>
-</div>
-
-<!-- Result Card 2 -->
-<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-<a href="/barber-detail/2" class="block">
-    <div class="relative">
-        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=300&q=80" alt="Modern Barber Co." class="w-full h-48 object-cover">
-        <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
-            €€€
-        </div>
-    </div>
-    <div class="p-5">
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="font-bold text-lg text-gray-900">Modern Barber Co.</h3>
-                <div class="flex items-center mt-1 mb-2">
-                    <div class="flex items-center">
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                    </div>
-                    <span class="ml-1 text-sm text-gray-600">(89 reviews)</span>
-                </div>
-            </div>
-            <button class="text-gray-400 hover:text-primary-600 transition-colors">
-                <i class="far fa-heart text-xl"></i>
-            </button>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm">
-            <i class="fas fa-map-marker-alt mr-2"></i>
-            <span>42 Avenue des Champs-Élysées, Paris 8e</span>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm mt-2">
-            <i class="fas fa-cut mr-2"></i>
-            <span>Haircut, Hair Styling, Hair Coloring</span>
-        </div>
-        <div class="mt-4 flex justify-between items-center">
-            <span class="text-primary-600 font-medium">From €45</span>
-            <span class="text-sm text-gray-500">Next available: Tomorrow</span>
-        </div>
-    </div>
-</a>
-</div>
-
-<!-- Result Card 3 -->
-<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
-<a href="/barber-detail/3" class="block">
-    <div class="relative">
-        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=300&q=80" alt="Le Salon de Coiffure" class="w-full h-48 object-cover">
-        <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
-            €
-        </div>
-    </div>
-    <div class="p-5">
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="font-bold text-lg text-gray-900">Le Salon de Coiffure</h3>
-                <div class="flex items-center mt-1 mb-2">
-                    <div class="flex items-center">
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star-half-alt rating-star text-sm"></i>
-                        <i class="far fa-star rating-star text-sm"></i>
-                    </div>
-                    <span class="ml-1 text-sm text-gray-600">(42 reviews)</span>
-                </div>
-            </div>
-            <button class="text-gray-400 hover:text-primary-600 transition-colors">
-                <i class="far fa-heart text-xl"></i>
-            </button>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm">
-            <i class="fas fa-map-marker-alt mr-2"></i>
-            <span>8 Rue de Seine, Paris 6e</span>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm mt-2">
-            <i class="fas fa-cut mr-2"></i>
-            <span>Haircut, Beard Trim</span>
-        </div>
-        <div class="mt-4 flex justify-between items-center">
-            <span class="text-primary-600 font-medium">From €18</span>
-            <span class="text-sm text-gray-500">Next available: Today</span>
-        </div>
-    </div>
-</a>
-</div>
-
-<!-- Result Card 4 -->
-<div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
-<a href="/barber-detail/4" class="block">
-    <div class="relative">
-        <img src="https://images.unsplash.com/photo-1622288432450-277d0fef5ed7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=300&q=80" alt="Sharp Edge" class="w-full h-48 object-cover">
-        <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
-            €€
-        </div>
-    </div>
-    <div class="p-5">
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="font-bold text-lg text-gray-900">Sharp Edge</h3>
-                <div class="flex items-center mt-1 mb-2">
-                    <div class="flex items-center">
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="fas fa-star rating-star text-sm"></i>
-                        <i class="far fa-star rating-star text-sm"></i>
-                    </div>
-                    <span class="ml-1 text-sm text-gray-600">(107 reviews)</span>
-                </div>
-            </div>
-            <button class="text-gray-400 hover:text-primary-600 transition-colors">
-                <i class="far fa-heart text-xl"></i>
-            </button>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm">
-            <i class="fas fa-map-marker-alt mr-2"></i>
-            <span>24 Boulevard de Montmartre, Paris 9e</span>
-        </div>
-        <div class="flex items-center text-gray-600 text-sm mt-2">
-            <i class="fas fa-cut mr-2"></i>
-            <span>Haircut, Beard Trim, Hot Towel Shave</span>
-        </div>
-        <div class="mt-4 flex justify-between items-center">
-            <span class="text-primary-600 font-medium">From €30</span>
-            <span class="text-sm text-gray-500">Next available: Today</span>
-        </div>
-    </div>
-</a>
-</div>
-
+                    
                 </div>
                 
                 <!-- Pagination -->
-                <div class="mt-12 flex justify-center" data-aos="fade-up" data-aos-delay="400">
-                    <nav class="flex items-center">
-                        <a href="#" class="px-3 py-2 rounded-md text-gray-400 hover:text-primary-600"></a>
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                        <a href="#" class="px-4 py-2 rounded-md bg-primary-50 text-primary-600 font-medium mx-1">1</a>
-                        <a href="#" class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 mx-1">2</a>
-                        <a href="#" class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 mx-1">3</a>
-                        <span class="px-4 py-2 text-gray-400">...</span>
-                        <a href="#" class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 mx-1">6</a>
-                        <a href="#" class="px-3 py-2 rounded-md text-gray-700 hover:text-primary-600">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </nav>
+                <div id="pagination" class="mt-12 flex justify-center" data-aos="fade-up" data-aos-delay="400">
+                    
                 </div>
             </div>
         </div>
@@ -577,6 +316,43 @@
     
     <!-- Custom JavaScript -->
     <script>
+        let barberShops = [];
+        
+        let filtersSelcted = {};
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalResults = 0;
+        let from = 0;
+        let to = 0;
+        let Pagination;
+
+        //filter
+        const filters = document.querySelectorAll('.filter');
+        filters.forEach(filter => {
+            filter.addEventListener('change', () => {
+                const location = document.querySelector('input[name="location"]').value;
+                const service = document.querySelector('select[name="service"]').value;
+                const date = document.querySelector('input[name="date"]').value;
+                const price = document.querySelector('input[name="price"]:checked').value;
+                const rating = document.querySelector('input[name="rating"]:checked')?.value;
+                const sort =document.getElementById('sort').value;
+                const filtersSelcted = {
+                    location: location,
+                    service: service,
+                    date: date,
+                    price: price,
+                    rating: rating,
+                    sort: sort
+                };
+                console.log(filtersSelcted);
+                getBarberShops(currentPage, filtersSelcted);
+              
+            });
+        });
+
+
+
+
         // Initialize AOS animations
         AOS.init({
             duration: 800,
@@ -626,24 +402,151 @@
             }, 300);
         });
         
-        // Filter options toggle active state
-        const filterOptions = document.querySelectorAll('.filter-option');
-        filterOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                // If it's a checkbox, toggle the active class
-                if (option.querySelector('input[type="checkbox"]')) {
-                    option.classList.toggle('active');
-                }
-                // If it's a radio button, set active only to the clicked one
-                if (option.querySelector('input[type="radio"]')) {
-                    const name = option.querySelector('input').name;
-                    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                        radio.closest('.filter-option').classList.remove('active');
-                    });
-                    option.classList.add('active');
-                }
+        
+
+async function getBarberShops(page = 1, filtersSelcted = null) {
+    let url = `/api/barberShops?page=${page}`;
+    if (filtersSelcted) {
+        url += '&location=' + filtersSelcted.location;
+        url += '&service=' + filtersSelcted.service;
+        url += '&date=' + filtersSelcted.date;
+        url += '&price=' + filtersSelcted.price;
+        url += '&rating=' + filtersSelcted.rating;
+    }
+    const response = await fetch(`${url}`);
+    const data = await response.json();
+    console.log(data);
+    barberShops = data.data;
+    currentPage = data.current_page;
+    Pagination = data.links;	
+    totalPages = data.last_page;
+    totalResults = data.total;
+    from = data.from;
+    to = data.to;
+
+    // console.log(barberShops);
+    renderBarberShops(barberShops);
+    renderPagination(Pagination);
+
+    
+}
+getBarberShops();
+
+function renderBarberShops(barberShops) {
+    const resultsContainer = document.querySelector('.grid');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    barberShops.forEach(barberShop => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl shadow-sm overflow-hidden card-hover';
+        card.setAttribute('data-aos', 'fade-up');
+        card.setAttribute('data-aos-delay', '100');
+
+        // Define helper functions
+        function calculateAveragePrice(services) {
+            if (services.length === 0) return 'N/A';
+            const sum = services.reduce((total, service) => total + parseFloat(service.price), 0);
+            return (sum / services.length).toFixed(2);
+        }
+
+        function generateStarRating(rating) {
+            const averageRating = typeof rating === 'number' ? rating : 0;
+            const fullStars = Math.floor(averageRating);
+            const halfStar = averageRating - fullStars > 0.2 && averageRating - fullStars < 0.8;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let starsHTML = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<i class="fas fa-star rating-star text-sm"></i>';
+            }
+            
+            if (halfStar) {
+                starsHTML += '<i class="fas fa-star-half-alt rating-star text-sm"></i>';
+            }
+            
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<i class="far fa-star rating-star text-sm"></i>';
+            }
+            
+            return starsHTML;
+        }
+
+        card.innerHTML = `
+            <a href="/barbershop-detail/${barberShop.id}" class="block">
+                <div class="relative">
+                    <img src="/storage/${barberShop.cover}" alt="${barberShop.name}" class="w-full h-48 object-cover">
+                    <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
+                        ${barberShop.services.length > 0 ? calculateAveragePrice(barberShop.services) : ''}$$
+                    </div>
+                </div>
+                <div class="p-5">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-900">${barberShop.name}</h3>
+                            <div class="flex items-center mt-1 mb-2">
+                                <div class="flex items-center">
+                                    ${generateStarRating(parseFloat(barberShop.average_rating) > 0 ? parseFloat(barberShop.average_rating) : 0)}
+                                </div>
+                                <span class="ml-1 text-sm text-gray-600">(${barberShop.ratings_count} reviews)</span>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 hover:text-primary-600 transition-colors">
+                            <i class="far fa-heart text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center text-gray-600 text-sm">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <span>${barberShop.address || ''}, ${barberShop.city || ''}</span>
+                    </div>
+                    <div class="flex items-center text-gray-600 text-sm mt-2">
+                        <i class="fas fa-cut mr-2"></i>
+                        <span>
+                            ${barberShop.services.length > 0 
+                                ? [...new Set(barberShop.services.map(service => service.type))].join(', ')
+                                : 'No services available'
+                            }
+                        </span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-primary-600 font-medium">From €${barberShop.services.length > 0 
+                            ? Math.min(...barberShop.services.map(service => parseFloat(service.price)))
+                            : '(No Services available)'
+                        }</span>
+                    </div>
+                </div>
+            </a>
+        `;
+
+        resultsContainer.appendChild(card);
+
+        const pageData= document.querySelector('.pageData');
+        pageData.innerHTML = `Showing ${from} - ${to} of ${totalResults} results`;
+
+    });
+}
+function renderPagination(pagination) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = ''; // Clear previous pagination
+    pagination.forEach((link, index) => {
+        const pageLink = document.createElement('a');
+        pageLink.href = `#`;
+        pageLink.innerHTML = link.label;
+        pageLink.className = `px-4 py-2 border rounded-md ${link.active ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-200 not-allowed'}`;
+        pageLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            let page = link.url.split('page=')[1];
+            getBarberShops(page);
+            // Scroll to the top of the results
+            window.scrollTo({
+                top: document.querySelector('.search').offsetTop,
+                behavior: 'smooth'
             });
         });
+        paginationContainer.appendChild(pageLink);
+    });
+}
+
     </script>
 @endsection
     

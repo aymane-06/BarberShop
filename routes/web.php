@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarberShopController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -20,9 +21,7 @@ Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->nam
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/search-results', function () {
-    return view('pages.search-results');
-})->name('search-results');
+Route::get('/search-results', [PublicPagesController::class,'searchResults'])->name('search-results');
 
 Route::get('/barbershop-detail/{barberShop:id}',[BarberShopController::class, 'show'])->name('barbershop-detail');
 

@@ -1031,7 +1031,7 @@
                     },
                     body: JSON.stringify({
                         user_id: userId,
-                        suspended_by: {{ auth()->user()->id }},
+                        suspended_by: {{ auth()->user()?->id }},
                         reason,
                         details,
                         send_email: sendEmail
@@ -1072,7 +1072,7 @@
             const message = document.getElementById('email-message').value;
             const sendCopy = document.getElementById('send-copy').checked;
             const userId = this.getAttribute('id');
-            const send_by = {{ auth()->user()->id }};
+            const send_by = {{ auth()->user()?->id }};
             
             if (!subject || !message) {
                 alert('Please fill in both subject and message fields.');

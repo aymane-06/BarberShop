@@ -292,6 +292,21 @@ class BarberShopController extends Controller
         return response()->json($working_hours, 200);
     }
 
+    public function getActiveBarberShops(Request $request){
+        // dd('test');
+        // return response()->json([
+        //     $request->all(),
+        // ]);
+
+        $barbershops = BarbershopRepository::getActiveBarberShops($request->location,$request->date,$request->rating,$request->sort,$request->service, $request->price);
+                    $barbershops->getCollection()->transform(function ($barbershop) {
+                        $barbershop->average_rating = $barbershop->ratings()->avg('rating');
+                        $barbershop->ratings_count = $barbershop->ratings()->count();
+                        return $barbershop;
+                    });
+        return response()->json($barbershops, 200);
+    }
+
     
 
 

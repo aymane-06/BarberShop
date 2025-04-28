@@ -309,4 +309,5 @@ class BookingController extends Controller
             'booking' => $booking,
         ],200);
     }
+    
 }
