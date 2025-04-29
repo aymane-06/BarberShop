@@ -340,79 +340,8 @@
             </div>
             
             <!-- Quick Stats Row -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                <!-- Stats Card 1: Today's Appointments -->
-                <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-indigo-500 hover:to-violet-600" style="animation-delay: 0.3s">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm text-indigo-200 font-medium">Today's Appointments</p>
-                            <h3 class="text-2xl font-bold count-up mt-1" data-target="8">0</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                            <i class="fas fa-calendar-day text-xl text-white"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-xs flex items-center">
-                        <span class="bg-green-500/30 px-2 py-1 rounded-full text-green-200"><i class="fas fa-arrow-up mr-1"></i>12%</span>
-                        <span class="ml-2 text-indigo-100">from yesterday</span>
-                    </div>
-                </div>
+            <div id="stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                 
-                <!-- Stats Card 2: Weekly Revenue -->
-                <div class="bg-gradient-to-br from-fuchsia-600 to-purple-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-fuchsia-500 hover:to-purple-600" style="animation-delay: 0.4s">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm text-fuchsia-200 font-medium">Weekly Revenue</p>
-                            <h3 class="text-2xl font-bold count-up mt-1" data-target="1250">0</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                            <i class="fas fa-euro-sign text-xl text-white"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-xs flex items-center">
-                        <span class="bg-green-500/30 px-2 py-1 rounded-full text-green-200"><i class="fas fa-arrow-up mr-1"></i>8%</span>
-                        <span class="ml-2 text-fuchsia-100">from last week</span>
-                    </div>
-                </div>
-                
-                <!-- Stats Card 3: New Clients -->
-                <div class="bg-gradient-to-br from-blue-600 to-violet-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-blue-500 hover:to-violet-600" style="animation-delay: 0.5s">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm text-blue-200 font-medium">New Clients</p>
-                            <h3 class="text-2xl font-bold count-up mt-1" data-target="15">0</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                            <i class="fas fa-user-plus text-xl text-white"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-xs flex items-center">
-                        <span class="bg-green-500/30 px-2 py-1 rounded-full text-green-200"><i class="fas fa-arrow-up mr-1"></i>24%</span>
-                        <span class="ml-2 text-blue-100">this month</span>
-                    </div>
-                </div>
-                
-                <!-- Stats Card 4: Rating -->
-                <div class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-purple-500 hover:to-indigo-600" style="animation-delay: 0.6s">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm text-purple-200 font-medium">Overall Rating</p>
-                            <h3 class="text-2xl font-bold mt-1"><span class="count-up" data-target="4">0</span>.8/5</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                            <i class="fas fa-star text-xl text-white"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-xs flex items-center">
-                        <div class="flex space-x-0.5 text-yellow-300">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -430,11 +359,10 @@
                             <p class="text-gray-500 text-sm">Appointments & Revenue</p>
                         </div>
                         <div>
-                            <select class="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                                <option>This Week</option>
-                                <option>Last Week</option>
-                                <option>This Month</option>
-                                <option>Last Month</option>
+                            <select id="chartDateSelctor" class="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
+                                <option value="Week">This Week</option>
+                                <option value="Month">This Month</option>
+                                <option value="Year">This Year</option>
                             </select>
                         </div>
                     </div>
@@ -666,16 +594,33 @@
 
 <!-- Chart.js Setup -->
 <script>
-    const ctx = document.getElementById('performanceChart');
+    let performanceChart = null;
+    async function fetchChartData($date='Week') {
+        const response = await fetch(`/api/barberShop/{{ auth()->user()->barberShop->id }}/weekly-revenue?date=${$date}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        let data= await response.json();
+        console.log(data);
+
+        let labels=data.days ?? data.months;
+        let revenues=data.revenues;
+        let appointments=data.appointments;
+        let ctx = document.getElementById('performanceChart');
+
+        if(performanceChart) {
+            performanceChart.destroy();
+        }
+
     if (ctx) {
-        const performanceChart = new Chart(ctx.getContext('2d'), {
+        performanceChart = new Chart(ctx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                labels: labels,
                 datasets: [
                     {
                         label: 'Appointments',
-                        data: [12, 19, 3, 5, 2, 3, 7],
+                        data: appointments,
                         backgroundColor: 'rgba(124, 58, 237, 0.1)',
                         borderColor: 'rgba(124, 58, 237, 1)',
                         borderWidth: 2,
@@ -683,7 +628,7 @@
                     },
                     {
                         label: 'Revenue',
-                        data: [100, 200, 150, 300, 200, 250, 150],
+                        data: revenues,
                         backgroundColor: 'rgba(29, 185, 84, 0.1)',
                         borderColor: 'rgba(29, 185, 84, 1)',
                         borderWidth: 2,
@@ -700,10 +645,149 @@
             }
         });
     }
+}
+document.getElementById('chartDateSelctor').addEventListener('change', function() {
+        const selectedValue = this.value;
+        // Update the chart with the selected value
+        fetchChartData(selectedValue);
+    });
+
+
+    fetchChartData();
+
+    
+    
 </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        async function barberShopDashboardStats(){
+            await fetch(`/api/barberShop/dashboard/{{ auth()->user()->barberShop->id }}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update stats section with data from API
+                    const statsEl = document.getElementById('stats');
+                    
+                    // Format data
+                    const avgRating = parseFloat(data.avgRating).toFixed(1);
+                    const newClients = data.newClients;
+                    const newClientsPercentage = data.newClientsPercentage;
+                    const todaysTotalBooking = data.todaysTotalBooking;
+                    const todaysTotalBookingPercentage = data.todaysTotalBookingPercentage;
+                    const weeklyRevenue = parseFloat(data.weeklyRevenue).toFixed(0);
+                    const weeklyRevenuePercentage = data.weeklyRevenuePercentage;
+                    
+                    // Build stats HTML
+                    statsEl.innerHTML = `
+                        <!-- Stats Card 1: Today's Appointments -->
+                        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-indigo-500 hover:to-violet-600" style="animation-delay: 0.3s">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-indigo-200 font-medium">Today's Appointments</p>
+                                    <h3 class="text-2xl font-bold count-up mt-1" data-target="${todaysTotalBooking}">${todaysTotalBooking}</h3>
+                                </div>
+                                <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                    <i class="fas fa-calendar-day text-xl text-white"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs flex items-center">
+                                <span class="${todaysTotalBookingPercentage >= 0 ? 'bg-green-500/30 text-green-200' : 'bg-red-500/30 text-red-200'} px-2 py-1 rounded-full">
+                                    <i class="fas fa-arrow-${todaysTotalBookingPercentage >= 0 ? 'up' : 'down'} mr-1"></i>${Math.abs(todaysTotalBookingPercentage)}%
+                                </span>
+                                <span class="ml-2 text-indigo-100">from yesterday</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Card 2: Weekly Revenue -->
+                        <div class="bg-gradient-to-br from-fuchsia-600 to-purple-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-fuchsia-500 hover:to-purple-600" style="animation-delay: 0.4s">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-fuchsia-200 font-medium">Weekly Revenue</p>
+                                    <h3 class="text-2xl font-bold count-up mt-1" data-target="${weeklyRevenue}">€${weeklyRevenue}</h3>
+                                </div>
+                                <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                    <i class="fas fa-euro-sign text-xl text-white"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs flex items-center">
+                                <span class="${weeklyRevenuePercentage >= 0 ? 'bg-green-500/30 text-green-200' : 'bg-red-500/30 text-red-200'} px-2 py-1 rounded-full">
+                                    <i class="fas fa-arrow-${weeklyRevenuePercentage >= 0 ? 'up' : 'down'} mr-1"></i>${Math.abs(weeklyRevenuePercentage)}%
+                                </span>
+                                <span class="ml-2 text-fuchsia-100">from last week</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Card 3: New Clients -->
+                        <div class="bg-gradient-to-br from-blue-600 to-violet-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-blue-500 hover:to-violet-600" style="animation-delay: 0.5s">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-blue-200 font-medium">New Clients</p>
+                                    <h3 class="text-2xl font-bold count-up mt-1" data-target="${newClients}">${newClients}</h3>
+                                </div>
+                                <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                    <i class="fas fa-user-plus text-xl text-white"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs flex items-center">
+                                <span class="${newClientsPercentage >= 0 ? 'bg-green-500/30 text-green-200' : 'bg-red-500/30 text-red-200'} px-2 py-1 rounded-full">
+                                    <i class="fas fa-arrow-${newClientsPercentage >= 0 ? 'up' : 'down'} mr-1"></i>${Math.abs(newClientsPercentage)}%
+                                </span>
+                                <span class="ml-2 text-blue-100">this month</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Card 4: Rating -->
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl p-4 text-white stat-card shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:from-purple-500 hover:to-indigo-600" style="animation-delay: 0.6s">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-purple-200 font-medium">Overall Rating</p>
+                                    <h3 class="text-2xl font-bold mt-1">${avgRating}/5</h3>
+                                </div>
+                                <div class="p-3 rounded-full bg-white/20 backdrop-blur-sm shadow-inner transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                    <i class="fas fa-star text-xl text-white"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs flex items-center">
+                                <div class="flex space-x-0.5 text-yellow-300">
+                                    ${generateStarRating(avgRating)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    
+                    // Helper function to generate star icons based on rating
+                    function generateStarRating(rating) {
+                        let stars = '';
+                        const fullStars = Math.floor(rating);
+                        const hasHalfStar = rating % 1 >= 0.5;
+                        
+                        // Add full stars
+                        for (let i = 0; i < fullStars; i++) {
+                            stars += '<i class="fas fa-star"></i>';
+                        }
+                        
+                        // Add half star if needed
+                        if (hasHalfStar) {
+                            stars += '<i class="fas fa-star-half-alt"></i>';
+                        }
+                        
+                        // Add empty stars
+                        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                        for (let i = 0; i < emptyStars; i++) {
+                            stars += '<i class="far fa-star"></i>';
+                        }
+                        
+                        return stars;
+                    }
+                    
+                })
+                .catch(error => console.error('Error fetching dashboard stats:', error));
+        }
+        barberShopDashboardStats();
+        
+
         async function getConfirmedAppointments() {
             try {
                 const response = await fetch('/api/barberShop/{{ $barberShop->id }}/confirmed-appointments');
@@ -866,6 +950,7 @@
                                 'success'
                             );
                             event.remove();
+                            barberShopDashboardStats();
                             modal.classList.add('hidden');
                         })
                         .catch(error => {

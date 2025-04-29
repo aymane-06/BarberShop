@@ -35,6 +35,8 @@ Route::post('/barberShop/services/update/{services:id}',[ServicesController::cla
 Route::delete('/barberShop/services/delete/{services:id}',action: [ServicesController::class,'destroy']);
 Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::class,'toggle']);
 Route::post('/barberShop/services/statistics',[ServicesController::class,'getServicesStatistics']);
+Route::get('/barberShop/dashboard/{barberShop:id}',[BarberShopController::class,'getDashboardStatistics']);
+Route::get('/barberShop/{barberShop:id}/weekly-revenue',[BarberShopController::class,'getWeeklyRevenue']);
 
 
 Route::get('/barberShops',[BarberShopController::class,'getActiveBarberShops']);

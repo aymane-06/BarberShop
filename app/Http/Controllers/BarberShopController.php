@@ -307,6 +307,19 @@ class BarberShopController extends Controller
         return response()->json($barbershops, 200);
     }
 
+
+    public function getDashboardStatistics(barberShop $barberShop){
+        // dd($barberShop);
+        $statistics = BarbershopRepository::barberShopDashboardStats($barberShop);
+        return response()->json($statistics, 200);
+    }
+
+    public function getWeeklyRevenue(barberShop $barberShop,Request $request){
+        $date = $request->date;
+        $weeklyRevenue = BarbershopRepository::getWeeklyRevenue($barberShop,$date);
+        return response()->json($weeklyRevenue, 200);
+    }
+
     
 
 

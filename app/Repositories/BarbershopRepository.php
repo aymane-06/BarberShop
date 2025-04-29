@@ -179,4 +179,126 @@ class BarbershopRepository extends BaseRepository
                  ->paginate(6);
 }
 
+
+    public static function getTodaysBookings(BarberShop $barberShop)  {
+        $todaysTotalBooking=$barberShop->bookings()->whereDate('created_at', now())->count();
+        $todaysTotalBookingPercentage= $barberShop->bookings()->count() > 0 ? round(($todaysTotalBooking / $barberShop->bookings()->whereDate('created_at', now()->subDay())->count()) * 100) : 0;
+
+    }
+    public static function barberShopDashboardStats($barberShop){
+         $todaysTotalBooking=$barberShop->bookings()->whereDate('created_at', now())->count();
+         $todaysTotalBookingPercentage= $barberShop->bookings()->whereDate('created_at', now()->subDay())->count() > 0 ? round(($todaysTotalBooking / $barberShop->bookings()->whereDate('created_at', now()->subDay())->count()) * 100) : 0;
+         $weeklyRevenue=$barberShop->bookings()->whereDate('created_at', '>=', now()->startOfWeek())->where('status','completed')->sum('amount');
+         $weeklyRevenuePercentage= $barberShop->bookings()->whereDate('created_at', '>=', now()->startOfWeek()->subDays(7))->count() > 0 ? round(($weeklyRevenue / $barberShop->bookings()->whereDate('created_at', '>=', now()->subDays(14))->sum('amount')) * 100) : 0;
+         $newClients=$barberShop->bookings()->whereDate('created_at', '>=', now()->subDays(30))->where('status','completed')->distinct('user_id')->count('user_id');
+         $newClientsPercentage= $barberShop->bookings()->whereDate('created_at', '>=', now()->subDays(60))->count() > 0 ? round(($newClients / $barberShop->bookings()->whereDate('created_at', '>=', now()->subDays(60))->where('status','completed')->distinct('user_id')->count('user_id')) * 100) : 0;
+         $avgRating=$barberShop->ratings()->avg('rating');
+         return [
+            'todaysTotalBooking' => $todaysTotalBooking,
+            'todaysTotalBookingPercentage' => $todaysTotalBookingPercentage,
+            'weeklyRevenue' => $weeklyRevenue,
+            'weeklyRevenuePercentage' => $weeklyRevenuePercentage,
+            'newClients' => $newClients,
+            'newClientsPercentage' => $newClientsPercentage,
+            'avgRating' => $avgRating,
+         ];
+    }
+
+    public static function getWeeklyRevenue($barberShop,$date){
+        if($date=='Week'){
+        $startDate = now()->startOfWeek(); 
+        $endDate = now();
+        $revenues = [];
+        $days = [];
+
+        // Loop through each day of the week
+        for ($date = clone $startDate; $date <= $endDate; $date->addDay()) {
+            $dayName = $date->format('D');
+            $days[] = $dayName;
+            
+            // Get revenue for each day
+            $dailyRevenue = $barberShop->bookings()
+                ->whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->sum('amount');
+            // Get appointments for each day
+            $dailyAppointments = $barberShop->bookings()
+                ->whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->count();
+            $appointments[] = $dailyAppointments;
+            $revenues[] = $dailyRevenue;
+        }
+
+        return [
+            'days' => $days,
+            'revenues' => $revenues,
+            'appointments' => $appointments,
+        ];
+    }elseif($date=='Month'){
+        $startDate = now()->startOfMonth(); 
+        $endDate = now();
+        $revenues = [];
+        $days = [];
+
+        // Loop through each day of the month
+        for ($date = clone $startDate; $date <= $endDate; $date->addDay()) {
+            $dayName = $date->format('D');
+            $days[] = $dayName;
+            
+            // Get revenue for each day
+            $dailyRevenue = $barberShop->bookings()
+                ->whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->sum('amount');
+            // Get appointments for each day
+            $dailyAppointments = $barberShop->bookings()
+                ->whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->count();
+            $appointments[] = $dailyAppointments;
+            $revenues[] = $dailyRevenue;
+        }
+
+        return [
+            'days' => $days,
+            'revenues' => $revenues,
+            'appointments' => $appointments,
+        ];
+    
+    }elseif($date=='Year'){
+        $startDate = now()->startOfYear(); 
+        $endDate = now();
+        $revenues = [];
+        $months = [];
+
+        // Loop through each month of the year
+        for ($date = clone $startDate; $date <= $endDate; $date->addMonth()) {
+            $monthName = $date->format('M');
+            $months[] = $monthName;
+            
+            // Get revenue for each month
+            $monthlyRevenue = $barberShop->bookings()
+                ->whereMonth('created_at', $date->month)
+                ->whereYear('created_at', $date->year)
+                ->where('status', 'completed')
+                ->sum('amount');
+            // Get appointments for each month
+            $monthlyAppointments = $barberShop->bookings()
+                ->whereMonth('created_at', $date->month)
+                ->whereYear('created_at', $date->year)
+                ->where('status', 'completed')
+                ->count();
+            $appointments[] = $monthlyAppointments;
+            $revenues[] = $monthlyRevenue;
+        }
+
+        return [
+            'months' => $months,
+            'revenues' => $revenues,
+            'appointments' => $appointments,
+        ];
+    }
+
+}
 }
