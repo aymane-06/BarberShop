@@ -29,9 +29,9 @@ class UserRepository extends BaseRepository
     {
         return [
             'totalUsers' => User::count(),
-            'newUsersPercentage' => User::count() > 0 
-                ? round((User::where('created_at', '>=', now()->subDays(30))->count() / User::count()) * 100, 1) 
-                : 0,
+            'newUsersPercentage' => User::where('created_at', '<=', now()->subDays(30))->count() > 0 
+                ? round((User::where('created_at', '>=', now()->subDays(30))->count() / User::where('created_at', '<=', now()->subDays(30))->count()) * 100, 1) 
+                : round((User::where('created_at', '>=', now()->subDays(30))->count()) * 100, 1),
             'activeUsers' => User::where('status', 'Active')->count(),
             'activeUsersPercentage' => User::count() > 0 
                 ? round((User::where('status', 'Active')->count() / User::count()) * 100, 1) 
@@ -50,7 +50,7 @@ class UserRepository extends BaseRepository
 
     public static function getUsers($search=null, $status=null, $role=null, $sort=null)
     {
-        $query = User::query()->where('role','!=',"super admin");
+        $query = User::query()->where('role','!=',"super-admin");
         
         if ($search) {
             $query->where(function($q) use ($search) {

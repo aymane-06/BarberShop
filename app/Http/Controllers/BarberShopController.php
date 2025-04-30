@@ -30,7 +30,7 @@ class BarberShopController extends Controller
     public function index()
     {
         $barberShop = auth()->user()->barberShop;
-        $Apointments = $barberShop->bookings()->where('status','confirmed')->with(['user', 'services'])->get();
+        $Apointments = $barberShop?->bookings()->where('status','confirmed')->with(['user', 'services'])->get();
         return view('barber.dashboard', compact('barberShop','Apointments'));
     }
 

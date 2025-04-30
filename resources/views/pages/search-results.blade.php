@@ -434,7 +434,12 @@ async function getBarberShops(page = 1, filtersSelcted = null) {
 getBarberShops();
 
 function renderBarberShops(barberShops) {
+    
     const resultsContainer = document.querySelector('.grid');
+    if (barberShops.length === 0) {
+        resultsContainer.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-xl text-gray-500 font-medium">No results found.</p><p class="text-gray-400 mt-2">Try adjusting your filters or search criteria.</p></div>';
+        return;
+    }
     resultsContainer.innerHTML = ''; // Clear previous results
 
     barberShops.forEach(barberShop => {

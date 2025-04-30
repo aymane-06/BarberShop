@@ -46,6 +46,8 @@
 @endsection
 
 @section('content')
+
+
 <!-- Hero Section with Video Background -->
 <section class="relative overflow-hidden min-h-screen flex items-center">
   <!-- Video Background -->
@@ -64,7 +66,10 @@
          style="display: none;"> -->
     <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-primary-900/70 z-10"></div>
   </div>
-
+  <!-- Flash messages overlay -->
+  <div class="absolute top-4 right-4 left-4 z-30 max-w-lg mx-auto">
+    @include('partials.auth-errors')
+  </div>
   <!-- Content overlay -->
   <div class="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
     <div class="flex flex-col lg:flex-row items-center gap-10">
