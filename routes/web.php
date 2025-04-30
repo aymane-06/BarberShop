@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BarberShopController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PublicPagesController;
@@ -87,9 +88,7 @@ Route::prefix('auth')->group(function () {
 
 // Admin routes group with middleware
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard',[AdminController::class,'index'])->name('dashboard');
     
     Route::get('/users', function () {
         return view('admin.UserManaging');

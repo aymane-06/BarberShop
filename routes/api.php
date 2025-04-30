@@ -11,6 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+Route::get('/admin/dashboard/statistics',[UserController::class,'getAdminDashboardStatistics']);
+
 Route::get('/admin/Barbershops',[BarberShopController::class,'getBarberShops']);
 Route::get('/admin/Barbershops/statistics',[BarberShopController::class,'getBarbershopsStatistics']);
 Route::post('/admin/barbershops/reject',[BarberShopController::class,'reject']);
@@ -37,6 +40,7 @@ Route::post('/barberShop/services/toggle/{services:id}',[ServicesController::cla
 Route::post('/barberShop/services/statistics',[ServicesController::class,'getServicesStatistics']);
 Route::get('/barberShop/dashboard/{barberShop:id}',[BarberShopController::class,'getDashboardStatistics']);
 Route::get('/barberShop/{barberShop:id}/weekly-revenue',[BarberShopController::class,'getWeeklyRevenue']);
+
 
 
 Route::get('/barberShops',[BarberShopController::class,'getActiveBarberShops']);

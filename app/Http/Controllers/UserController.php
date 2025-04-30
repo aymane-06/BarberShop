@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendUserCustomEmail;
 use App\Mail\customUserEmail;
 use App\Models\User;
+use App\Repositories\AdminRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Mail;
@@ -186,6 +187,13 @@ class UserController extends Controller
 
     public function getUsersStatistics(){
         $statistics=UserRepository::getUserStatistics();
+        return response()->json($statistics, 200);
+    }
+
+
+    public function getAdminDashboardStatistics(Request $request){
+        $date=$request->date;
+        $statistics = AdminRepository::getPlatformGrowth($date);
         return response()->json($statistics, 200);
     }
 

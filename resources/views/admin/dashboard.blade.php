@@ -19,12 +19,12 @@
             <div class="flex justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Users</p>
-                    <h3 class="text-2xl font-bold text-gray-900">2,547</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">{{ $totalUsers }}</h3>
                     <p class="text-xs text-green-600 mt-2 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                         </svg>
-                        12.5% from last month
+                        {{$percentageUserChange}}% from last month
                     </p>
                 </div>
                 <div class="bg-primary-100 p-3 rounded-lg">
@@ -40,12 +40,12 @@
             <div class="flex justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Registered Barbershops</p>
-                    <h3 class="text-2xl font-bold text-gray-900">128</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">{{$totalBarberShops}}</h3>
                     <p class="text-xs text-green-600 mt-2 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                         </svg>
-                        8.2% from last month
+                        {{ $percentageChangeBarberShops }}% from last month
                     </p>
                 </div>
                 <div class="bg-green-100 p-3 rounded-lg">
@@ -61,12 +61,12 @@
             <div class="flex justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Platform Revenue (Month)</p>
-                    <h3 class="text-2xl font-bold text-gray-900">$14,825</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">{{ $thisMonthRevenue }}</h3>
                     <p class="text-xs text-green-600 mt-2 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                         </svg>
-                        23.1% from last month
+                        {{$percentageChangeRevenue}}% from last month
                     </p>
                 </div>
                 <div class="bg-indigo-100 p-3 rounded-lg">
@@ -82,9 +82,9 @@
             <div class="flex justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">New Registrations (Today)</p>
-                    <h3 class="text-2xl font-bold text-gray-900">12</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">{{$todyNewUsers}}</h3>
                     <p class="text-xs text-gray-500 mt-2">
-                        8 users, 4 barbershops
+                        {{ $clientsCount }} users, {{$barbersCount}} barbershops
                     </p>
                 </div>
                 <div class="bg-amber-100 p-3 rounded-lg">
@@ -105,11 +105,10 @@
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-lg font-semibold text-gray-900">Platform Growth</h3>
                     <div>
-                        <select class="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-20">
-                            <option>Last 7 days</option>
-                            <option>Last 14 days</option>
-                            <option>Last 30 days</option>
-                            <option>Last 90 days</option>
+                        <select id="chartDateSelctor" class="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-20">
+                                <option value="Week">This Week</option>
+                                <option value="Month">This Month</option>
+                                <option value="Year">This Year</option>
                         </select>
                     </div>
                 </div>
@@ -355,16 +354,32 @@
 <script>
     // Initialize all charts when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
-        // Platform Growth Chart
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        const revenueChart = new Chart(revenueCtx, {
+        let users=[];
+        let barbershops=[];
+        let labels=[];
+        let revenueChart;
+
+        async function getPlatformGrowth(date='Week'){
+            const response = await fetch(`/api/admin/dashboard/statistics?date=${date}`);
+            const data = await response.json();
+            console.log(data);
+            users = data.Users;
+            barbershops = data.barberShops;
+            labels = data.days ?? data.months;
+            console.log(users, barbershops, labels);
+            
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChart) {
+                revenueChart.destroy(); // Destroy the previous chart instance
+            }
+         revenueChart = new Chart(revenueCtx, {
             type: 'line',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                labels: labels,
                 datasets: [
                     {
                         label: 'Users',
-                        data: [1850, 2120, 1790, 2390, 2940, 3200, 2700],
+                        data: users,
                         borderColor: '#6d28d9',
                         backgroundColor: 'rgba(109, 40, 217, 0.1)',
                         pointBackgroundColor: '#6d28d9',
@@ -375,7 +390,7 @@
                     },
                     {
                         label: 'Barbershops',
-                        data: [65, 78, 82, 95, 110, 125, 128],
+                        data: barbershops,
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         pointBackgroundColor: '#10b981',
@@ -411,11 +426,20 @@
                         }
                     },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
                     }
                 }
             }
         });
+        }
+        getPlatformGrowth();
+        // Platform Growth Chart
+        document.getElementById('chartDateSelctor').addEventListener('change', function() {
+            const selectedDate = this.value;
+            getPlatformGrowth(selectedDate);
+        });
+
+        
 
         // Barbershop Categories Pie Chart
         const appointmentPieCtx = document.getElementById('appointmentPieChart').getContext('2d');
