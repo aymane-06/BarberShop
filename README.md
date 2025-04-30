@@ -18,9 +18,9 @@ A full-featured web platform that allows barbers to create and manage their digi
 
 | Frontend | Backend | Database | DevOps | APIs |
 |----------|---------|----------|--------|------|
-| Blade Templates | Laravel 10.x | MySQL 8.0+ | Docker | Google Maps |
+| Blade Templates | Laravel 10.x | MySQL 8.0+ |  | Google Maps |
 | TailwindCSS | PHP 8.2+ |  | CI/CD Pipeline | Stripe (coming soon) |
-| Alpine.js | Sanctum/Jetstream | ElasticSearch (optional) | GitHub Actions | Pusher/Socket.io |
+| Alpine.js | Sanctum/Jetstream |  | GitHub Actions | Pusher/Socket.io |
 | SCSS | RESTful API | | |  |
 
 ## ⚙️ Installation
