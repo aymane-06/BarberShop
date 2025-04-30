@@ -412,6 +412,7 @@ async function getBarberShops(page = 1, filtersSelcted = null) {
         url += '&date=' + filtersSelcted.date;
         url += '&price=' + filtersSelcted.price;
         url += '&rating=' + filtersSelcted.rating;
+        url += '&sort=' + filtersSelcted.sort;
     }
     const response = await fetch(`${url}`);
     const data = await response.json();
@@ -475,7 +476,7 @@ function renderBarberShops(barberShops) {
         card.innerHTML = `
             <a href="/barbershop-detail/${barberShop.id}" class="block">
                 <div class="relative">
-                    <img src="/storage/${barberShop.cover}" alt="${barberShop.name}" class="w-full h-48 object-cover">
+                    <img src="${barberShop.cover.startsWith('http') ? barberShop.cover : '/storage/' + barberShop.cover}" alt="${barberShop.name}" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='/images/default-barbershop.jpg';">
                     <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
                         ${barberShop.services.length > 0 ? calculateAveragePrice(barberShop.services) : ''}$$
                     </div>

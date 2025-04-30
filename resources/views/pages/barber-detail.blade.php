@@ -192,7 +192,11 @@
                 <!-- Barber Image -->
                 <div class="md:w-1/3 mb-6 md:mb-0 md:pr-8">
                     <div class="relative rounded-lg overflow-hidden shadow-md h-64 md:h-auto">
-                        <img src="/storage/{{ $barberShop->cover }}" alt="Classic Cuts Barber Shop" class="w-full h-full object-cover">
+                        @if(Str::startsWith($barberShop->cover, 'https'))
+                            <img src="{{ $barberShop->cover }}" alt="{{ $barberShop->name }}" class="w-full h-full object-cover">
+                        @else
+                            <img src="/storage/{{ $barberShop->cover }}" alt="{{ $barberShop->name }}" class="w-full h-full object-cover">
+                        @endif
                         <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow">
                             €€
                         </div>

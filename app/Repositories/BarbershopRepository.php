@@ -98,86 +98,88 @@ class BarbershopRepository extends BaseRepository
     }
     // date: "2025-04-26"location: "tes"page: "1"price: "99"rating: "5"service: "Haircuts"
     public static function getActiveBarberShops($search = null, $date = null, $rating = null, $sort = null, $service = null, $price = null)
-{
-    $query = BarberShop::query()
-        ->where('is_verified', 'Verified')
-        ->where('is_active', 1);
-
-    // Search by name, address, city, or zip
-    if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'LIKE', "%{$search}%")
-              ->orWhere('address', 'LIKE', "%{$search}%")
-              ->orWhere('city', 'LIKE', "%{$search}%")
-              ->orWhere('zip', 'LIKE', "%{$search}%");
-        });
-    }
-
-    // // Filter by available working hours on a specific date
-    if (!empty($date)) {
-        $dayOfWeek = strtolower(date('l', strtotime($date)));
-        $query->whereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\"') IS NOT NULL")
-              ->where(function ($q) use ($dayOfWeek) {
-                  $q->whereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\".closed') IS NULL")
-                    ->orWhereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\".closed') != 'on'");
-              });
-    }
-
-    // Filter by minimum average rating
-    if (!empty($rating)) {
-        $query->withAvg('ratings', 'rating')
-              ->having('ratings_avg_rating', '>=', $rating);
-    }
-
-    // // Filter by service type
-    if (!empty($service)) {
-        $query->whereHas('services', function ($q) use ($service) {
-            $q->where('type', 'LIKE', "%{$service}%");
-        });
-    }
-
-    // // Filter by maximum price
-    if (!empty($price)) {
-        $query->whereHas('services', function ($q) use ($price) {
-            $q->where('price', '<=', $price);
-        });
-    }
-
-    // // Sorting
-    if (!empty($sort)) {
+    {
+        $query = BarberShop::query()
+            ->where('is_verified', 'Verified')
+            ->where('is_active', 1);
+    
+        // Search by name, address, city, or zip
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('address', 'LIKE', "%{$search}%")
+                  ->orWhere('city', 'LIKE', "%{$search}%")
+                  ->orWhere('zip', 'LIKE', "%{$search}%");
+            });
+        }
+    
+        // Filter by available working hours on a specific date
+        if (!empty($date)) {
+            $dayOfWeek = strtolower(date('l', strtotime($date)));
+            $query->whereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\"') IS NOT NULL")
+                  ->where(function ($q) use ($dayOfWeek) {
+                      $q->whereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\".closed') IS NULL")
+                        ->orWhereRaw("JSON_EXTRACT(working_hours, '$.\"$dayOfWeek\".closed') != 'on'");
+                  });
+        }
+    
+        // Add withAvg if rating filter or sorting by rating
+        if (!empty($rating) || $sort === 'rating') {
+            $query->withAvg('ratings', 'rating');
+        }
+    
+        // Filter by minimum average rating
+        if (!empty($rating)) {
+            $query->having('ratings_avg_rating', '>=', $rating);
+        }
+    
+        // Filter by service type
+        if (!empty($service)) {
+            $query->whereHas('services', function ($q) use ($service) {
+                $q->where('type', 'LIKE', "%{$service}%");
+            });
+        }
+    
+        // Filter by maximum price
+        if (!empty($price)) {
+            $query->whereHas('services', function ($q) use ($price) {
+                $q->where('price', '<=', $price);
+            });
+        }
+    
+        // Sorting logic
         switch ($sort) {
             case 'rating':
-                $query->leftJoin('ratings', 'barber_shops.id', '=', 'ratings.barberShop_id')
-                      ->select('barber_shops.*', \DB::raw('COALESCE(AVG(ratings.rating), 0) as avg_rating'))
-                      ->groupBy('barber_shops.id')
-                      ->orderByDesc('avg_rating');
+                $query->orderByDesc('ratings_avg_rating');
                 break;
-
+    
             case 'bookings':
                 $query->withCount('bookings')
                       ->orderByDesc('bookings_count');
                 break;
-
-            case 'PriceDESC':
-                $query->leftJoin('services', 'barber_shops.id', '=', 'services.barberShop_id')
-                      ->select('barber_shops.*', \DB::raw('MIN(services.price) as min_price'))
-                      ->groupBy('barber_shops.id')
-                      ->orderByDesc('min_price');
+    
+            case "PriceDESC":
+                $query->withAvg('services','price')->groupBy('barber_shops.id')
+                      ->orderBy('services_avg_price', 'DESC');
                 break;
-
-            case 'PriceASC':
-                $query->leftJoin('services', 'barber_shops.id', '=', 'services.barberShop_id')
-                      ->select('barber_shops.*', \DB::raw('MIN(services.price) as min_price'))
-                      ->groupBy('barber_shops.id')
-                      ->orderBy('min_price', 'ASC');
+    
+            case "PriceASC":
+                $query->withAvg('services','price')->groupBy('barber_shops.id')
+                      ->orderBy('services_avg_price', 'ASC');
+                break;
+    
+            default:
+                // If no sorting is provided, you can default to some other logic (e.g., alphabetical or by id)
+                $query->orderBy('name');
                 break;
         }
+    
+        // Return paginated results with relations
+        return $query->with('services', 'ratings')
+                     ->paginate(6);
     }
+    
 
-    // Return paginated results with relations
-    return $query->with('services', 'ratings')
-                 ->paginate(6);
-}
 
 
     public static function getTodaysBookings(BarberShop $barberShop)  {
