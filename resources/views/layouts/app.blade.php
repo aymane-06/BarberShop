@@ -40,6 +40,10 @@
     @yield('additional_styles')
 </head>
 <body class="bg-gray-50">
+     <!-- Flash messages overlay -->
+  <div class="absolute top-4 right-4 left-4 z-30 max-w-lg mx-auto">
+    @include('partials.auth-errors')
+  </div>
   <!-- Mobile Menu Overlay -->
 <div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden">
     <div class="mobile-menu bg-white h-full w-72 shadow-xl p-5 overflow-y-auto">
@@ -95,7 +99,7 @@
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
                         </form>
                     </div>
-                @elseif(auth()->user()->role === 'admin')
+                @elseif(auth()->user()->role === 'admin' || auth()->user()->role === 'super-admin')
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open" class="flex justify-between w-full hover:text-primary-600 transition-colors">
                             Admin Panel
@@ -195,8 +199,8 @@
                             @else
                             <a href="{{ route('barber.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Barber Dashboard</a>
                             @endif
-                        @elseif(auth()->user()->role === 'admin')
-                            <a href="" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Admin Panel</a>
+                        @elseif( auth()->user()->role === 'admin' || auth()->user()->role === 'super-admin' )
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Admin Panel</a>
                         @else
                             <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">My Bookings</a>
                             <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Favorites</a>

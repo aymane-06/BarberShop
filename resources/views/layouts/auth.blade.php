@@ -38,6 +38,10 @@
               @yield('additional_styles')
               </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
+     <!-- Flash messages overlay -->
+  <div class="absolute top-4 right-4 left-4 z-30 max-w-lg mx-auto">
+    @include('partials.auth-errors')
+  </div>
               <!-- Navigation -->
               <nav class="bg-white shadow-sm px-4 md:px-6 py-3 sticky top-0 z-40">
                             <div class="max-w-7xl mx-auto flex justify-between items-center">
