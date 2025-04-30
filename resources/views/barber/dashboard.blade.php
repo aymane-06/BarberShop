@@ -951,6 +951,7 @@ document.getElementById('chartDateSelctor').addEventListener('change', function(
                             );
                             event.remove();
                             barberShopDashboardStats();
+                            fetchChartData();
                             modal.classList.add('hidden');
                         })
                         .catch(error => {

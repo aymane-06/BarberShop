@@ -23,7 +23,6 @@ class AdminAccess
         }
 
         if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'super-admin') {
-            dd('not admin');
             return redirect()->route('home')->with('error', 'You do not have admin access.');
         }
 

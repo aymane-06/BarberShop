@@ -42,7 +42,7 @@
 </head>
 <body class="bg-gray-50">
      <!-- Flash messages overlay -->
-  <div class="absolute top-4 right-4 left-4 z-30 max-w-lg mx-auto">
+  <div class="absolute top-4 right-4 left-4 z-100 max-w-lg mx-auto">
     @include('partials.auth-errors')
   </div>
     <div id="app">

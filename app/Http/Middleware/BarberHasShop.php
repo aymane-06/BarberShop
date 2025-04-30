@@ -18,7 +18,7 @@ class BarberHasShop
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check() || Auth::user()->role !== 'barber') {
-            return redirect()->route('login')->with('error', 'Please login with your barber account.');
+            return redirect()->route('home')->with('error', 'Please login with your barber account.');
         }
         
         // If barber already has a shop, redirect to dashboard

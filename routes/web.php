@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\RatingController;
 use App\Http\Middleware\AdminAccess;
+use App\Http\Middleware\BarberHasShop;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\IsVerifiedBarber;
@@ -64,12 +65,14 @@ Route::middleware(['auth', EnsureEmailIsVerified::class])->group(function () {
     // Rating routes
     Route::post('/Booking/rate/{barberShop}',[RatingController::class,'store'])->name('rating.store');
     Route::put('/Booking/rate/{rating}',[RatingController::class,'update'])->name('rating.update');
+    //barberShop Join
+    Route::get('/barber/barberjoin', [BarberShopController::class, 'barberJoin'])->name('barber.barberJoin');
+    Route::post('/barber/barberjoin', [BarberShopController::class, 'barberadd'])->name('barber.barberJoin.submit');
 });
 
 // Barber registration routes
-Route::middleware(['auth', EnsureEmailIsVerified::class, CheckUserRole::class.':barber', 'barber.hasShop'])->group(function () {
-    Route::get('/barber/barberjoin', [BarberShopController::class, 'barberJoin'])->name('barber.barberJoin');
-    Route::post('/barber/barberjoin', [BarberShopController::class, 'barberadd'])->name('barber.barberJoin.submit');
+Route::middleware(['auth', EnsureEmailIsVerified::class, CheckUserRole::class.':barber', BarberHasShop::class])->group(function () {
+   
     
     Route::get('/barber/barbershop/create', function () {
         return view('barber.BarbershopCreate');
