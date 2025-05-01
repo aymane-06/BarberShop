@@ -5,7 +5,7 @@ A full-featured web platform that allows barbers to create and manage their digi
 ## 🚀 Features
 
 - 🔐 **User & Barber Authentication** - Secure login/register system with role-based access
-- 📍 **Google Maps Integration** - Find nearby barbershops with real-time location data
+- 📍 **Google Maps Integration** - Find nearby barbershops with real-time location data(soon...)
 - 📅 **Smart Appointment System** - Book, reschedule or cancel appointments with ease
 - ⭐ **Review & Rating System** - Leave feedback and rate your barbershop experience
 - 📊 **Advanced Admin Dashboard** - Complete statistics, verification processes and management tools
