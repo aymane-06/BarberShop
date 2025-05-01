@@ -9,7 +9,7 @@ A full-featured web platform that allows barbers to create and manage their digi
 - 📅 **Smart Appointment System** - Book, reschedule or cancel appointments with ease
 - ⭐ **Review & Rating System** - Leave feedback and rate your barbershop experience
 - 📊 **Advanced Admin Dashboard** - Complete statistics, verification processes and management tools
-- 💬 **Real-time Chat** - Direct communication between clients and barbers
+- 💬 **Real-time Chat** - Direct communication between clients and barbers(soon...)
 - 🔎 **Intelligent Search** - Filter by rating, price, availability, services, and more
 - 🎨 **Responsive Design** - Optimized UI for all devices using modern frameworks
 - 📱 **Progressive Web App** - Install on mobile devices for native-like experience
