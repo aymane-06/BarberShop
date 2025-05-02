@@ -20,34 +20,71 @@ jobs:
           # Enter project directory
           cd ~/domains/cutbook.labo-snce.com/public_html/BarberShop/
           
+          echo "Starting deployment process..."
+          
           # Check if it's a git repository, if not initialize it
           if [ ! -d .git ]; then
+            echo "Initializing git repository..."
             git init
             git remote add origin https://github.com/aymane-06/BarberShop
           fi
           
-          # Fetch and pull latest changes
-          git fetch origin main
-          git reset --hard origin/main
+          # Show current branch and remotes for debugging
+          echo "Current git status:"
+          git status
+          echo "Remote repositories:"
+          git remote -v
+          
+          # Fetch and pull latest changes - using master branch
+          echo "Fetching latest code from master branch..."
+          git fetch --all
+          git checkout -f master || git checkout -f main  # Try both branches
+          git reset --hard origin/master || git reset --hard origin/main  # Try both branches
           
           # Set file permissions
+          echo "Setting file permissions..."
           chmod -R 755 .
           chmod -R 777 storage bootstrap/cache
           
           # Install Composer 2 locally if needed
           if [ ! -f composer.phar ]; then
+            echo "Installing Composer..."
             php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
             php composer-setup.php --install-dir=. --filename=composer.phar
             php -r "unlink('composer-setup.php');"
           fi
           
           # Install dependencies
+          echo "Installing dependencies..."
           php composer.phar install --no-dev --optimize-autoloader
-
+          
+          # Install Faker for seeds
+          echo "Installing Faker..."
           php -d memory_limit=-1 composer.phar require fakerphp/faker
-
+          
+          # Fix potential case sensitivity issues with factory files
+          echo "Checking factory file names..."
+          # Create proper case files if needed
+          if [ -f database/factories/barberShopFactory.php ] && [ ! -f database/factories/BarberShopFactory.php ]; then
+            echo "Copying barberShopFactory.php to BarberShopFactory.php..."
+            cp database/factories/barberShopFactory.php database/factories/BarberShopFactory.php
+            # Update class name in file
+            sed -i 's/class barberShopFactory/class BarberShopFactory/g' database/factories/BarberShopFactory.php
+          fi
+          
+          # Clear caches
+          echo "Clearing Laravel caches..."
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
           
           # Run Laravel commands
+          echo "Running migrations..."
           php artisan migrate:fresh --force
-
           
+          echo "Running seeders..."
+          php artisan db:seed --force || echo "Seeding failed, but continuing deployment"
+          
+          echo "Deployment completed!"
+
