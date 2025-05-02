@@ -50,4 +50,4 @@ jobs:
           # Run Laravel commands
           php artisan migrate:fresh --force
 
-          php artisan db:seed --force
+          
