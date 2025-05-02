@@ -460,7 +460,7 @@
 
         // Fetch barbershops from the API
 
-        url=`http://127.0.0.1:8000/api/admin/Barbershops?page=${page}`;
+        url=`/api/admin/Barbershops?page=${page}`;
         // Add filter parameters to the URL if they exist
         if (filterData.search) url += `&search=${encodeURIComponent(filterData.search)}`;
         if (filterData.status) url += `&status=${encodeURIComponent(filterData.status)}`;
@@ -852,7 +852,7 @@
             
             
           
-        let reject = await fetch('http://127.0.0.1:8000/api/admin/barbershops/reject', {
+        let reject = await fetch('/api/admin/barbershops/reject', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -945,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         try {
-            let reconsider = await fetch('http://127.0.0.1:8000/api/admin/barbershops/reconsider', {
+            let reconsider = await fetch('/api/admin/barbershops/reconsider', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1029,7 +1029,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         try {
-            let approve = await fetch('http://127.0.0.1:8000/api/admin/barbershops/approve', {
+            let approve = await fetch('/api/admin/barbershops/approve', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1060,7 +1060,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function getBarberShopsStatistics() {
     
-  let statistics=  await fetch('http://127.0.0.1:8000/api/admin/Barbershops/statistics')
+  let statistics=  await fetch('/api/admin/Barbershops/statistics')
         .then(res=>res.json())
         .then(data=>{
             console.log(data);
@@ -1211,7 +1211,7 @@ getBarberShopsStatistics();
             }
             
             try {
-                const response = await fetch('http://127.0.0.1:8000/api/admin/barbershops/email-owner', {
+                const response = await fetch('/api/admin/barbershops/email-owner', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
