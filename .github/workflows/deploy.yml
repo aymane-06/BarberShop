@@ -1,0 +1,53 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to Production
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          # Enter project directory
+          cd ~/domains/cutbook.labo-snce.com/public_html/BarberShop/
+          
+          # Check if it's a git repository, if not initialize it
+          if [ ! -d .git ]; then
+            git init
+            git remote add origin https://github.com/aymane-06/BarberShop
+          fi
+          
+          # Fetch and pull latest changes
+          git fetch origin main
+          git reset --hard origin/main
+          
+          # Set file permissions
+          chmod -R 755 .
+          chmod -R 777 storage bootstrap/cache
+          
+          # Install Composer 2 locally if needed
+          if [ ! -f composer.phar ]; then
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php composer-setup.php --install-dir=. --filename=composer.phar
+            php -r "unlink('composer-setup.php');"
+          fi
+          
+          # Install dependencies
+          php composer.phar install --no-dev --optimize-autoloader
+
+          php -d memory_limit=-1 composer.phar require fakerphp/faker
+
+          
+          # Run Laravel commands
+          php artisan migrate:fresh --force
+
+          php artisan db:seed --force
