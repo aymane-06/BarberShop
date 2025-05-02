@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\barberShop;
 use Illuminate\Database\Seeder;
 
-class BarberShopSeeder extends Seeder
+class barberShopSeeder extends Seeder
 {
     /**
      * Run the database seeds.
