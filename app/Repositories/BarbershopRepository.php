@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\BarberShop;
+use App\Models\barberShop;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
@@ -17,27 +17,27 @@ class BarbershopRepository extends BaseRepository
      */
     public function model(): string
     {
-        return BarberShop::class;
+        return barberShop::class;
     }
 
     public static function getTotalBarberShops()
     {
-        return BarberShop::count();
+        return barberShop::count();
     }
 
     public static function getTotalBarberShopsApproved()
     {
-        return BarberShop::where('is_verified', 'Verified')->count();
+        return barberShop::where('is_verified', 'Verified')->count();
     }
 
     public static function getTotalBarberShopsPending()
     {
-        return BarberShop::where('is_verified', 'Pending Verification')->count();
+        return barberShop::where('is_verified', 'Pending Verification')->count();
     }
 
     public static function getTotalBarberShopsRejected()
     {
-        return BarberShop::where('is_verified', 'Rejected')->count();
+        return barberShop::where('is_verified', 'Rejected')->count();
     }
 
     public static function getBarberShopsStatistics(){
@@ -51,12 +51,12 @@ class BarbershopRepository extends BaseRepository
         $rejectedPercentage = $total > 0 ? round(($rejected / $total) * 100) : 0;
         
         // Get shops created in the last day
-        $pendingLastDay = BarberShop::where('is_verified', 'Pending Verification')
+        $pendingLastDay = barberShop::where('is_verified', 'Pending Verification')
             ->where('created_at', '>=', now()->subDay())
             ->count();
             
         // Get new shops percentage (comparing with last month)
-        $lastMonthCount = BarberShop::where('created_at', '<', now()->startOfMonth())->count();
+        $lastMonthCount = barberShop::where('created_at', '<', now()->startOfMonth())->count();
         $newBarberShopsPercentage = $lastMonthCount > 0 
             ? round((($total - $lastMonthCount) / $lastMonthCount) * 100) 
             : round(($total*100));
@@ -75,7 +75,7 @@ class BarbershopRepository extends BaseRepository
 
     public static function getBarberShops($search=null,$status=null,$rating=null,$sort=null)
     {
-        $query= BarberShop::query();
+        $query= barberShop::query();
         if ($search){
                 $query->where('name', 'LIKE', "%$search%");
         }
@@ -99,7 +99,7 @@ class BarbershopRepository extends BaseRepository
     // date: "2025-04-26"location: "tes"page: "1"price: "99"rating: "5"service: "Haircuts"
     public static function getActiveBarberShops($search = null, $date = null, $rating = null, $sort = null, $service = null, $price = null)
     {
-        $query = BarberShop::query()
+        $query = barberShop::query()
             ->where('is_verified', 'Verified')
             ->where('is_active', 1);
     
