@@ -13,37 +13,37 @@ class ServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get all verified barbershops
-        $barbershops = barberShop::where('is_verified', 'Verified')->get();
+        // // Get all verified barbershops
+        // $barbershops = barberShop::where('is_verified', 'Verified')->get();
         
-        foreach ($barbershops as $barbershop) {
-            // Create 3-7 services for each barbershop
-            $numServices = rand(3, 7);
+        // foreach ($barbershops as $barbershop) {
+        //     // Create 3-7 services for each barbershop
+        //     $numServices = rand(3, 7);
             
-            // Create a mix of service types
-            $serviceTypes = ['Haircuts', 'Beard & Shave', 'Packages'];
+        //     // Create a mix of service types
+        //     $serviceTypes = ['Haircuts', 'Beard & Shave', 'Packages'];
             
-            // Common haircut services
-            Services::factory()->create([
-                'barber_shop_id' => $barbershop->id,
-                'name' => 'Classic Haircut',
-                'price' => rand(20, 40),
-                'duration' => 30,
-                'type' => 'Haircuts',
-            ]);
+        //     // Common haircut services
+        //     Services::factory()->create([
+        //         'barber_shop_id' => $barbershop->id,
+        //         'name' => 'Classic Haircut',
+        //         'price' => rand(20, 40),
+        //         'duration' => 30,
+        //         'type' => 'Haircuts',
+        //     ]);
             
-            Services::factory()->create([
-                'barber_shop_id' => $barbershop->id,
-                'name' => 'Beard Trim',
-                'price' => rand(15, 25),
-                'duration' => 20,
-                'type' => 'Beard & Shave',
-            ]);
+        //     Services::factory()->create([
+        //         'barber_shop_id' => $barbershop->id,
+        //         'name' => 'Beard Trim',
+        //         'price' => rand(15, 25),
+        //         'duration' => 20,
+        //         'type' => 'Beard & Shave',
+        //     ]);
             
-            // Random additional services
-            Services::factory($numServices - 2)->create([
-                'barber_shop_id' => $barbershop->id,
-            ]);
-        }
+        //     // Random additional services
+        //     Services::factory($numServices - 2)->create([
+        //         'barber_shop_id' => $barbershop->id,
+        //     ]);
+        // }
     }
 }
