@@ -481,7 +481,7 @@ function renderBarberShops(barberShops) {
         card.innerHTML = `
             <a href="/barbershop-detail/${barberShop.id}" class="block">
                 <div class="relative">
-                    <img src="${barberShop.cover.startsWith('http') ? barberShop.cover : '/storage/' + barberShop.cover}" alt="${barberShop.name}" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='/images/default-barbershop.jpg';">
+                    <img src="${barberShop.cover ? (barberShop.cover.startsWith('http') ? barberShop.cover : '/storage/' + barberShop.cover) : '/images/default-barbershop.jpg'}" alt="${barberShop.name}" class="w-full h-48 object-cover" onerror="this.onerror=null; this.src='/images/default-barbershop.jpg';">
                     <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-medium text-primary-600 shadow price-tag">
                         ${barberShop.services.length > 0 ? calculateAveragePrice(barberShop.services) : ''}$$
                     </div>
