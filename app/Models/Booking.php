@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\BarberShop;
+use App\Models\Services;
+use App\Models\User;
 class Booking extends Model
 {
     /** @use HasFactory<\Database\Factories\BookingFactory> */

@@ -86,12 +86,19 @@ jobs:
           echo "Running seeders..."
           php artisan db:seed --force || echo "Seeding failed, but continuing deployment"
 
-          #start queue workers
-          echo "Starting queue workers..."
-            # Restart queue workers
-            echo "Restarting queue workers..."
+            # Start queue workers
+            echo "Starting queue workers..."
             php artisan queue:restart
-           
+            
+            # Make sure supervisor restarts the queue workers if using supervisor
+            if command -v supervisorctl &> /dev/null; then
+            echo "Restarting supervisor queue workers..."
+            supervisorctl restart all
+            else
+            # Start queue worker as background process if supervisor is not available
+            echo "Starting queue worker as background process..."
+            nohup php artisan queue:work --daemon --tries=3 > storage/logs/queue.log 2>&1 &
+            fi    
           
           echo "Deployment completed!"
 

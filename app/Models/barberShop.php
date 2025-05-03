@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Booking;
+use App\Models\Rating;
+use App\Models\Services;
+use App\Models\User;
+
 
 class BarberShop extends Model
 {

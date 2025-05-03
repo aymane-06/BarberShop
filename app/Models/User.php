@@ -7,7 +7,10 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\Booking;
+use App\Models\BarberShop;
+use App\Models\Rating;
+   
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
