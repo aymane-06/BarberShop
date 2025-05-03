@@ -79,6 +79,10 @@ jobs:
           php artisan route:clear
           php artisan view:clear
           
+           composer dump-autoload
+          php artisan optimize:clear
+
+
           # Run Laravel commands
           echo "Running migrations..."
           php artisan migrate:fresh --force
@@ -86,6 +90,8 @@ jobs:
           echo "Running seeders..."
           php artisan db:seed --force || echo "Seeding failed, but continuing deployment"
 
+          
+           
             # Start queue workers
             echo "Starting queue workers..."
             php artisan queue:restart
@@ -99,6 +105,7 @@ jobs:
             echo "Starting queue worker as background process..."
             nohup php artisan queue:work --daemon --tries=3 > storage/logs/queue.log 2>&1 &
             fi    
+
           
           echo "Deployment completed!"
 
