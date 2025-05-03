@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use Illuminate\Http\Request;
 
 class PublicPagesController extends Controller

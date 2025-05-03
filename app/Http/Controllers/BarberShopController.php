@@ -10,7 +10,7 @@ use App\Mail\BarberShopApprovalMail;
 use App\Mail\BarberShopRejected;
 use App\Mail\customEmail;
 use App\Mail\SendReconsiderationEmail;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use App\Http\Requests\StorebarberShopRequest;
 use App\Http\Requests\UpdatebarberShopRequest;
 use App\Models\Services;

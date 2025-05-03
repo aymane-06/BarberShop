@@ -6,7 +6,7 @@ use App\Models\Services;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Service;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use Illuminate\Database\Seeder;
 
 class BookingSeeder extends Seeder

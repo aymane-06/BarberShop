@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
@@ -17,7 +17,7 @@ class BarbershopRepository extends BaseRepository
      */
     public function model(): string
     {
-        return barberShop::class;
+        return BarberShop::class;
     }
 
     public static function getTotalBarberShops()

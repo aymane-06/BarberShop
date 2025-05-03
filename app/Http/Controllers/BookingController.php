@@ -19,7 +19,7 @@ use App\Mail\UserBookingCompleted;
 use App\Mail\UserBookingConfirmation;
 use App\Mail\UserBookingReminder;
 use App\Mail\UserBookingReschduling;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;

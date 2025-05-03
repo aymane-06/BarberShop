@@ -30,7 +30,7 @@ class Booking extends Model
     ];
     public function barberShop()
     {
-        return $this->belongsTo(barberShop::class, 'barbershop_id');
+        return $this->belongsTo(BarberShop::class, 'barbershop_id');
     }
     
     public function services()

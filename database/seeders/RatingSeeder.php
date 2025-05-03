@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Rating;
 use App\Models\Booking;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 

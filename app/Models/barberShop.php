@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Booking;
 
-class barberShop extends Model
+class BarberShop extends Model
 {
     /** @use HasFactory<\Database\Factories\BarberShopFactory> */
     use HasFactory;

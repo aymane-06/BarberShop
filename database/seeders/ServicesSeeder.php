@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Services;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use Illuminate\Database\Seeder;
 
 class ServicesSeeder extends Seeder

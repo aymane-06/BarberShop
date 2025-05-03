@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use Illuminate\Auth\Access\Response;
 
 class BarberShopPolicy

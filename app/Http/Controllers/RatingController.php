@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use App\Models\Rating;
 use App\Http\Requests\StoreRatingRequest;
 use App\Http\Requests\UpdateRatingRequest;

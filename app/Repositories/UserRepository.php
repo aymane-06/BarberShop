@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use App\Models\User;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model

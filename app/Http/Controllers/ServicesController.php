@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\barberShop;
+use App\Models\BarberShop;
 use App\Models\Services;
 use App\Http\Requests\StoreServicesRequest;
 use App\Http\Requests\UpdateServicesRequest;
