@@ -85,6 +85,13 @@ jobs:
           
           echo "Running seeders..."
           php artisan db:seed --force || echo "Seeding failed, but continuing deployment"
+
+          #start queue workers
+          echo "Starting queue workers..."
+            # Restart queue workers
+            echo "Restarting queue workers..."
+            php artisan queue:restart
+           
           
           echo "Deployment completed!"
 

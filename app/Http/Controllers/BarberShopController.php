@@ -141,7 +141,7 @@ class BarberShopController extends Controller
     }
 
     public function barberJoin(){
-        return view('barber.Barber-join');
+        return view('barber.BarberJoin');
     }
     public function barberadd(Request $request){
         $validated = $request->validate([
