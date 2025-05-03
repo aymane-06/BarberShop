@@ -83,9 +83,7 @@ Route::middleware(['auth', EnsureEmailIsVerified::class, CheckUserRole::class.':
 
 // Barber verification pending page
 Route::middleware(['auth', CheckUserRole::class.':barber'])->group(function () {
-    Route::get('/barber/barbershop/Verification', function () {
-        return view('barber.BarberVerification');
-    })->name('barber.barberVerification');
+    Route::get('/barber/barbershop/Verification',[BarberShopController::class,'barberVerification'])->name('barber.barberVerification');
 });
 
 // Verified barber routes

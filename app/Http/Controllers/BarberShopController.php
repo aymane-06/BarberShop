@@ -140,6 +140,10 @@ class BarberShopController extends Controller
         //
     }
 
+    public function barberVerification(){
+        return view('barber.barberVerification');
+    }
+
     public function barberJoin(){
         return view('barber.BarberJoin');
     }
