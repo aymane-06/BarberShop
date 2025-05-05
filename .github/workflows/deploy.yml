@@ -79,9 +79,14 @@ jobs:
           php artisan route:clear
           php artisan view:clear
           
-           composer dump-autoload
+          composer dump-autoload
           php artisan optimize:clear
 
+          # Set up file storage
+          echo "Setting up file storage..."
+          php artisan storage:link
+          chmod -R 775 storage
+          chmod -R 775 public/storage
 
           # Run Laravel commands
           echo "Running migrations..."
@@ -90,22 +95,19 @@ jobs:
           echo "Running seeders..."
           php artisan db:seed --force || echo "Seeding failed, but continuing deployment"
 
+          # Start queue workers
+          echo "Starting queue workers..."
+          php artisan queue:restart
           
-           
-            # Start queue workers
-            echo "Starting queue workers..."
-            php artisan queue:restart
-            
-            # Make sure supervisor restarts the queue workers if using supervisor
-            if command -v supervisorctl &> /dev/null; then
+          # Make sure supervisor restarts the queue workers if using supervisor
+          if command -v supervisorctl &> /dev/null; then
             echo "Restarting supervisor queue workers..."
             supervisorctl restart all
-            else
+          else
             # Start queue worker as background process if supervisor is not available
             echo "Starting queue worker as background process..."
             nohup php artisan queue:work --daemon --tries=3 > storage/logs/queue.log 2>&1 &
-            fi    
+          fi    
 
-          
           echo "Deployment completed!"
 
