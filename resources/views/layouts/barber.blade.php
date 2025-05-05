@@ -69,7 +69,7 @@
                                     Appointments
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="/barber/services" class="flex bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
                                     <i class="fas fa-cut mr-3"></i>
                                     Services
@@ -86,7 +86,7 @@
                                     <i class="fas fa-star mr-3"></i>
                                     Reviews
                                 </a>
-                            </li>
+                            </li> -->
                             <li>
                                 <div class="relative">
                                     <button onclick="toggleDropdown('shopDropdown')" class="flex items-center justify-between w-full bg-white hover:bg-primary-50 rounded-xl font-medium text-gray-600 hover:text-primary-700 py-3 px-4 transition-all">
