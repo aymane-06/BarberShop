@@ -89,7 +89,7 @@
             </svg>
           </a>
           @endguest
-          @if (Auth::user()?->role !== 'barber')
+          @if (Auth::user()?->role !== 'barber'&& Auth::user()?->role !== 'admin'&& Auth::user()?->role !== 'super-admin')
           <a href="{{ route('barber.barberJoin') }}"
             class="group backdrop-blur-md bg-primary-600/50 hover:bg-primary-600 border-2 border-primary-400 text-white px-6 py-3.5 rounded-md font-medium text-center transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
             <i class="fas fa-cut mr-2"></i>

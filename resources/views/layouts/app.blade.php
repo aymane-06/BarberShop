@@ -184,35 +184,76 @@
         
         <div class="hidden md:flex items-center space-x-4">
             @auth
-                <div class="relative group">
-                    <button class="flex items-center text-gray-700 hover:text-primary-600 focus:outline-none">
-                        <img src="{{ auth()->user()->provider ? auth()->user()->avatar : (auth()->user()->avatar ? '/storage/'.auth()->user()->avatar : asset('images/default-avatar.png')) }}" class="w-8 h-8 rounded-full mr-2 object-cover border border-gray-200">
-                        <span>{{ auth()->user()->name }}</span>
-                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg p-2 hidden group-hover:block z-50">
-                        @if(auth()->user()->role === 'barber')
-                            @if (auth()->user()->barbershop===null)
-                            <a href="{{ route('barber.barbershop.create') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Create BarberShop</a>
+                <div class="relative inline-block text-left">
+                    <div>
+                        <button type="button" id="user-menu-button" aria-expanded="false" aria-haspopup="true" 
+                            class="flex items-center text-gray-700 hover:text-primary-600 focus:outline-none">
+                            <img src="{{ auth()->user()->provider ? auth()->user()->avatar : (auth()->user()->avatar ? '/storage/'.auth()->user()->avatar : asset('images/default-avatar.png')) }}" 
+                                class="w-8 h-8 rounded-full mr-2 object-cover border border-gray-200">
+                            <span>{{ auth()->user()->name }}</span>
+                            <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="user-dropdown-menu" 
+                        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 hidden transition-all duration-100 transform opacity-0 scale-95" 
+                        role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <div class="py-1" role="none">
+                            @if(auth()->user()->role === 'barber')
+                                @if (auth()->user()->barbershop===null)
+                                <a href="{{ route('barber.barbershop.create') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">Create BarberShop</a>
+                                @else
+                                <a href="{{ route('barber.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">Barber Dashboard</a>
+                                @endif
+                            @elseif( auth()->user()->role === 'admin' || auth()->user()->role === 'super-admin' )
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">Admin Panel</a>
                             @else
-                            <a href="{{ route('barber.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Barber Dashboard</a>
+                                <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">My Bookings</a>
+                                <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">Favorites</a>
                             @endif
-                        @elseif( auth()->user()->role === 'admin' || auth()->user()->role === 'super-admin' )
-                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Admin Panel</a>
-                        @else
-                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">My Bookings</a>
-                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md">Favorites</a>
-                        @endif
-                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md"> Profile</a>
-                        <div class="border-t border-gray-100 my-1"></div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">Log out</button>
-                        </form>
+                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-md" role="menuitem">Profile</a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <form method="POST" action="{{ route('logout') }}" role="none">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md" role="menuitem">Log out</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const menuButton = document.getElementById('user-menu-button');
+                        const menu = document.getElementById('user-dropdown-menu');
+                        
+                        menuButton.addEventListener('click', function() {
+                            const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+                            menuButton.setAttribute('aria-expanded', !expanded);
+                            
+                            if (!expanded) {
+                                menu.classList.remove('hidden', 'opacity-0', 'scale-95');
+                                menu.classList.add('opacity-100', 'scale-100');
+                            } else {
+                                menu.classList.add('opacity-0', 'scale-95');
+                                setTimeout(() => {
+                                    menu.classList.add('hidden');
+                                }, 100);
+                            }
+                        });
+                        
+                        document.addEventListener('click', function(event) {
+                            if (!menuButton.contains(event.target) && !menu.contains(event.target)) {
+                                menuButton.setAttribute('aria-expanded', 'false');
+                                menu.classList.add('opacity-0', 'scale-95');
+                                setTimeout(() => {
+                                    menu.classList.add('hidden');
+                                }, 100);
+                            }
+                        });
+                    });
+                </script>
             @else
                 <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-800 transition-colors">Log in</a>
                 <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors shadow-sm">Sign Up Free</a>
